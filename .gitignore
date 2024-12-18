@@ -1,0 +1,16 @@
+# https://github.com/github/gitignore/blob/main/Python.gitignore
+
+.idea
+*.sqlite3
+minha-venv
+minha-venv/
+
+# Environments
+.env
+.venv
+env/
+venv/
+minha-env/
+ENV/
+env.bak/
+venv.bak/
