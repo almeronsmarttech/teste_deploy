@@ -4,6 +4,7 @@ cycler==0.12.1
 Django==5.1.4
 django-allauth==65.3.0
 fonttools==4.55.3
+gunicorn==23.0.0
 kiwisolver==1.4.7
 matplotlib==3.10.0
 numpy==2.2.0
