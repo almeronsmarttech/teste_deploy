@@ -34,9 +34,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    # apps externas
+    'django_bootstrap5',
     # minhas apps
     'apps.app',
+    'apps.calculadora',
 ]
 
 #ALLOWED_HOSTS = []

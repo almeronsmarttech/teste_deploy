@@ -5,4 +5,5 @@ from .views import IndexView
 urlpatterns = [
    path('', IndexView.as_view(), name='IndexView'),
    #path('calculate/', IndexView.as_view(), name='calculate'),
+   path('calculadora/', include('apps.calculadora.urls')),
 ]

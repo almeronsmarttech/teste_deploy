@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% load django_bootstrap5 %}
+
+
+{% block title %} Calculadora {% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Calculadora Simples</h1>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <div class="btn-group mt-3">
+                <button type="submit" class="btn btn-primary" onclick="document.getElementById('id_operacao').value='soma'">Somar</button>
+                <button type="submit" class="btn btn-secondary" onclick="document.getElementById('id_operacao').value='subtracao'">Subtrair</button>
+                <button type="submit" class="btn btn-success" onclick="document.getElementById('id_operacao').value='multiplicacao'">Multiplicar</button>
+                <button type="submit" class="btn btn-danger" onclick="document.getElementById('id_operacao').value='divisao'">Dividir</button>
+                <button type="submit" class="btn btn-warning" onclick="document.getElementById('id_operacao').value='exponenciacao'">Exponenciar</button>
+                <button type="submit" class="btn btn-info" onclick="document.getElementById('id_operacao').value='radiciacao'">Radiciação</button>
+                <button type="submit" class="btn btn-info" onclick="document.getElementById('id_operacao').value='media'">Média</button>
+            </div>
+        </form>
+
+        {% if resultado is not None %}
+            <div class="alert alert-success mt-4" role="alert">
+                Operação: {{ operacao|title }}<br>
+                Resultado: {{ resultado }}
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
