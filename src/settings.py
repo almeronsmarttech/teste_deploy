@@ -102,10 +102,12 @@ SOCIALACCOUNT_PROVIDERS = {
    'google': {
        'APP': {
             'client_id': os.environ.get('CLIENT_ID_GOOGLE'),
-            'secret': os.environ.get('ID_GOOGLE'),
+            'secret': os.environ.get('SECRET_GOOGLE'),
            'key' : ''
            #'key': os.environ.get('API_KEY'),
-       }
+       },
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
    }
 }
 
