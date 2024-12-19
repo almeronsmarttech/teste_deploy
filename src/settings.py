@@ -36,11 +36,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # apps externas
     'django_bootstrap5',
-        # Allauth
-        # Add these
+        # Allauth sugeridas pela própria digital ocean
+
+        # Make sure to add these required apps
+    'django.contrib.sites',
+	  # Django-allauth apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    # Social/third party login provider for Digital Ocean
+    'allauth.socialaccount.providers.digitalocean',
+
     'allauth.socialaccount.providers.google',
 
     # minhas apps
@@ -95,7 +101,12 @@ AUTHENTICATION_BACKENDS = [
 
    # This one
    'allauth.account.auth_backends.AuthenticationBackend',
+
 ]
+
+LOGIN_REDIRECT_URL = 'IndexView'
+LOGOUT_REDIRECT_URL = 'IndexView'
+
 # AllAuth
 # Provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
