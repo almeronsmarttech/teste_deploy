@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import IndexView
+from .views import indexView
 
 urlpatterns = [
-   path('', IndexView.as_view(), name='IndexView'),
-   #path('calculate/', IndexView.as_view(), name='calculate'),
+   path('', indexView.as_view(), name='IndexView'),
+   # AllAuth Override default postlogin action with our view
+   path('accounts/profile/', indexView.as_view(), name='profileOverridenView'),
    path('calculadora/', include('apps.calculadora.urls')),
 ]

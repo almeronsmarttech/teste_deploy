@@ -36,6 +36,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # apps externas
     'django_bootstrap5',
+        # Allauth
+        # Add these
+   'allauth',
+   'allauth.account',
+   'allauth.socialaccount',
+   'allauth.socialaccount.providers.google',
+
     # minhas apps
     'apps.app',
     'apps.calculadora',
@@ -56,6 +63,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #Allauth
+    # This one
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'src.urls'
@@ -73,9 +83,20 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # AllAuth
+                # This one
+               'django.template.context_processors.request',
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+   # Needed to login by user in admin, regardless of `allauth`
+   'django.contrib.auth.backends.ModelBackend',
+
+   # This one
+   'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 WSGI_APPLICATION = 'src.wsgi.application'
