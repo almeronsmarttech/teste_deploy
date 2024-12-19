@@ -103,7 +103,7 @@ SOCIALACCOUNT_PROVIDERS = {
        'APP': {
             'client_id': os.environ.get('CLIENT_ID_GOOGLE'),
             'secret': os.environ.get('ID_GOOGLE'),
-           'key': ''
+           'key': os.environ.get('API_KEY'),
        }
    }
 }
