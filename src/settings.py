@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'django_bootstrap5',
         # Allauth
         # Add these
-   'allauth',
-   'allauth.account',
-   'allauth.socialaccount',
-   'allauth.socialaccount.providers.google',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 
     # minhas apps
     'apps.app',
@@ -51,9 +51,7 @@ INSTALLED_APPS = [
 #ALLOWED_HOSTS = []
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
 
-
 # Application definition
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -98,6 +96,36 @@ AUTHENTICATION_BACKENDS = [
    # This one
    'allauth.account.auth_backends.AuthenticationBackend',
 ]
+# AllAuth
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+   'google': {
+       'APP': {
+           #'client_id': os.environ.get('CLIENT_ID_GOOGLE'),
+            'client_id': "27910326959-u71p01mh6haf1ho56klt2njgsgm9fneg.apps.googleusercontent.com",
+           #'secret': os.environ.get('ID_GOOGLE'),
+            'secret': "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",
+           'key': ''
+       }
+   }
+}
+
+# AllAuth settings
+SITE_ID = 1
+
+ACCOUNT_LOGIN_REDIRECT_URL ="/"
+ACCOUNT_LOGOUT_REDIRECT_URL ="/"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = False
+ACCOUNT_PASSWORD_MIN_LENGTH = 8
+ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'
+ACCOUNT_LOGOUT_ON_GET = True
+
+SOCIALACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = False
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_LOGIN_ON_GET=True
+SOCIALACCOUNT_AUTO_SIGNUP = True
 
 WSGI_APPLICATION = 'src.wsgi.application'
 
