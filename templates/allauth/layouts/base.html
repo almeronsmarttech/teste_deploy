@@ -1,109 +1,46 @@
-{% load i18n %}
-{% load bootstrap5 %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends "account/base_entrance.html" %}
+{% load i18n allauth account %}
 
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        {% block head_title %}
-        {% endblock head_title %}
-    </title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    {% block extra_head %}
-    {% endblock extra_head %}
-</head>
-
-<body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">AllAuth Test</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        {% if user.is_authenticated %}
-                            {% url 'account_email' as email_url %}
-                            {% if email_url %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ email_url }}">{% trans "Change Email" %}</a>
-                                </li>
-                            {% endif %}
-                            {% url 'account_change_password' as change_password_url %}
-                            {% if change_password_url %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ change_password_url }}">{% trans "Change Password" %}</a>
-                                </li>
-                            {% endif %}
-                            {% url 'mfa_index' as mfa_url %}
-                            {% if mfa_url %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ mfa_url }}">{% trans "Two-Factor Authentication" %}</a>
-                                </li>
-                            {% endif %}
-                            {% url 'usersessions_list' as usersessions_list_url %}
-                            {% if usersessions_list_url %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ usersessions_list_url }}">{% trans "Sessions" %}</a>
-                                </li>
-                            {% endif %}
-                            {% url 'account_logout' as logout_url %}
-                            {% if logout_url %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ logout_url }}">{% trans "Sign Out" %}</a>
-                                </li>
-                            {% endif %}
-                        {% else %}
-                            {% url 'account_login' as login_url %}
-                            {% if login_url %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ login_url }}">{% trans "Sign In" %}</a>
-                                </li>
-                            {% endif %}
-                            {% url 'account_signup' as signup_url %}
-                            {% if signup_url %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ signup_url }}">{% trans "Sign Up" %}</a>
-                                </li>
-                            {% endif %}
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <main>
-        <div class="container mt-4">
-            {% block body %}
-            {% if messages %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>{% trans "Messages:" %}</strong>
-                <ul class="mb-0">
-                    {% for message in messages %}
-                    <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            {% endif %}
-            <div class="card">
-                <div class="card-body">
-                    {% block content %}
-                    {% endblock content %}
-                </div>
-            </div>
-            {% endblock body %}
-        </div>
-    </main>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    {% block extra_body %}
-    {% endblock extra_body %}
-</body>
-
-</html>
+{% block head_title %}
+   {% trans "Sign In" %}
+{% endblock head_title %}
+{% block content %}
+   <span class="card-title">{% trans "Sign In" %}</span>
+   {% if not SOCIALACCOUNT_ONLY %}
+       {% setvar link %}
+           <a href="{{ signup_url }}">
+           {% endsetvar %}
+           {% setvar end_link %}
+           </a>
+       {% endsetvar %}
+       <div class="row"><div class="col s12">
+           {% blocktranslate %}
+               If you have not created an account yet, then please {{ link }}sign up{{ end_link }} first.
+           {% endblocktranslate %}
+       </div></div><br/>
+       {% url 'account_login' as login_url %}
+       {% element form form=form method="post" action=login_url tags="entrance,login" %}
+           {% slot body %}
+               {% csrf_token %}
+               {% element fields form=form unlabeled=True %}
+               {% endelement %}
+               {{ redirect_field }}
+           {% endslot %}
+           {% slot actions %}
+               <input class="btn indigo darken-2 white-text" type="submit" tags="prominent,login" value="{% trans "Sign In" %}" />
+               <br/><br/><br/>
+           {% endslot %}
+       {% endelement %}
+       <br/>
+   {% endif %}
+   {% if LOGIN_BY_CODE_ENABLED %}
+       {% element h2 %}
+           {% element button href=request_login_code_url tags="prominent,login,secondary" %}
+               {% trans "Mail me a sign-in code" %}
+           {% endelement %}
+       {% endelement %}
+   {% endif %}
+   {% if SOCIALACCOUNT_ENABLED %}
+       {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+   {% endif %}
+{% endblock content %}
