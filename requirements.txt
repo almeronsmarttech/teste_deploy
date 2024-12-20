@@ -12,6 +12,7 @@ fonttools==4.55.3
 gunicorn==23.0.0
 idna==3.10
 kiwisolver==1.4.7
+MarkupSafe==3.0.2
 matplotlib==3.10.0
 numpy==2.2.0
 packaging==24.2

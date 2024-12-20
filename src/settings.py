@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # apps externas
     'django_bootstrap5',
-    'django_extensions',
+
         # Allauth
         # Add these
     'allauth',
