@@ -1,56 +1,103 @@
 {% load i18n %}
-{% load bootstrap5 %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block head_title %}MyApp{% endblock head_title %}</title>
-    {% bootstrap_css %}
-    {% block extra_head %}{% endblock extra_head %}
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>
+       {% block head_title %}
+       {% endblock head_title %}
+   </title>
+   <!-- Compiled and minified CSS -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.1.0/dist/css/materialize.min.css">
+   {% block extra_head %}
+   {% endblock extra_head %}
 </head>
-
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">MyApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        {% if user.is_authenticated %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <main class="container mt-4">
-        {% if messages %}
-            {% bootstrap_messages %}
-        {% endif %}
-        {% block content %}
-        {% endblock content %}
-    </main>
-    <footer class="text-center mt-4">
-        <p>&copy; 2024 MyApp</p>
-    </footer>
-    {% bootstrap_javascript %}
-    {% block extra_body %}{% endblock extra_body %}
+   <header>
+       <nav>
+           <div class="nav-wrapper indigo darken-4 white-text">
+               <a href="#" class="brand-logo">AllAuth test</a>
+               <ul id="nav-mobile" class="right hide-on-med-and-down">
+               {% if user.is_authenticated %}
+                   {% url 'account_email' as email_url %}
+                   {% if email_url %}
+                       <li>
+                           <a href="{{ email_url }}">{% trans "Change Email" %}</a>
+                       </li>
+                   {% endif %}
+                   {% url 'account_change_password' as change_password_url %}
+                   {% if change_password_url %}
+                       <li>
+                           <a href="{{ change_password_url }}">{% trans "Change Password" %}</a>
+                       </li>
+                   {% endif %}
+                   {% url 'mfa_index' as mfa_url %}
+                   {% if mfa_url %}
+                       <li>
+                           <a href="{{ mfa_url }}">{% trans "Two-Factor Authentication" %}</a>
+                       </li>
+                   {% endif %}
+                   {% url 'usersessions_list' as usersessions_list_url %}
+                   {% if usersessions_list_url %}
+                       <li>
+                           <a href="{{ usersessions_list_url }}">{% trans "Sessions" %}</a>
+                       </li>
+                   {% endif %}
+                   {% url 'account_logout' as logout_url %}
+                   {% if logout_url %}
+                       <li>
+                           <a href="{{ logout_url }}">{% trans "Sign Out" %}</a>
+                       </li>
+                   {% endif %}
+               {% else %}
+                   {% url 'account_login' as login_url %}
+                   {% if login_url %}
+                       <li>
+                           <a href="{{ login_url }}">{% trans "Sign In" %}</a>
+                       </li>
+                   {% endif %}
+                   {% url 'account_signup' as signup_url %}
+                   {% if signup_url %}
+                       <li>
+                           <a href="{{ signup_url }}">{% trans "Sign Up" %}</a>
+                       </li>
+                   {% endif %}
+               {% endif %}
+               </ul>
+           </div>
+       </nav>
+   </header>
+   <main>
+       <div class="container">
+       {% block body %}
+           {% if messages %}
+               <div class="row"><div class="col s12">
+                   <div class="card yellow black-text">
+                       <div class="card-content">
+                           <span class="card-title">{% trans "Messages:" %}</span>
+                           <ul>
+                               {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+                           </ul>
+                       </div>
+                   </div>
+               </div></div>
+           {% endif %}
+           <div class="row"><div class="section col s12">
+               <div class="card white">
+                   <div class="card-content">
+                       {% block content %}
+                       {% endblock content %}
+                   </div>
+               </div>
+           </div></div>
+       {% endblock body %}
+       </div>
+   </main>
+   <!-- Compiled and minified JavaScript -->
+   <script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.1.0/dist/js/materialize.min.js"></script>
+   {% block extra_body %}
+   {% endblock extra_body %}
 </body>
-
 </html>
