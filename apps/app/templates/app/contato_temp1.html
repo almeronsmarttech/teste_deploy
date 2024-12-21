@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Almeron Contato</h1>
+    <span style='color: green;'>Formulário de Contato</span>
+{% load static %}
+    <h1>Entre em Contato</h1>
+    <form method="post" action="{% url 'contato' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Enviar</button>
+    </form>
+<p>{{ message }}</p>
+{% endblock content %}
