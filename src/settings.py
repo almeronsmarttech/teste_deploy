@@ -211,7 +211,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CAMPOS NECESSÁRIOS PARA A CUSTOMIZAÇÃO DOS USUÁRIOS
 
 # Set custom user model as the active one
-AUTH_USER_MODEL = 'demo.MyCustomUser'
+AUTH_USER_MODEL = 'app.MyCustomUser'
 
 # Configure AllAuth username related management, because we are
 # using the e-mail as username. See:
