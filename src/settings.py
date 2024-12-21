@@ -206,3 +206,18 @@ STATICFILES_DIRS = [BASE_DIR / 'static/',]
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# CAMPOS NECESSÁRIOS PARA A CUSTOMIZAÇÃO DOS USUÁRIOS
+
+# Set custom user model as the active one
+AUTH_USER_MODEL = 'demo.MyCustomUser'
+
+# Configure AllAuth username related management, because we are
+# using the e-mail as username. See:
+# https://docs.allauth.org/en/latest/account/advanced.html
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
