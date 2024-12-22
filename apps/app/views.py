@@ -18,7 +18,7 @@ class IndexView(TemplateView):
         if self.request.user.is_authenticated:
             #context['message'] = f"Bem-vindo, {self.request.user.username}! Você está logado."
             context['logado'] = True
-            context['nome_completo'] = self.request.user.first_name + " " + self.request.user.last_name
+            context['nome_completo'] = self.request.user.first_name.title() + " " + self.request.user.last_name.title()
         else:
             context['logado'] = False
             #context['message'] = "Você não está logado."
