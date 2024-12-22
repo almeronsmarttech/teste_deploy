@@ -6,7 +6,7 @@
 
 {% if logado %}
     <span style='color: green;'>Logado</span>
-    <span style='color: green;'>{{ nome_completo }}</span>
+    <span style='color: green;'>{{ title(nome_completo) }}</span>
     <span style='color: green;'>{{message}}</span>
 {% else %}
     <span style='color: red;'>Não logado</span>
