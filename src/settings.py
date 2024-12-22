@@ -10,8 +10,8 @@ load_dotenv(os.path.join(BASE_DIR,'.env'))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-#DEBUG = os.environ.get("DEBUG","False") == True
+#DEBUG = True
+DEBUG = os.environ.get("DEBUG","False") == True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
