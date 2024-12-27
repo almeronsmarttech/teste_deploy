@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+<!-- -->
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curva Senoidal</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Curva Senoidal com Slider</h1>
+    <div id="plot"></div>
+    <div style="margin: 20px;">
+        <label for="amplitude">Amplitude:</label>
+        <input type="range" id="amplitude" min="0.5" max="5" step="0.1" value="1">
+        <span id="amp-value">1.0</span>
+        <br>
+        <label for="frequency">Frequência:</label>
+        <input type="range" id="frequency" min="0.5" max="5" step="0.1" value="1">
+        <span id="freq-value">1.0</span>
+    </div>
+    <script>
+        // Inicializar dados padrão
+        const x = Array.from({length: 500}, (_, i) => i * (2 * Math.PI / 500)); // 0 to 2π
+        let amplitude = 1.0;
+        let frequency = 1.0;
+
+        // Funções para calcular y e a derivada
+        function calculateY(amplitude, frequency) {
+            return x.map(val => amplitude * Math.sin(frequency * val));
+        }
+        function calculateDY(amplitude, frequency) {
+            return x.map(val => amplitude * frequency * Math.cos(frequency * val));
+        }
+
+        // Dados iniciais
+        const y = calculateY(amplitude, frequency);
+        const dydx = calculateDY(amplitude, frequency);
+
+        // Configuração inicial do gráfico
+        const sinTrace = {
+            x: x,
+            y: y,
+            mode: 'lines',
+            name: 'Seno(x)',
+        };
+
+        const derivativeTrace = {
+            x: x,
+            y: dydx,
+            mode: 'lines',
+            name: 'Derivada (cos(x))',
+        };
+
+        const layout = {
+            title: 'Curva Senoidal e sua Derivada',
+            xaxis: { title: 'x' },
+            yaxis: { title: 'y' },
+        };
+
+        Plotly.newPlot('plot', [sinTrace, derivativeTrace], layout);
+
+        // Atualizar os gráficos com base nos sliders
+        document.getElementById('amplitude').addEventListener('input', function () {
+            amplitude = parseFloat(this.value);
+            document.getElementById('amp-value').innerText = amplitude.toFixed(1);
+
+            const updatedY = calculateY(amplitude, frequency);
+            const updatedDY = calculateDY(amplitude, frequency);
+
+            Plotly.update('plot', {
+                y: [updatedY, updatedDY],
+            });
+        });
+
+        document.getElementById('frequency').addEventListener('input', function () {
+            frequency = parseFloat(this.value);
+            document.getElementById('freq-value').innerText = frequency.toFixed(1);
+
+            const updatedY = calculateY(amplitude, frequency);
+            const updatedDY = calculateDY(amplitude, frequency);
+
+            Plotly.update('plot', {
+                y: [updatedY, updatedDY],
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+{% endblock content %}

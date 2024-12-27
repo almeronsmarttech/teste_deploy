@@ -6,7 +6,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
 
-from .forms import Contato1Form
+from .calculos import FNSR
+
+from .forms import Contato1Form, FlexaoNormalSimplesRetangularForm
 
 # Create your views here.
 class IndexView(TemplateView):
@@ -47,3 +49,23 @@ class Contato1View(FormView):
     def form_invalid(self, form, *args, **kwargs):
         messages.error(self.request, 'Erro ao enviar e-mail')
         return super(Contato1View, self).form_invalid(form, *args, **kwargs)
+
+class CurvaView(TemplateView):
+    template_name = "app/curva.html"
+
+
+class FlexaoNormalSimplesRetangularView(FormView):
+    template_name = 'app/flexao_normal_simples_retangular_form.html'
+    form_class = FlexaoNormalSimplesRetangularForm
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        dl = instance.dl
+        ## gamac,gamas,gamaf,bduct,b,h,d, amk)
+        aas = FNSR(form.cleaned_data['fck'],form.cleaned_data['fyk'],form.cleaned_data['es'],form.cleaned_data['gamac'],form.cleaned_data['gamas'],form.cleaned_data['gamaf'],form.cleaned_data['bduct'],form.cleaned_data['b'],form.cleaned_data['h'],form.cleaned_data['d'],form.cleaned_data['amk'])
+        # Outros cálculos podem ser adicionados aqui
+
+        return self.render_to_response(self.get_context_data(form=form, dl=dl, aas= aas[0], asl=aas[1]))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))

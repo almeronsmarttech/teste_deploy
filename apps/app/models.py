@@ -53,3 +53,27 @@ class MyCustomUser(AbstractBaseUser):
        return self.timezone == 'UTC'
 
 
+from django import forms
+from django.db import models
+from django.views.generic.edit import FormView
+from django.shortcuts import render
+
+# Define o modelo
+class FlexaoNormalSimplesRetangularModel(models.Model):
+    fck = models.IntegerField(choices=[(x, x) for x in [20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90]], default=25)
+    fyk = models.IntegerField(choices=[(x, x) for x in [250, 500, 600]], default=500)
+    es = models.IntegerField(choices=[(x, x) for x in [190, 200, 215]], default=200)
+    gamac = models.FloatField(default=1.4)
+    gamas = models.FloatField(default=1.15)
+    gamaf = models.FloatField(default=1.4)
+    bduct = models.FloatField(default=1.0)
+    b = models.FloatField(default=15)
+    h = models.FloatField(default=40)
+    d = models.FloatField(default=36)
+    amk = models.FloatField(default=30)
+
+    @property
+    def dl(self):
+        return self.h - self.d
+
+

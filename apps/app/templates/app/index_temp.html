@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+<!-- -->
+{% block content %}
+<h1>Almeron Index</h1>
+
+{% if logado %}
+    <span style='color: green;'>Logado</span>
+    <span style='color: green;'>{{ nome_completo }}</span>
+    <span style='color: green;'>{{message}}</span>
+{% else %}
+    <span style='color: red;'>Não logado</span>
+    <span style='color: red;'>{{message}}</span>
+{% endif %}
+
+<p>{{ message }}</p>
+{% endblock content %}
