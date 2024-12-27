@@ -10,15 +10,80 @@
     <h1 class="mb-4">Fleção Normal Simples Retangular</h1>
     <form method="post" novalidate>
         {% csrf_token %}
-        <div class="row">
-            {% for field in form %}
-                <div class="col-md-4 mb-3">
-                    <!-- Renderizando manualmente o label -->
-                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label|safe }}</label>
-                    {% bootstrap_field field show_label=False %}
+
+        <!-- Propriedades dos Materiais -->
+        <fieldset class="border p-3 rounded">
+            <legend class="float-none w-auto px-2">Propriedades dos Materiais</legend>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <label for="{{ form.fck.id_for_label }}" class="form-label">{{ form.fck.label|safe }}</label>
+                    {% bootstrap_field form.fck show_label=False %}
                 </div>
-            {% endfor %}
-        </div>
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <label for="{{ form.fyk.id_for_label }}" class="form-label">{{ form.fyk.label|safe }}</label>
+                    {% bootstrap_field form.fyk show_label=False %}
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <label for="{{ form.es.id_for_label }}" class="form-label">{{ form.es.label|safe }}</label>
+                    {% bootstrap_field form.es show_label=False %}
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Coeficientes Ponderadores -->
+        <fieldset class="border p-3 rounded mt-4">
+            <legend class="float-none w-auto px-2">Coeficientes Ponderadores</legend>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <label for="{{ form.gamac.id_for_label }}" class="form-label">{{ form.gamac.label|safe }}</label>
+                    {% bootstrap_field form.gamac show_label=False %}
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <label for="{{ form.gamas.id_for_label }}" class="form-label">{{ form.gamas.label|safe }}</label>
+                    {% bootstrap_field form.gamas show_label=False %}
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <label for="{{ form.gamaf.id_for_label }}" class="form-label">{{ form.gamaf.label|safe }}</label>
+                    {% bootstrap_field form.gamaf show_label=False %}
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Propriedades Geométricas -->
+        <fieldset class="border p-3 rounded mt-4">
+            <legend class="float-none w-auto px-2">Propriedades Geométricas</legend>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <label for="{{ form.b.id_for_label }}" class="form-label">{{ form.b.label|safe }}</label>
+                    {% bootstrap_field form.b show_label=False %}
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <label for="{{ form.h.id_for_label }}" class="form-label">{{ form.h.label|safe }}</label>
+                    {% bootstrap_field form.h show_label=False %}
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <label for="{{ form.d.id_for_label }}" class="form-label">{{ form.d.label|safe }}</label>
+                    {% bootstrap_field form.d show_label=False %}
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Esforços Solicitantes -->
+        <fieldset class="border p-3 rounded mt-4">
+            <legend class="float-none w-auto px-2">Esforços Solicitantes</legend>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <label for="{{ form.bduct.id_for_label }}" class="form-label">{{ form.bduct.label|safe }}</label>
+                    {% bootstrap_field form.bduct show_label=False %}
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                    <label for="{{ form.amk.id_for_label }}" class="form-label">{{ form.amk.label|safe }}</label>
+                    {% bootstrap_field form.amk show_label=False %}
+                </div>
+            </div>
+        </fieldset>
+
+
         <div class="btn-group mt-3">
             <button type="submit" class="btn btn-primary">Calcular</button>
         </div>
