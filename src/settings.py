@@ -207,6 +207,9 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
+SESSION_COOKIE_AGE = 180 # 3 minutes. "1209600(2 weeks)" by default
+SESSION_SAVE_EVERY_REQUEST = True # "False" by default
+
 # CONFIGURAÇÕES DE E-MAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST =  os.environ.get('EMAIL_HOST')
