@@ -17,8 +17,97 @@
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
 
-Almeron base
+
+{% block menu %}
+
+<!-- Menu Fixo -->
+  <nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <!-- Logo -->
+      <a class="navbar-brand" href="#">Almeron SmartTech</a>
+
+      <!-- Centralização do Menu -->
+      <div class="d-flex justify-content-center flex-grow-1">
+        <ul class="navbar-nav d-flex flex-row">
+          <li class="nav-item mx-3">
+            <a class="nav-link text-white" href="{% url 'IndexView' %}">Home</a>
+          </li>
+          <li class="nav-item mx-3">
+            <a class="nav-link text-white" href="{% url 'calculadora' %}">Calculadora</a>
+          </li>
+          <li class="nav-item mx-3">
+            <a class="nav-link text-white" href="#sobre">Sobre</a>
+          </li>
+          <li class="nav-item mx-3">
+            <a class="nav-link text-white" href="{% url 'CurvaView' %}">Curva</a>
+          </li>
+          <li class="nav-item mx-3">
+            <a class="nav-link text-white" href="{% url 'flexao_normal_simples_retangular_view' %}">Flexão Normal Simples</a>
+          </li>
+
+          <li class="nav-item mx-3">
+            <a class="nav-link text-white" href="{% url 'ContatoView' %}">Contato</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Login/Logout -->
+      <div>
+        <ul class="navbar-nav d-flex flex-row">
+
+          {% if user.is_authenticated %}
+          <p>Seja muito bem-vindo(a) {{ nome_completo }}!</p>
+              <li class="nav-item mx-2"><a  class="nav-link text-white"  href="{% url 'account_logout' %}?next=/">Logout</a></li>
+          {% else %}
+              <li class="nav-item mx-2"><a  class="nav-link text-white"  href="{% url 'account_login' %}">Login</a></li>
+          {% endif %}
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+{% endblock menu %}
+
+
+<!-- Conteúdo Principal -->
+  <main class="flex-grow-1 mt-5 pt-5">
+    <div class="container text-center mt-5">
+      <!--
+      {% if user.is_authenticated %}
+      <p>Seja muito bem-vindo(a) {{ nome_completo }}!</p>
+      {% endif %}
+
+
+      <h1 id="home">Bem-vindo!</h1>
+      <p>Conteúdo principal da página.</p>
+      <section id="sobre" class="mt-5">
+        <h2>Sobre</h2>
+        <p>Informações sobre a empresa.</p>
+      </section>
+      <section id="contato" class="mt-5">
+        <h2>Contato</h2>
+        <p>Informações de contato.</p>
+      </section>
+      -->
+    </div>
+  </main>
+
+
+
+
+
 {% block content %}
 {% endblock content %}
+
+
+{% block footer %}
+
+<!-- Footer -->
+  <footer class="text-center bg-dark text-white py-3 mt-auto fixed-bottom">
+    Almeron SmartTech<sup>®</sup>. Todos os direitos reservados. &copy; {{ ano_atual }}
+  </footer>
+
+{% endblock footer %}
 </body>
 </html>

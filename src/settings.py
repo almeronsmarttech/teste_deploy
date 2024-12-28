@@ -207,7 +207,8 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
-SESSION_COOKIE_AGE = 180 # 3 minutes. "1209600(2 weeks)" by default
+#SESSION_COOKIE_AGE = 180 # 3 minutes. "1209600(2 weeks)" by default
+SESSION_COOKIE_AGE = 7200 # 20 minutes. "1209600(2 weeks)" by default
 SESSION_SAVE_EVERY_REQUEST = True # "False" by default
 
 # CONFIGURAÇÕES DE E-MAIL

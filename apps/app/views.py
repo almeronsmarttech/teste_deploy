@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
+from datetime import datetime
 
 from .calculos import FNSR
 
@@ -12,6 +13,7 @@ from .forms import Contato1Form, FlexaoNormalSimplesRetangularForm
 
 # Create your views here.
 class IndexView(TemplateView):
+    ano_atual = datetime.now().year
     template_name = "app/index.html"
 
     def get_context_data(self, **kwargs):
@@ -27,6 +29,7 @@ class IndexView(TemplateView):
         else:
             context['logado'] = False
             #context['message'] = "Você não está logado."
+        context['ano_atual']=self.ano_atual
         return context
 
 
