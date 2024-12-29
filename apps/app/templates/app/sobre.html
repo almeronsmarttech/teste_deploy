@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Dynamic Content Loading</h1>
+<button hx-get="{% url 'load_content' %}" hx-target="#content">
+    Load Content
+</button>
+<div id="content"></div>
+{% endblock %}

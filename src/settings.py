@@ -10,8 +10,8 @@ load_dotenv(os.path.join(BASE_DIR,'.env'))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = os.environ.get("DEBUG","False") == True
+DEBUG = True
+#DEBUG = os.environ.get("DEBUG","False") == True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # apps externas
+    'django_htmx',
     'django_bootstrap5',
         # Allauth
         # Add these
@@ -50,6 +51,8 @@ MIDDLEWARE = [
     #Allauth
     # This one
     "allauth.account.middleware.AccountMiddleware",
+    # htmx
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 ROOT_URLCONF = 'src.urls'

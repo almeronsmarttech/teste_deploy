@@ -5,6 +5,8 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
+from django.http import HttpResponse
+from django.shortcuts import render
 from datetime import datetime
 
 from .calculos import FNSR
@@ -15,6 +17,19 @@ from .forms import Contato1Form, FlexaoNormalSimplesRetangularForm
 class IndexView(TemplateView):
     ano_atual = datetime.now().year
     template_name = "app/index.html"
+
+    def render_to_response(self, context, **response_kwargs):
+        # Verifica se é uma requisição HTMX
+        if self.request.headers.get('HX-Request'):
+            # Renderiza apenas o conteúdo parcial
+            return self.response_class(
+                request=self.request,
+                template=self.template_name,
+                context=context,
+                content_type='text/html',
+            )
+        # Caso contrário, renderiza o layout completo
+        return super().render_to_response(context, **response_kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -72,3 +87,18 @@ class FlexaoNormalSimplesRetangularView(FormView):
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
+# fonte: https://blog.devgenius.io/django-and-htmx-a-powerful-duo-for-modern-web-development-be537fe280f1
+def sobre(request):
+    return render(request, 'app/sobre.html')
+
+def load_content(request):
+    return HttpResponse("<p>This content was loaded dynamically!</p>")
+
+def contact_form(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        # Process the form (e.g., save to database, send email)
+        return HttpResponse(f"Thanks, {name}! We've received your message.")
+    return render(request, 'app/contact_form.html')
