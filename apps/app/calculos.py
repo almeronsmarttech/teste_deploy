@@ -26,7 +26,7 @@ def FNSR(fck, fyk, es,gamac,gamas,gamaf,bduct,b,h,d, amk):
         alfac = 0.85
         eu = 3.5
         qlim = 0.8 * bduct - 0.35
-    elif fck > 50 and fck < 90:
+    elif fck > 50 and fck <= 90:
         alamb = 0.8 - (fck - 50) / 400
         alfac = 0.85 * (1 - (fck - 50) / 200)
         a = (90 - fck) / 100
