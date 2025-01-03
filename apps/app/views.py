@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
+
 
 from .calculos import FNSR
 
@@ -67,11 +69,11 @@ class Contato1View(FormView):
     def form_invalid(self, form, *args, **kwargs):
         messages.error(self.request, 'Erro ao enviar e-mail')
         return super(Contato1View, self).form_invalid(form, *args, **kwargs)
-
+#@login_required
 class CurvaView(TemplateView):
     template_name = "app/curva.html"
 
-
+#@login_required
 class FlexaoNormalSimplesRetangularView(FormView):
     template_name = 'app/flexao_normal_simples_retangular_form.html'
     form_class = FlexaoNormalSimplesRetangularForm
@@ -94,6 +96,8 @@ def sobre(request):
 def load_content(request):
     return HttpResponse("<p>This content was loaded dynamically!</p>")
 
+# Só está funcionando em funções, não em classes
+@login_required
 def contact_form(request):
     if request.method == 'POST':
         name = request.POST.get('name')
