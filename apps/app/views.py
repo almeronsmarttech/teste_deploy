@@ -83,7 +83,7 @@ class FlexaoNormalSimplesRetangularView(FormView):
         aas = FNSR(form.cleaned_data['fck'],form.cleaned_data['fyk'],form.cleaned_data['es'],form.cleaned_data['gamac'],form.cleaned_data['gamas'],form.cleaned_data['gamaf'],form.cleaned_data['bduct'],form.cleaned_data['b'],form.cleaned_data['h'],form.cleaned_data['d'],form.cleaned_data['amk'])
         # Outros cálculos podem ser adicionados aqui
 
-        return self.render_to_response(self.get_context_data(form=form, dl=dl, aas= aas[0], asl=aas[1]))
+        return self.render_to_response(self.get_context_data(form=form, dl=dl, asmin= aas[0], aas= aas[1], asl=aas[2]))
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))

@@ -100,4 +100,4 @@ def FNSR(fck, fyk, es,gamac,gamas,gamaf,bduct,b,h,d, amk):
     # Área da armadura comprimida: asl
     print("\nÁrea da armadura comprimida")
     print(f"As' adotada: {saida2} cm2")
-    return round(aas,2), round(asl,2)
+    return round(asmin,2), round(aas,2), round(asl,2)
