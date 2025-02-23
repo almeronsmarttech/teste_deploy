@@ -14,3 +14,22 @@ minha-env/
 ENV/
 env.bak/
 venv.bak/
+
+# Arquivos compilados e caches do Python
+__pycache__/
+*.py[cod]
+
+# Ambiente virtual
+venv/
+env/
+
+# Arquivos de log e banco de dados do Django (se estiver usando SQLite)
+*.log
+db.sqlite3
+
+# Configurações do editor (opcional)
+.vscode/
+.idea/
+
+# Outros arquivos temporários do sistema
+.DS_Store
