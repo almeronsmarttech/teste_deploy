@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # apps externas
     'django_htmx',
+    'tailwind',
     'django_bootstrap5',
         # Allauth
         # Add these
@@ -35,8 +36,8 @@ INSTALLED_APPS = [
     'apps.calculadora',
 ]
 
-#ALLOWED_HOSTS = []
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
+ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
+#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
 
 # Application definition
 

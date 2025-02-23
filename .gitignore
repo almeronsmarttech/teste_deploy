@@ -33,3 +33,6 @@ db.sqlite3
 
 # Outros arquivos temporários do sistema
 .DS_Store
+
+
+TESTE_SENHA.txt
