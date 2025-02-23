@@ -1,104 +1,19 @@
+{% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Almeron SmartTech - {% block title %} {% endblock %}</title>
-  <script src="https://unpkg.com/htmx.org@1.6.1"></script>
-</head>
-<body class="d-flex flex-column min-vh-100">
-  {# Load the tag library #}
-  {% load django_bootstrap5 %}
+<html lang="en">
+	<head>
+    <title>Django Tailwind</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
 
-  {# Load CSS and JavaScript #}
-  {% bootstrap_css %}
-  {% bootstrap_javascript %}
-
-  {# Display django.contrib.messages as Bootstrap alerts #}
-  {% bootstrap_messages %}
-
-  {% block menu %}
-  <!-- Menu Fixo -->
-  <nav class="navbar navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-      <!-- Logo -->
-      <a class="navbar-brand" href="#">Almeron SmartTech</a>
-
-      <!-- Centralização do Menu -->
-      <div class="d-flex justify-content-center flex-grow-1">
-        <ul class="navbar-nav d-flex flex-row">
-          <li class="nav-item mx-3">
-            <a class="nav-link text-white" href="{% url 'IndexView' %}"  hx-get="{% url 'IndexView' %}" hx-target="#main-content" hx-swap="innerHTML" >Home</a>
-          </li>
-          <li class="nav-item mx-3">
-            <a class="nav-link text-white" href="{% url 'calculadora' %}">Calculadora1</a>
-          </li>
-          <li class="nav-item mx-3">
-            <a class="nav-link text-white" href="{% url 'sobre' %}">Sobre1</a>
-          </li>
-          <li class="nav-item mx-3">
-            <a class="nav-link text-white" href="{% url 'CurvaView' %}">Curva1</a>
-          </li>
-          <li class="nav-item mx-3">
-            <a class="nav-link text-white" href="{% url 'flexao_normal_simples_retangular_view' %}">Flexão Normal Simples1</a>
-          </li>
-          <li class="nav-item mx-3">
-            <a class="nav-link text-white" href="{% url 'ContatoView' %}">Contato1</a>
-          </li>
-
-          <li class="nav-item mx-3">
-            <a class="nav-link text-white" href="{% url 'contact_form' %}">Contato 11</a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Login/Logout -->
-      <div>
-        <ul class="navbar-nav d-flex flex-row">
-          {% if user.is_authenticated %}
-          <p class="text-white m-0">Seja muito bem-vindo(a) {{ nome_completo }}!</p>
-          <li class="nav-item mx-2">
-            <a class="nav-link text-white" href="{% url 'account_logout' %}?next=/">Logout</a>
-          </li>
-          {% else %}
-          <li class="nav-item mx-2">
-            <a class="nav-link text-white" href="{% url 'account_login' %}">Login</a>
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-  </nav>
-  {% endblock menu %}
-
-  <!-- Espaço para compensar o menu fixo -->
-  <div class="mt-5"></div>
-
-  <!-- Conteúdo Principal -->
-  <main class="flex-grow-1" id="main-content">
-    <div class="container py-4">
-      {% block content %}
-      <h1 id="home">Bem-vindo!</h1>
-      <p>Conteúdo principal da página.</p>
-      <section id="sobre" class="mt-5">
-        <h2>Sobre</h2>
-        <p>Informações sobre a empresa.</p>
-      </section>
-      <section id="contato" class="mt-5">
-        <h2>Contato</h2>
-        <p>Informações de contato.</p>
-      </section>
-      {% endblock content %}
-    </div>
-  </main>
-
-  {% block footer %}
-  <!-- Footer -->
-  <footer class="text-center bg-dark text-white py-3 mt-auto">
-    Almeron SmartTech<sup>®</sup>. Todos os direitos reservados. &copy; {{ ano_atual }}
-  </footer>
-  {% endblock footer %}
-
-  {% bootstrap_javascript %}
-</body>
+	<body class="bg-gray-50 font-serif leading-normal tracking-normal">
+		<div class="container mx-auto">
+			<section class="flex items-center justify-center h-screen">
+				<h1 class="text-5xl">Django + Tailwind = ❤️</h1>
+			</section>
+		</div>
+	</body>
 </html>
