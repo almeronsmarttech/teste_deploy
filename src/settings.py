@@ -23,6 +23,8 @@ INSTALLED_APPS = [
     # apps externas
     'django_htmx',
     'tailwind',
+    'theme',
+    'django_browser_reload',
     'django_bootstrap5',
         # Allauth
         # Add these
@@ -36,8 +38,8 @@ INSTALLED_APPS = [
     'apps.calculadora',
 ]
 
-ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
-#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
+#ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
 
 # Application definition
 
@@ -54,9 +56,18 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     # htmx
     'django_htmx.middleware.HtmxMiddleware',
+    # reload tailwindo
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = 'src.urls'
+
+TAILWIND_APP_NAME = 'theme'
+
+#NPM_BIN_PATH = "/usr/local/bin/npm"
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+
+
 
 TEMPLATES = [
     {
