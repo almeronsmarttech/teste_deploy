@@ -50,7 +50,7 @@
                     <a href="#" hx-get="{% url 'menu2:conteudo_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Menu 2</a>
 
                     {% if user.is_authenticated %}
-                        <button hx-post="{% url 'loginapp:logout' %}" 
+                        <button hx-post="#" 
                                 hx-target="body" 
                                 hx-swap="outerHTML" 
                                 class="bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition">
