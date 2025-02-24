@@ -78,8 +78,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             #BASE_DIR / "templates"
-            #BASE_DIR / 'src' / 'templates',
-            os.path.join(BASE_DIR, "theme", "static"),  # Inclui o caminho do Tailwind
+            BASE_DIR / 'src' / 'templates',
+            #os.path.join(BASE_DIR, "theme", "static"),  # Inclui o caminho do Tailwind
         ],
         'APP_DIRS': True,
         'OPTIONS': {
