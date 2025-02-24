@@ -16,11 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import BaseView, HomePartialView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')), # Allauth
     path("__reload__/", include("django_browser_reload.urls")),
     #path('accounts/login/', include('allauth.urls'), name='login'), # Allauth
-    path('', include('apps.app.urls')),
+    #path('', include('apps.app.urls')),
+    path('', BaseView.as_view(), name='base'),
+    path('home/', HomePartialView.as_view(), name='home_partial'),
+    path('menu1/', include('apps.menu1.urls')),
+    path('menu2/', include('apps.menu2.urls')),
+    path('login/', include('apps.loginapp.urls')),
 ]

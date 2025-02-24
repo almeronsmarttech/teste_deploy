@@ -36,12 +36,15 @@ INSTALLED_APPS = [
     # minhas apps
     'apps.app',
     'apps.calculadora',
+    'apps.menu1',
+    'apps.menu2',
+    'apps.loginapp',
 ]
 
 #ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(",")
-
+#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(",")
+ALLOWED_HOSTS = []
 # Application definition
 
 MIDDLEWARE = [
@@ -74,7 +77,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / "templates"
+            #BASE_DIR / "templates"
+            BASE_DIR / 'src' / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
