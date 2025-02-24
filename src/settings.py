@@ -42,9 +42,9 @@ INSTALLED_APPS = [
 ]
 
 #ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
+#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(",")
-#ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []
 # Application definition
 
 MIDDLEWARE = [
