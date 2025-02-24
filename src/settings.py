@@ -10,8 +10,8 @@ load_dotenv(os.path.join(BASE_DIR,'.env'))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = os.environ.get("DEBUG","False") == True
+DEBUG = True
+#DEBUG = os.environ.get("DEBUG","False") == True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -21,11 +21,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # apps externas
-    'django_htmx',
     'tailwind',
     'theme',
     'django_browser_reload',
-    'django_bootstrap5',
+    'django_htmx',
+    #'django_bootstrap5',
         # Allauth
         # Add these
     'allauth',
@@ -43,8 +43,8 @@ INSTALLED_APPS = [
 
 #ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(",")
-#ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(",")
+ALLOWED_HOSTS = []
 # Application definition
 
 MIDDLEWARE = [
@@ -79,6 +79,7 @@ TEMPLATES = [
         'DIRS': [
             #BASE_DIR / "templates"
             BASE_DIR / 'src' / 'templates',
+            os.path.join(BASE_DIR, "theme", "static"),  # Inclui o caminho do Tailwind
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -205,6 +206,10 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = BASE_DIR / 'staticroot'
 STATICFILES_DIRS = [BASE_DIR / 'static/',]
+
+#TAILWIND_CSS_PATH = "static/css/dist/styles.css"  # Local onde o Tailwind salva o CSS gerado
+#TAILWIND_CSS_PATH = "../theme/static/css/dist"  # Local onde o Tailwind salva o CSS gerado
+TAILWIND_CSS_PATH = "css/dist/styles.css"  # O caminho relativo dentro do diretório static
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
