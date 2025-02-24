@@ -43,8 +43,8 @@ INSTALLED_APPS = [
 
 #ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(",")
-#ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(",")
+ALLOWED_HOSTS = []
 # Application definition
 
 MIDDLEWARE = [
@@ -78,7 +78,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             #BASE_DIR / "templates"
-            BASE_DIR / 'src' / 'templates',
+            #BASE_DIR / 'src' / 'templates',
             os.path.join(BASE_DIR, "theme", "static"),  # Inclui o caminho do Tailwind
         ],
         'APP_DIRS': True,

@@ -3,7 +3,8 @@ from django.utils.timezone import now
 
 
 class BaseView(TemplateView):
-    template_name = 'src/base.html'
+    #template_name = 'src/base.html'
+    template_name = 'base.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -12,4 +13,5 @@ class BaseView(TemplateView):
 
 
 class HomePartialView(TemplateView):
-    template_name = 'src/home.html'
+    #template_name = 'src/home.html'
+    template_name = 'home.html'
