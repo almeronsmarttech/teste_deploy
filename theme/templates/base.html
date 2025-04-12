@@ -1,68 +1,27 @@
-{% load tailwind_tags %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token">
+
     <title>Almeron SmartTech</title>
+
+    <!-- Scripts -->
     <script src="https://unpkg.com/htmx.org"></script>
-    {% tailwind_css %}
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+
+
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal flex flex-col min-h-screen overflow-x-hidden">
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-blue-900 via-blue-700 to-blue-500 text-white py-4 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center px-6">
-            <!-- Logo -->
-            <div class="text-2xl font-extrabold bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
-                Almeron SmartTech
-            </div>
 
-            <!-- Menu Desktop -->
-            <nav class="hidden md:flex items-center space-x-6">
-                <a href="#" hx-get="{% url 'home_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Home</a>
-                <a href="#" hx-get="{% url 'menu1:conteudo_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Menu 1</a>
-                <a href="#" hx-get="{% url 'menu2:conteudo_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Menu 2</a>
-
-                {% if user.is_authenticated %}
-                    <button hx-post="#" 
-                            hx-target="body" 
-                            hx-swap="outerHTML" 
-                            class="bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition">
-                        Logout
-                    </button>
-                {% else %}
-                    <a href="#" hx-get="{% url 'loginapp:form_partial' %}" hx-target="#conteudo" class="bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-800 transition">Login</a>
-                {% endif %}
-            </nav>
-
-            <!-- Menu Mobile -->
-            <div class="md:hidden relative">
-                <button id="menu-button" class="text-white focus:outline-none">
-                    <!-- Ícone Hambúrguer -->
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>
-                </button>
-
-                <nav id="mobile-menu" class="hidden flex flex-col space-y-2 bg-blue-900 text-white absolute right-0 top-full w-48 p-4 rounded-lg shadow-lg">
-                    <a href="#" hx-get="{% url 'home_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Home</a>
-                    <a href="#" hx-get="{% url 'menu1:conteudo_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Menu 1</a>
-                    <a href="#" hx-get="{% url 'menu2:conteudo_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Menu 2</a>
-
-                    {% if user.is_authenticated %}
-                        <button hx-post="#" 
-                                hx-target="body" 
-                                hx-swap="outerHTML" 
-                                class="bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition">
-                            Logout
-                        </button>
-                    {% else %}
-                        <a href="#" hx-get="{% url 'loginapp:form_partial' %}" hx-target="#conteudo" class="bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-800 transition text-center">Login</a>
-                    {% endif %}
-                </nav>
-            </div>
-        </div>
-    </header>
+    <!-- Header Atualizável -->
+    <div id="header" hx-get="{% url 'header_partial' %}" hx-trigger="load" hx-swap="outerHTML">
+    {% include "partials/header.html" %}
+</div>
 
     <!-- Main Content -->
     <main class="container mx-auto mt-6 px-6 flex-grow">
@@ -80,11 +39,5 @@
         </div>
     </footer>
 
-    <script>
-        document.getElementById('menu-button').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
-        });
-    </script>
 </body>
 </html>

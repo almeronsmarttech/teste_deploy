@@ -10,8 +10,8 @@ load_dotenv(os.path.join(BASE_DIR,'.env'))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = os.environ.get("DEBUG","False") == True
+DEBUG = True
+#DEBUG = os.environ.get("DEBUG","False") == True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     # apps externas
     'tailwind',
     'theme',
-    'django_browser_reload',
+    #'django_browser_reload',
     'django_htmx',
     #'django_bootstrap5',
         # Allauth
@@ -34,11 +34,12 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     # minhas apps
-    'apps.app',
+    #'apps.app',
     'apps.calculadora',
     'apps.menu1',
     'apps.menu2',
     'apps.loginapp',
+    'apps.laje_metodo_araujo',
 ]
 
 if DEBUG:
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    "src.middleware_personalizado.CsrfMiddleware",  # 🚀 Middleware de CSRF
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -66,6 +68,14 @@ MIDDLEWARE = [
     # reload tailwindo
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8000",  # ✅ Adicione sua URL local
+    "http://localhost:8000",
+    "https://almeronsmarttech.com.br",  # ✅ Adicione o domínio do site
+    "https://www.almeronsmarttech.com.br",
+]
+
 
 ROOT_URLCONF = 'src.urls'
 
@@ -81,9 +91,11 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             #BASE_DIR / "templates"
-            BASE_DIR / 'src' / 'templates',
+            BASE_DIR / 'theme' / 'templates',
             #os.path.join(BASE_DIR, "theme", "static"),  # Inclui o caminho do Tailwind
         ],
+        #'DIRS': [BASE_DIR / "src/templates", BASE_DIR / "theme/templates"],
+        #'DIRS': [BASE_DIR / "theme/templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,6 +106,7 @@ TEMPLATES = [
                 # AllAuth
                 # This one
                'django.template.context_processors.request',
+                #"django.template.context_processors.csrf", # ✅ Adiciona CSRF automaticamente
             ],
         },
     },
@@ -119,8 +132,7 @@ SOCIALACCOUNT_PROVIDERS = {
    }
 }
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+
 
 # AllAuth settings
 SITE_ID = 1
@@ -128,7 +140,7 @@ SITE_ID = 1
 SITE_URL = 'almeronsmarttech.com.br'
 #USE_X_FORWARDED_HOST = True
 #SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
+"""
 ACCOUNT_LOGIN_REDIRECT_URL ="/"
 ACCOUNT_LOGOUT_REDIRECT_URL ="/"
 ACCOUNT_EMAIL_REQUIRED = True
@@ -136,6 +148,36 @@ ACCOUNT_EMAIL_VERIFICATION = False
 ACCOUNT_PASSWORD_MIN_LENGTH = 8
 ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'
 ACCOUNT_LOGOUT_ON_GET = True
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = "none"
+LOGIN_REDIRECT_URL = "/home/"  # Onde o usuário deve ser enviado após login bem-sucedido
+#LOGIN_REDIRECT_URL = '/'
+#LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = "/home/"
+ACCOUNT_LOGOUT_REDIRECT_URL = "/login/form/"  # Para onde o usuário vai após logout
+ACCOUNT_SIGNUP_REDIRECT_URL = "/login/form/"  # Ajuste para onde o usuário vai após cadastro
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5  # Se estiver definido, pode bloquear tentativas excessivas
+"""
+
+
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_VERIFICATION = "none"  # Ou 'mandatory' se quiser confirmar e-mail antes de logar
+#ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5  # Se estiver definido, pode bloquear tentativas excessivas
+ACCOUNT_RATE_LIMITS = {
+    "login_failed": "5/300s",  # No máximo 5 tentativas a cada 300 segundos (5 minutos)
+}
+# 🚀 REDIRECIONAMENTO APÓS LOGIN BEM-SUCEDIDO
+LOGIN_REDIRECT_URL = "/home/"
+ACCOUNT_LOGOUT_REDIRECT_URL = "/login/form/"
+LOGOUT_REDIRECT_URL = '/'  # Página inicial após logout
+
 
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = False
@@ -227,7 +269,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CAMPOS NECESSÁRIOS PARA A CUSTOMIZAÇÃO DOS USUÁRIOS
 
 # Set custom user model as the active one
-AUTH_USER_MODEL = 'app.MyCustomUser'
+AUTH_USER_MODEL = 'loginapp.MyCustomUser'
 
 # Configure AllAuth username related management, because we are
 # using the e-mail as username. See:
@@ -237,7 +279,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+#ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
 
 #SESSION_COOKIE_AGE = 180 # 3 minutes. "1209600(2 weeks)" by default
 SESSION_COOKIE_AGE = 7200 # 20 minutes. "1209600(2 weeks)" by default

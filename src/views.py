@@ -1,6 +1,7 @@
 from django.views.generic import TemplateView
 from django.utils.timezone import now
-
+from django.shortcuts import render
+from django.views import View
 
 class BaseView(TemplateView):
     #template_name = 'src/base.html'
@@ -15,3 +16,4 @@ class BaseView(TemplateView):
 class HomePartialView(TemplateView):
     #template_name = 'src/home.html'
     template_name = 'home.html'
+

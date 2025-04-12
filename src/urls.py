@@ -15,9 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 from .views import BaseView, HomePartialView
 
+from apps.loginapp.views import header_partial, FormPartialView, UserCreationView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')), # Allauth
@@ -26,7 +28,11 @@ urlpatterns = [
     #path('', include('apps.app.urls')),
     path('', BaseView.as_view(), name='base'),
     path('home/', HomePartialView.as_view(), name='home_partial'),
-    path('menu1/', include('apps.menu1.urls')),
+    path('laje/', include('apps.laje_metodo_araujo.urls')),
     path('menu2/', include('apps.menu2.urls')),
     path('login/', include('apps.loginapp.urls')),
+    path('logout/', LogoutView.as_view(),name='logout'),
+    path('header/', header_partial, name='header_partial'),
+    path('form/', FormPartialView.as_view(), name='form_partial'),
+    path('create-account/', UserCreationView.as_view(), name='create_account'),
 ]
