@@ -1,0 +1,17 @@
+<div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
+    <h1 class="text-2xl font-bold text-gray-800 text-center">Login</h1>
+
+    <!-- Formulário de Login -->
+    <form hx-post="{% url 'send_code' %}" hx-target="#login-container" hx-swap="outerHTML">
+    {% csrf_token %}
+    <label for="email">E-mail</label>
+    <input type="email" name="email" required>
+    <button type="submit">Receber Código</button>
+</form>
+
+    <!-- Links de recuperação e criação de conta -->
+    <div class="flex justify-between mt-4">
+        <a href="#" class="text-sm text-gray-600 hover:text-gray-800">Esqueci minha senha</a>
+        <a href="#" class="text-sm text-gray-600 hover:text-gray-800">Criar uma conta nova</a>
+    </div>
+</div>

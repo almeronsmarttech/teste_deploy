@@ -1,0 +1,39 @@
+<nav id="mobile-menu"
+     class="flex flex-col space-y-2 bg-blue-900 text-white absolute right-0 top-full w-48 p-4 rounded-lg shadow-lg"
+     hx-get="{% url 'toggle_menu' %}"
+     hx-trigger="click from:#menu-button"
+     hx-target="#mobile-menu"
+     hx-swap="outerHTML">
+
+    <a href="#" hx-get="{% url 'home_partial' %}" hx-target="#conteudo" hx-swap="innerHTML"
+       hx-trigger="click"
+       hx-on:htmx:afterRequest="document.getElementById('mobile-menu').classList.add('hidden')"
+       class="hover:underline">Home</a>
+
+    <a href="#" hx-get="{% url 'menu1:conteudo_partial' %}" hx-target="#conteudo" hx-swap="innerHTML"
+       hx-trigger="click"
+       hx-on:htmx:afterRequest="document.getElementById('mobile-menu').classList.add('hidden')"
+       class="hover:underline">Menu 1</a>
+
+    <a href="#" hx-get="{% url 'menu2:conteudo_partial' %}" hx-target="#conteudo" hx-swap="innerHTML"
+       hx-trigger="click"
+       hx-on:htmx:afterRequest="document.getElementById('mobile-menu').classList.add('hidden')"
+       class="hover:underline">Menu 2</a>
+
+    {% if user.is_authenticated %}
+        <button hx-post="{% url 'loginapp:logout' %}"
+                hx-target="body" 
+                hx-swap="outerHTML"
+                hx-on:htmx:afterRequest="document.getElementById('mobile-menu').classList.add('hidden')"
+                class="bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition">
+            Logout
+        </button>
+    {% else %}
+        <a href="#" hx-get="{% url 'loginapp:form_partial' %}" hx-target="#conteudo" hx-swap="innerHTML"
+           hx-trigger="click"
+           hx-on:htmx:afterRequest="document.getElementById('mobile-menu').classList.add('hidden')"
+           class="bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-800 transition text-center">
+            Login
+        </a>
+    {% endif %}
+</nav>

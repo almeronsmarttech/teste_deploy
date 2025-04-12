@@ -1,0 +1,40 @@
+{% load static %}
+
+<div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
+    <h1 class="text-2xl font-bold text-gray-800 text-center">Verificação</h1>
+    <p class="text-gray-600 text-center">Insira o código enviado para o seu e-mail.</p>
+
+    {% if error %}
+        <p class="text-red-600 text-center mt-2">{{ error }}</p>
+    {% endif %}
+
+    <!-- Formulário de Verificação -->
+    <form hx-post="{% url 'loginapp:verify_code' %}"
+          hx-target="#verify-result"
+          hx-swap="innerHTML"
+          class="mt-4">
+        {% csrf_token %}
+        <input type="hidden" name="email" value="{{ email }}">
+        <div class="mb-4">
+            <label for="verification_code" class="block text-gray-700 font-medium">Código</label>
+            <input type="text" name="verification_code" id="verification_code" required
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <button type="submit" class="w-full bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800">
+            Verificar
+        </button>
+    </form>
+
+    <!-- Botão para Reenviar Código -->
+    <div class="text-center mt-4">
+        <button hx-post="{% url 'loginapp:send_verification_code' %}"
+                hx-target="#verify-result"
+                hx-swap="innerHTML"
+                class="text-blue-600 hover:underline">
+            Reenviar Código
+        </button>
+    </div>
+
+    <!-- Container para exibir mensagens -->
+    <div id="verify-result" class="mt-4 text-center"></div>
+</div>

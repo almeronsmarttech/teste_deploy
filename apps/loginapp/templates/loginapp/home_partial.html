@@ -1,0 +1,12 @@
+<div id="conteudo">
+    <h1 class="text-2xl font-bold text-gray-800 text-center">Bem-vindo!</h1>
+    <p class="text-center text-gray-600">Agora você está logado como <strong>{{ user.email }}</strong></p>
+
+    <!-- Botão de logout -->
+    <div class="text-center mt-4">
+        <a href="{% url 'account_logout' %}"
+           class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+            Logout
+        </a>
+    </div>
+</div>
