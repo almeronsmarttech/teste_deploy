@@ -81,6 +81,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.almeronsmarttech.com.br",
 ]
 
+# Comentário para tentar atualizar
 
 ROOT_URLCONF = 'src.urls'
 
