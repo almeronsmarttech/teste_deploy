@@ -1,0 +1,62 @@
+<div class="bg-gray-50 p-6 rounded shadow-md border max-w-5xl">
+  <h2 class="text-xl font-bold text-gray-800 mb-4">Resultados</h2>
+
+  <!-- Parâmetros -->
+  <div class="mb-4">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-2">🔷 Parâmetros (adimensionais)</h3>
+    <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+      <div><strong>λ:</strong> {{ resultados.parametros.0 }}</div>
+      <div><strong>wc:</strong> {{ resultados.parametros.1 }}</div>
+      <div><strong>mx:</strong> {{ resultados.parametros.4 }}</div>
+      <div><strong>mxe:</strong> {{ resultados.parametros.2 }}</div>
+      <div><strong>my:</strong> {{ resultados.parametros.5 }}</div>
+      <div><strong>mye:</strong> {{ resultados.parametros.3 }}</div>
+      <div><strong>mxy:</strong> {{ resultados.parametros.6 }}</div>
+      <div><strong>rx:</strong> {{ resultados.parametros.8 }}</div>
+      <div><strong>rxe:</strong> {{ resultados.parametros.7 }}</div>
+      <div><strong>ry:</strong> {{ resultados.parametros.10 }}</div>
+      <div><strong>rye:</strong> {{ resultados.parametros.9 }}</div>
+      <div><strong>βx:</strong> {{ resultados.parametros.11 }}</div>
+      <div><strong>βy:</strong> {{ resultados.parametros.12 }}</div>
+    </div>
+  </div>
+
+  <!-- Reações de Apoio -->
+  <div class="mb-4">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-2">⚡ Reações de Apoio (kN/m)</h3>
+    <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+      <div><strong>Rx:</strong> {{ resultados.reacoes.0 }}</div>
+      <div><strong>Rxe:</strong> {{ resultados.reacoes.1 }}</div>
+      <div><strong>Ry:</strong> {{ resultados.reacoes.2 }}</div>
+      <div><strong>Rye:</strong> {{ resultados.reacoes.3 }}</div>
+    </div>
+  </div>
+
+  <!-- Momentos Fletores -->
+  <div class="mb-4">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-2">⚖️ Momentos Fletores (kN.m/m)</h3>
+    <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+      <div><strong>Mx:</strong> {{ resultados.momentos.0 }}</div>
+      <div><strong>Mxe:</strong> {{ resultados.momentos.1 }}</div>
+      <div><strong>My:</strong> {{ resultados.momentos.2 }}</div>
+      <div><strong>Mye:</strong> {{ resultados.momentos.3 }}</div>
+    </div>
+  </div>
+
+  <!-- ELS -->
+  <div>
+    <div class="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-2 border-b pb-1">
+      <span>📈 Estado Limite de Serviço - Deformação Excessiva (ELS-DEF)</span>
+    </div>
+    <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+      <div><strong>Flecha Inicial:</strong> {{ resultados.flecha_inicial }} cm</div>
+      <div class="flex items-center gap-1">
+        <strong>Flecha Final:</strong> {{ resultados.flecha_final }} cm
+        {% if resultados.flecha_final <= resultados.flecha_limite %}
+          <span class="text-green-600 text-xl">✔</span>
+        {% endif %}
+      </div>
+      <div><strong>Flecha Limite:</strong> {{ resultados.flecha_limite }} cm</div>
+    </div>
+  </div>
+</div>

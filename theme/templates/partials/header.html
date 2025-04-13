@@ -1,53 +1,54 @@
 <nav class="bg-gradient-to-r from-blue-900 via-blue-700 to-blue-500 text-white py-4 shadow-lg">
-    <div class="container mx-auto flex justify-between items-center px-6">
-        <!-- Logo -->
-        <div class="text-2xl font-extrabold bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
-            Almeron SmartTech
-        </div>
-
-        <!-- Menu Desktop -->
-        <nav class="hidden md:flex items-center space-x-6">
-            <a href="#" hx-get="{% url 'home_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Home</a>
-            <a href="#" hx-get="{% url 'laje' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Lajes</a>
-            <a href="#" hx-get="{% url 'menu2:conteudo_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Menu 2</a>
-
-            {% if user.is_authenticated %}
-                <!-- Logout: Cor Vermelha -->
-                <a href="{% url 'logout' %}"
-                   hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                   class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition" >
-                    Logout
-                </a>
-            {% else %}
-                <!-- Login: Cor Azul -->
-                <a href="#" hx-get="{% url 'form_partial' %}" hx-target="#conteudo" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-800 transition">
-                    Login
-                </a>
-            {% endif %}
-        </nav>
-
-        <!-- Menu Mobile -->
-        <div class="md:hidden relative">
-            <button id="menu-button" class="text-white focus:outline-none">
-                <!-- Ícone Hambúrguer -->
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
-            </button>
-
-            <nav id="mobile-menu" class="hidden flex flex-col space-y-2 bg-blue-900 text-white absolute right-0 top-full w-48 p-4 rounded-lg shadow-lg">
-                <a href="#" hx-get="{% url 'home_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Home</a>
-                <a href="#" hx-get="{% url 'laje' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Lajes</a>
-                <a href="#" hx-get="{% url 'menu2:conteudo_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Menu 2</a>
-
-                {% if user.is_authenticated %}
-                    <a href="{% url 'logout' %}" class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition">
-                        Logout
-                    </a>
-                {% else %}
-                    <a href="#" hx-get="{% url 'form_partial' %}" hx-target="#conteudo" class="bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-800 transition text-center">Login</a>
-                {% endif %}
-            </nav>
-        </div>
+  <div class="container mx-auto flex justify-between items-center px-6">
+    <!-- Logo -->
+    <div class="text-2xl font-extrabold bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
+      Almeron SmartTech
     </div>
+
+    <!-- Menu Desktop -->
+    <nav class="hidden md:flex items-center space-x-6">
+      <a href="#" hx-get="{% url 'home_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Home</a>
+      <a href="#" hx-get="{% url 'laje' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Lajes</a>
+      <a href="#" hx-get="{% url 'menu2:conteudo_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Menu 2</a>
+
+      {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+           class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition">
+          Logout
+        </a>
+      {% else %}
+        <a href="#" hx-get="{% url 'form_partial' %}" hx-target="#conteudo" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+           class="bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-800 transition">
+          Login
+        </a>
+      {% endif %}
+    </nav>
+
+    <!-- Menu Mobile -->
+    <div class="md:hidden relative">
+      <button id="menu-button" type="button" class="text-white focus:outline-none">
+        <!-- Ícone Hambúrguer -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </button>
+
+      <nav id="mobile-menu" class="hidden flex flex-col space-y-2 bg-blue-900 text-white absolute right-0 top-full w-48 p-4 rounded-lg shadow-lg z-50">
+        <a href="#" hx-get="{% url 'home_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Home</a>
+        <a href="#" hx-get="{% url 'laje' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Lajes</a>
+        <a href="#" hx-get="{% url 'menu2:conteudo_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Menu 2</a>
+
+        {% if user.is_authenticated %}
+          <a href="{% url 'logout' %}" class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition">
+            Logout
+          </a>
+        {% else %}
+          <a href="#" hx-get="{% url 'form_partial' %}" hx-target="#conteudo"
+             class="bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-800 transition text-center">
+            Login
+          </a>
+        {% endif %}
+      </nav>
+    </div>
+  </div>
 </nav>

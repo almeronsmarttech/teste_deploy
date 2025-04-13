@@ -1,43 +1,98 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Almeron SmartTech</title>
 
-    <title>Almeron SmartTech</title>
+  <!-- Estilos -->
+  <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
 
-    <!-- Scripts -->
-    <script src="https://unpkg.com/htmx.org"></script>
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+  <!-- Scripts -->
+  <script src="https://unpkg.com/htmx.org"></script>
 
-
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal flex flex-col min-h-screen overflow-x-hidden">
 
-    <!-- Header Atualizável -->
-    <div id="header" hx-get="{% url 'header_partial' %}" hx-trigger="load" hx-swap="outerHTML">
+  <!-- Header carregado via HTMX -->
+  <div id="header" hx-get="{% url 'header_partial' %}" hx-trigger="load" hx-swap="outerHTML">
     {% include "partials/header.html" %}
-</div>
+  </div>
 
-    <!-- Main Content -->
-    <main class="container mx-auto mt-6 px-6 flex-grow">
-        <div id="conteudo" class="bg-white shadow-md rounded-lg p-6"
-             hx-get="{% url 'home_partial' %}"
-             hx-trigger="load"
-             hx-swap="innerHTML">
-        </div>
-    </main>
+  <!-- Conteúdo principal -->
+  <main class="container mx-auto mt-6 px-6 flex-grow">
+    <div id="conteudo" class="bg-white shadow-md rounded-lg p-6"
+         hx-get="{% url 'home_partial' %}"
+         hx-trigger="load"
+         hx-swap="innerHTML">
+    </div>
+  </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-300 py-4 mt-6">
-        <div class="container mx-auto text-center">
-            Todos os direitos reservados - {{ ano }}
-        </div>
-    </footer>
+  <!-- Rodapé -->
+  <footer class="bg-gray-900 text-gray-300 py-4 mt-6">
+    <div class="container mx-auto text-center">
+      Todos os direitos reservados - {{ ano }}
+    </div>
+  </footer>
 
+  <!-- Scripts customizados -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("📦 Documento carregado");
+
+      // Executa sempre que o header for carregado via HTMX
+      document.body.addEventListener("htmx:afterSwap", (e) => {
+        if (e.detail.target.id === "header") {
+          console.log("✅ Header carregado via HTMX");
+          configurarMenuHamburguer();
+        }
+      });
+
+      configurarMenuHamburguer();
+
+      // Atualiza MathJax após HTMX
+      document.body.addEventListener("htmx:afterSettle", () => {
+        if (window.MathJax && MathJax.typesetPromise) {
+          console.log("🔄 Reprocessando fórmulas MathJax");
+          MathJax.typesetPromise();
+        }
+      });
+
+      function configurarMenuHamburguer() {
+        const button = document.querySelector("#menu-button");
+        const menu = document.querySelector("#mobile-menu");
+
+        if (!button || !menu) {
+          console.log("❌ Botão ou menu mobile não encontrados");
+          return;
+        }
+
+        console.log("✅ Menu hambúrguer encontrado");
+
+        button.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log("🍔 Clique no botão do menu");
+
+          menu.classList.toggle("hidden");
+
+          const estado = menu.classList.contains("hidden") ? "escondido" : "visível";
+          console.log(`📦 Menu agora está: ${estado}`);
+        });
+
+        // Fecha o menu ao clicar em qualquer item
+        menu.querySelectorAll("a").forEach(link => {
+          link.addEventListener("click", () => {
+            menu.classList.add("hidden");
+            console.log("🔚 Menu fechado após clique em link");
+          });
+        });
+      }
+    });
+  </script>
 </body>
 </html>

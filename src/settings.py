@@ -10,8 +10,8 @@ load_dotenv(os.path.join(BASE_DIR,'.env'))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = os.environ.get("DEBUG","False") == True
+DEBUG = True
+#DEBUG = os.environ.get("DEBUG","False") == True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -22,6 +22,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # apps externas
     'tailwind',
+    "crispy_forms",
+    "crispy_tailwind",
     'theme',
     #'django_browser_reload',
     'django_htmx',
@@ -45,8 +47,8 @@ INSTALLED_APPS = [
 if DEBUG:
     INSTALLED_APPS += ["django_browser_reload"]
 
-ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
-#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
+#ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(",")
 #ALLOWED_HOSTS = []
 # Application definition
@@ -68,6 +70,9 @@ MIDDLEWARE = [
     # reload tailwindo
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = "tailwind"
 
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",  # ✅ Adicione sua URL local

@@ -24,6 +24,7 @@ class Laje:
         print(f"W0: {self.__W0:.2f} cm3")
         self._w0 = 0 # flecha inicial m
         self.__wf = 0  # flecha inicial m
+        self.__wlim = min(self._lx, self._ly)/250
         self.__alfa_f = 0 #coeficiente multiplicador de flechas para consideração de fluência (cargas de longa duração)
         self.__Mdmin = 0.8 * self.__W0 * self.__concreto.fctk_sup
         #print(f"Md_min: {self.__Mdmin:.2f} kN.cm/m")
@@ -50,6 +51,8 @@ class Laje:
         self.__wf = self.__alfa_f * self._w0
         print(f"Flecha inicial: {self._w0*100:.4f} cm\tcoef. flecha diferida (alfa f): {self.__alfa_f:.2f}\tflecha final: {self.__wf*100:.4f} cm")
         return round(self.__wf*100,4)
+    def calcular_flecha_limite(self):
+        return round(self.__wlim*100,4) # retorna flecha limite em cm
 
     def calcular_xsi_t(self, tempo_carregamento):
         if tempo_carregamento <= 70:

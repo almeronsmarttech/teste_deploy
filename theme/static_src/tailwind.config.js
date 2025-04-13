@@ -33,14 +33,27 @@ module.exports = {
         /* JS 1: Ignore any JavaScript in node_modules folder. */
         // '!../../**/node_modules',
         /* JS 2: Process all JavaScript files in the project. */
-        // '../../**/*.js',
+        '../../**/*.js',
 
         /**
          * Python: If you use Tailwind CSS classes in Python, uncomment the following line
          * and make sure the pattern below matches your project structure.
          */
         // '../../**/*.py'
+
     ],
+  safelist: [
+    'hidden',
+    'block',
+    'flex',
+    'absolute',
+    'top-full',
+    'right-0',
+    'w-48',
+    'p-4',
+    'rounded-lg',
+    'shadow-lg',
+  ],
     theme: {
         extend: {},
     },
