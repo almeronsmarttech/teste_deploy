@@ -7,16 +7,7 @@ class LajeUnidirecionalForm(forms.Form):
     g = forms.FloatField(label="g (kN/m²)", min_value=0)
     q = forms.FloatField(label="q (kN/m²)", min_value=0)
 
-    tipo_laje = forms.ChoiceField(
-        label="Tipo da Laje (1–4)",
-        choices=[
-            (1, "Tipo 1 – Boros simplesmente apoiados"),
-            (2, "Tipo 2 – Um bordo apoiado e outro engastado"),
-            (3, "Tipo 3 – Dois bordos engastados"),
-            (4, "Tipo 4 – Um bordo engastado e outro em balanço"),
-        ],
-        initial=1
-    )
+    tipo_laje = forms.IntegerField(label="Tipo da Laje (1–4)", min_value=1, max_value=4)
 
     gama_f = forms.FloatField(label="γᶠ", initial=1.4)
     gama_c = forms.FloatField(label="γᶜ", initial=1.4)

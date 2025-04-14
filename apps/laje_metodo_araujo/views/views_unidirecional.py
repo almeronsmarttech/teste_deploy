@@ -25,6 +25,8 @@ class FormularioUnidirecionalView(FormView):
             Barra(aco_CA60, diametro=5.0),
             Barra(aco_CA50, diametro=6.3),
             Barra(aco_CA50, diametro=8.0),
+            Barra(aco_CA50, diametro=12.5),
+            Barra(aco_CA50, diametro=20.0)
         ]
 
         laje = LajeUnidirecional(
@@ -33,8 +35,7 @@ class FormularioUnidirecionalView(FormView):
             h=dados["h"],
             g=dados["g"],
             q=dados["q"],
-            #tipo_laje=dados["tipo_laje"],
-            tipo_laje=1,
+            tipo_laje=dados["tipo_laje"],
             concreto=concreto,
             aco=aco_CA50,
             bitolas=bitolas,
@@ -42,15 +43,16 @@ class FormularioUnidirecionalView(FormView):
             # ... adicione os outros parâmetros conforme necessário
         )
 
-
-
         resultados = {
-            "parametros": laje.calcular_reacoes(),
             "reacoes": laje.calcular_reacoes_apoio(),
             "momentos": laje.calcular_momentos_fletores(),
             "flecha_inicial": laje.calcular_flecha_inicial(),
             "flecha_final": laje.calcular_flecha_final(alfa_f=2.5),
             "flecha_limite": laje.calcular_flecha_limite(),
+            "calcular_armaduras": laje.calcular_armaduras(),
+            "detalhar_armadura_positiva": laje.detalhar_armaduras()[0],
+            "detalhar_armadura_negativa": laje.detalhar_armaduras()[1],
+            "detalhar_armadura_secundaria": laje.detalhar_armaduras()[2],
         }
 
         return render(self.request, "laje_metodo_araujo/unidirecional/resultados_parciais.html", {"resultados": resultados, "form": form})

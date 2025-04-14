@@ -33,6 +33,7 @@ class Laje:
         #self._As_min = max(self.__ro_min * self.__b * self.__h,self.calcular_As(self.__Mdmin))
         #self._As_min = self.calcular_As(self.__Mdmin/100)
         self._As_min = self.__ro_min * self.__b * self.__h
+        self._Ase_min_bidirecional = 0
         self.__bitola_minima = 5.0 / 10 # em cm
         self.__bitola_maxima = self.__h / 8 # em cm
         self.__bitolas = bitolas
@@ -51,6 +52,7 @@ class Laje:
         self.__wf = self.__alfa_f * self._w0
         print(f"Flecha inicial: {self._w0*100:.4f} cm\tcoef. flecha diferida (alfa f): {self.__alfa_f:.2f}\tflecha final: {self.__wf*100:.4f} cm")
         return round(self.__wf*100,4)
+
     def calcular_flecha_limite(self):
         return round(self.__wlim*100,4) # retorna flecha limite em cm
 
@@ -61,6 +63,7 @@ class Laje:
             return 2
 
     def calcular_As(self, momento, gama_f = 1.4):
+        momento = abs(momento)
         mi = (gama_f * momento * 100) / (self.__b*self.__d*self.__d*0.85*self.__concreto.fcd)
         print(f"gama_f: {gama_f}\tmomento: {momento:.2f} kN.m\tb: {self.__b}\td: {self.__d:.2f} cm\tfcd: {self.__concreto.fcd:.4f} kN/cm2")
         xsi = (1-np.sqrt(1-2*mi))/0.8
@@ -111,20 +114,27 @@ class Laje:
 
     def detalhamento_armaduras(self, As_necessario, cobertura = 1, tamanho = 1):
         self.__bitolas_possiveis = []
+        lista_resposta =[]
         for bitola in self.__bitolas:
-            if self.__bitola_minima <= bitola.diametro < self.__bitola_maxima:
+            if self.__bitola_minima <= bitola.diametro <= self.__bitola_maxima:
                 self.__bitolas_possiveis.append(bitola)
         for bitola in self.__bitolas_possiveis:
             num_barras = As_necessario/ bitola.area_aco
             espacamento = int(np.floor(100 / num_barras))
-            if espacamento < self.__espacamento_minimo:
-                break
+
             if espacamento > self.__espacamento_maximo:
                 espacamento = self.__espacamento_maximo
                 #recalcula número de barras
                 num_barras = 100 / espacamento
-            num_barras = int(np.ceil(num_barras * cobertura))
-            print(f"{num_barras} Φ de {bitola.diametro*10:.1f} mm a cada {espacamento} cm.\tAs efetivo: {num_barras/cobertura*bitola.area_aco:.2f} cm2/m.")
+            if espacamento > self.__espacamento_minimo:
+                num_barras = int(np.ceil(num_barras * cobertura))
+                print(
+                    f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm a cada {espacamento} cm.\tAs efetivo: {num_barras / cobertura * bitola.area_aco:.2f} cm2/m.")
+                lista_resposta.append(
+                    f"Φ de {bitola.diametro * 10:.1f} mm a cada {espacamento} cm. (As efetivo: {num_barras / cobertura * bitola.area_aco:.2f} cm2/m) -  N = {num_barras}    L = {tamanho:.2f} m ")
+
+        return lista_resposta
+
 
 class LajeUnidirecional(Laje):
     def __init__(self, lx: float, ly: float, h: int, g: float, q: float, tipo_laje: int, concreto: Concreto, aco:Aco, bitolas, psi2=0.4):
@@ -137,49 +147,17 @@ class LajeUnidirecional(Laje):
         self.__k = 0
         print(f"Laje Unidirecional tipo: {self._tipo_laje}")
 
-    def calcular_reacoes(self):
-        if self._tipo_laje == 1:
-            self.__k = 5
-        elif self._tipo_laje == 2:
-            self.__k = 2
-
-        elif self._tipo_laje == 3:
-            self.__k = 1
-
-        elif self._tipo_laje == 4:
-            self.__k = 48
-        else:
-            print("Tipo de laje não encontrada")
-        # if self._tipo_laje == 1:
-        #     self.__k = 5
-        # elif self._tipo_laje == 2:
-        #     self.__k = 2
-        # elif self._tipo_laje == 3:
-        #     self.__k = 1
-        # elif self._tipo_laje == 4:
-        #     self.__k = 48
-        # else:
-        #     raise ValueError("Tipo de laje inválido. Escolha um número de 1 a 4.")
-
-        #self.__lambda, self.__wc, self.__mxe, self.__mye, self.__mx, self.__my, self.__mxy, self.__rxe, self.__rx, self.__rye, self.__ry, self.__beta_x, self.__beta_y = teste.values()
-        return self.__k
-
-
     def calcular_reacoes_apoio(self):
         print("Calculo de reacoes de apoio")
         if self._tipo_laje == 1:
              self.__R = self._p * self._lx / 2.0
-
         elif self._tipo_laje == 2:
              self.__R = 3 * self._p * self._lx / 8.0
              self.__Re = 5 * self._p * self._lx / 8.0
-
         elif self._tipo_laje == 3:
              self.__Re = self._p * self._lx / 2.0
-
         elif self._tipo_laje == 4:
              self.__Re = self._p * self._lx
-
         else:
             print("Tipo de laje não encontrada")
 
@@ -207,7 +185,7 @@ class LajeUnidirecional(Laje):
     def calcular_armaduras(self):
         if self.__M > 0:
             self.__As_calculada = self.calcular_As(self.__M)
-        if self.__Me > 0:
+        if abs(self.__Me) > 0:
             self.__Ase_calculada = self.calcular_As(self.__Me)
         as_sec1 =0.2 * self.__As_calculada
         as_sec2 = 0.9
@@ -217,25 +195,43 @@ class LajeUnidirecional(Laje):
         print(f"As_sec1: {as_sec1:.2f} cm2/m\tAs_sec2: {as_sec2:.2f} cm2/m\tas_sec3: {as_sec3:.2f} cm2/m")
         if self.__As_calculada > 0:
             self.__As_adotada = max(self.__As_calculada, self._As_min)
+
         if self.__Ase_calculada > 0:
+            self._Ase_min_bidirecional = self._As_min
             self.__Ase_adotada = max(self.__Ase_calculada, self._As_min)
         print(f"Armadura Adotada:\nAs+: {self.__As_adotada:.2f} cm2/m\tAs-: {self.__Ase_adotada:.2f} cm2/m\tAs sec: {self.__As_secundaria:.2f} cm2/m")
-        return round(self.__As_adotada, 2), round(self.__Ase_adotada, 2), round(self.__As_secundaria, 2)
+        return round(self.__As_calculada, 2), round(self.__Ase_calculada, 2), round(self._As_min, 2), round(self._Ase_min_bidirecional, 2), round(self.__As_secundaria, 2), round(self.__As_adotada, 2),round(self.__Ase_adotada, 2), round(self.__As_secundaria, 2)
+
     def detalhar_armaduras(self):
+        lista = [[],[],[]]
         if self.__As_adotada > 0:
             print("Armadura Positiva Principal (As+):")
-            self.detalhamento_armaduras(self.__As_adotada, self._ly)
+            for arranjo in self.detalhamento_armaduras(self.__As_adotada, self._ly, self._lx):
+                lista[0].append(arranjo)
         if self.__Ase_adotada > 0:
-            print("As Negativa (As-):")
-            self.detalhamento_armaduras(self.__Ase_adotada, self._ly)
+            lista.append("As Negativa (As-):")
+            for arranjo in self.detalhamento_armaduras(self.__Ase_adotada, self._ly, self._lx):
+                lista[1].append(arranjo)
         if self.__As_secundaria > 0:
             print("As Secundária:")
-            self.detalhamento_armaduras(self.__As_secundaria, self._lx)
+            for arranjo in self.detalhamento_armaduras(self.__As_secundaria, self._lx, self._ly):
+                lista[2].append(arranjo)
+        return lista
 
     def calcular_flecha_inicial(self):
         print("Calculo da flecha inicial")
-
+        if self._tipo_laje == 1:
+            self.__k = 5
+        elif self._tipo_laje == 2:
+            self.__k = 2
+        elif self._tipo_laje == 3:
+            self.__k = 1
+        elif self._tipo_laje == 4:
+            self.__k = 48
+        else:
+            print("Tipo de laje não encontrada")
         self._w0 = self.__k * self._p_serv * self._lx ** 4 / (384 * self._D)
+        return round(self._w0,4)
 
 class LajeBidirecional(Laje):
     def __init__(self, lx: float, ly: float, h: int, g: float, q: float, tipo_laje: int, concreto: Concreto, aco:Aco, bitolas, psi2=0.4):
@@ -304,12 +300,14 @@ class LajeBidirecional(Laje):
         self.__As_minima_negativa = self._As_min
         print(f"Armaduras Mínimas:\nAs+_min: {self.__As_minima_positiva:.2f}\tAs-_min: {self.__As_minima_negativa:.2f}")
         self.__Asx_adotada = max(self.__Asx_calculada, self.__As_minima_positiva)
-        self.__Asxe_adotada = max(self.__Asxe_calculada, self.__As_minima_negativa)
+        if self.__Mxe != 0:
+            self.__Asxe_adotada = max(self.__Asxe_calculada, self.__As_minima_negativa)
         self.__Asy_adotada = max(self.__Asy_calculada, self.__As_minima_positiva)
-        self.__Asye_adotada = max(self.__Asye_calculada, self.__As_minima_negativa)
+        if self.__Mye != 0:
+            self.__Asye_adotada = max(self.__Asye_calculada, self.__As_minima_negativa)
         print(
             f"Armaduras Adotadas:\nAs_x: {self.__Asx_adotada:.2f}\tAs_xe: {self.__Asxe_adotada:.2f}\tAs_y: {self.__Asy_adotada:.2f}\tAs_ye: {self.__Asye_adotada:.2f}")
-        return round(self.__Asx_adotada,2), round(self.__Asxe_adotada,2),round(self.__Asy_adotada,2), round(self.__Asye_adotada,2)
+        return round(self.__Asx_calculada,2), round(self.__Asxe_calculada,2),round(self.__Asy_calculada,2), round(self.__Asye_calculada,2),round(self.__As_minima_positiva,2), round(self.__As_minima_negativa,2),round(self.__As_minima_positiva,2), round(self.__As_minima_negativa,2),round(self.__Asx_adotada,2), round(self.__Asxe_adotada,2),round(self.__Asy_adotada,2), round(self.__Asye_adotada,2)
 
     def imprimir_parametros(self):
         print(f"{self.__lambda, self.__wc, self.__mxe, self.__mye,self.__mx, self.__my, self.__mxy, self.__rxe, self.__rx, self.__rye, self.__ry, self.__beta_x, self.__beta_y}")
@@ -319,18 +317,29 @@ class LajeBidirecional(Laje):
         return round(self._w0*100,4)
 
     def detalhar_armaduras(self):
+        lista = [[], [], [], []]
         if self.__Asx_adotada > 0:
-            print("Armadura Positiva X (Asx+):")
-            self.detalhamento_armaduras(self.__Asx_adotada)
+            print(f"Armadura Positiva X (Asx+):{self.__Asx_adotada}")
+            for arranjo in self.detalhamento_armaduras(self.__Asx_adotada, self._ly, self._lx):
+                lista[0].append(arranjo)
+            print(f"Lista 00 :{lista[0]}")
         if self.__Asxe_adotada > 0:
-            print("As Negativa X (Asx-):")
-            self.detalhamento_armaduras(self.__Asxe_adotada)
+            print(f"As Negativa X (Asx-): {self.__Asxe_adotada}")
+            for arranjo in self.detalhamento_armaduras(self.__Asxe_adotada, self._ly, self._lx):
+                lista[1].append(arranjo)
+            print(f"Lista 01 :{lista[1]}")
         if self.__Asy_adotada > 0:
-            print("Armadura Positiva X (Asy+):")
-            self.detalhamento_armaduras(self.__Asy_adotada)
+            print(f"Armadura Positiva Y (Asy+): {self.__Asy_adotada}")
+            for arranjo in self.detalhamento_armaduras(self.__Asy_adotada, self._lx, self._ly):
+                lista[2].append(arranjo)
+            print(f"Lista 02 :{lista[2]}")
         if self.__Asye_adotada > 0:
-            print("As Negativa X (Asy-):")
-            self.detalhamento_armaduras(self.__Asye_adotada)
+            print(f"As Negativa Y (Asy-): {self.__Asye_adotada}")
+            for arranjo in self.detalhamento_armaduras(self.__Asye_adotada, self._lx, self._ly):
+                lista[3].append(arranjo)
+            print(f"Lista 03 :{lista[3]}")
+        print("Fim DETALHAR ARMADURAS BIDIRECIONAIS")
+        return lista
 
 
 

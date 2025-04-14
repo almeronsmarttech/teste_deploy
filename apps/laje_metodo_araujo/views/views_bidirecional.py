@@ -7,7 +7,7 @@ from ..forms.forms_bidirecional import LajeForm
 
 
 class LajeFormView(FormView):
-    template_name = "laje_metodo_araujo/laje_formulario.html"
+    template_name = "laje_metodo_araujo/bidirecional/laje_formulario.html"
     form_class = LajeForm
 
     def form_valid(self, form):
@@ -25,6 +25,8 @@ class LajeFormView(FormView):
             Barra(aco_CA60, diametro=5.0),
             Barra(aco_CA50, diametro=6.3),
             Barra(aco_CA50, diametro=8.0),
+            Barra(aco_CA50, diametro=12.5),
+            Barra(aco_CA50, diametro=20.0)
         ]
 
         laje = LajeBidirecional(
@@ -48,10 +50,13 @@ class LajeFormView(FormView):
             "flecha_final": laje.calcular_flecha_final(alfa_f=2.5),
             "flecha_limite": laje.calcular_flecha_limite(),
             "calcular_armaduras": laje.calcular_armaduras(),
-            "detalhar_armaduras": laje.detalhar_armaduras()
+            "detalhar_armadura_positiva_x": laje.detalhar_armaduras()[0],
+            "detalhar_armadura_negativa_x": laje.detalhar_armaduras()[1],
+            "detalhar_armadura_positiva_y": laje.detalhar_armaduras()[2],
+            "detalhar_armadura_negativa_y": laje.detalhar_armaduras()[3]
         }
 
-        return render(self.request, "laje_metodo_araujo/resultados_parciais.html", {"resultados": resultados})
+        return render(self.request, "laje_metodo_araujo/bidirecional/resultados_parciais.html", {"resultados": resultados})
 
 class AtualizarPView(View):
     def post(self, request):

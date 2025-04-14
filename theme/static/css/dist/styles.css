@@ -3693,6 +3693,9 @@
   .pl-0\.5 {
     padding-left: calc(var(--spacing) * 0.5);
   }
+  .pl-6 {
+    padding-left: calc(var(--spacing) * 6);
+  }
   .text-center {
     text-align: center;
   }
