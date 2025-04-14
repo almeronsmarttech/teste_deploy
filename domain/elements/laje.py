@@ -137,6 +137,34 @@ class LajeUnidirecional(Laje):
         self.__k = 0
         print(f"Laje Unidirecional tipo: {self._tipo_laje}")
 
+    def calcular_reacoes(self):
+        if self._tipo_laje == 1:
+            self.__k = 5
+        elif self._tipo_laje == 2:
+            self.__k = 2
+
+        elif self._tipo_laje == 3:
+            self.__k = 1
+
+        elif self._tipo_laje == 4:
+            self.__k = 48
+        else:
+            print("Tipo de laje não encontrada")
+        # if self._tipo_laje == 1:
+        #     self.__k = 5
+        # elif self._tipo_laje == 2:
+        #     self.__k = 2
+        # elif self._tipo_laje == 3:
+        #     self.__k = 1
+        # elif self._tipo_laje == 4:
+        #     self.__k = 48
+        # else:
+        #     raise ValueError("Tipo de laje inválido. Escolha um número de 1 a 4.")
+
+        #self.__lambda, self.__wc, self.__mxe, self.__mye, self.__mx, self.__my, self.__mxy, self.__rxe, self.__rx, self.__rye, self.__ry, self.__beta_x, self.__beta_y = teste.values()
+        return self.__k
+
+
     def calcular_reacoes_apoio(self):
         print("Calculo de reacoes de apoio")
         if self._tipo_laje == 1:
@@ -156,6 +184,7 @@ class LajeUnidirecional(Laje):
             print("Tipo de laje não encontrada")
 
         print(f"Rx : {self.__R:.2f} kN/m\tRxe : {self.__Re:.2f} kN/m")
+        return round(self.__R, 2), round(self.__Re, 2)
 
     def calcular_momentos_fletores(self):
         print("Calculo dos momentos de fletores")
@@ -173,6 +202,7 @@ class LajeUnidirecional(Laje):
             print("Tipo de laje não encontrada")
 
         print(f"Mx : {self.__M:.2f} kN.m/m\tMxe : {self.__Me:.2f} kN.m/m")
+        return round(self.__M,2),round(self.__Me,2)
 
     def calcular_armaduras(self):
         if self.__M > 0:
@@ -190,7 +220,7 @@ class LajeUnidirecional(Laje):
         if self.__Ase_calculada > 0:
             self.__Ase_adotada = max(self.__Ase_calculada, self._As_min)
         print(f"Armadura Adotada:\nAs+: {self.__As_adotada:.2f} cm2/m\tAs-: {self.__Ase_adotada:.2f} cm2/m\tAs sec: {self.__As_secundaria:.2f} cm2/m")
-
+        return round(self.__As_adotada, 2), round(self.__Ase_adotada, 2), round(self.__As_secundaria, 2)
     def detalhar_armaduras(self):
         if self.__As_adotada > 0:
             print("Armadura Positiva Principal (As+):")
@@ -204,16 +234,7 @@ class LajeUnidirecional(Laje):
 
     def calcular_flecha_inicial(self):
         print("Calculo da flecha inicial")
-        if self._tipo_laje == 1:
-            self.__k = 5
-        elif self._tipo_laje == 2:
-            self.__k = 2
-        elif self._tipo_laje == 3:
-            self.__k = 1
-        elif self._tipo_laje == 4:
-            self.__k = 48
-        else:
-            print("Tipo de laje não encontrada")
+
         self._w0 = self.__k * self._p_serv * self._lx ** 4 / (384 * self._D)
 
 class LajeBidirecional(Laje):

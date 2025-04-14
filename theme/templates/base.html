@@ -42,22 +42,16 @@
   <!-- Scripts customizados -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      console.log("📦 Documento carregado");
-
-      // Executa sempre que o header for carregado via HTMX
       document.body.addEventListener("htmx:afterSwap", (e) => {
         if (e.detail.target.id === "header") {
-          console.log("✅ Header carregado via HTMX");
           configurarMenuHamburguer();
         }
       });
 
       configurarMenuHamburguer();
 
-      // Atualiza MathJax após HTMX
       document.body.addEventListener("htmx:afterSettle", () => {
         if (window.MathJax && MathJax.typesetPromise) {
-          console.log("🔄 Reprocessando fórmulas MathJax");
           MathJax.typesetPromise();
         }
       });
@@ -66,29 +60,17 @@
         const button = document.querySelector("#menu-button");
         const menu = document.querySelector("#mobile-menu");
 
-        if (!button || !menu) {
-          console.log("❌ Botão ou menu mobile não encontrados");
-          return;
-        }
-
-        console.log("✅ Menu hambúrguer encontrado");
+        if (!button || !menu) return;
 
         button.addEventListener("click", (e) => {
           e.preventDefault();
           e.stopPropagation();
-          console.log("🍔 Clique no botão do menu");
-
           menu.classList.toggle("hidden");
-
-          const estado = menu.classList.contains("hidden") ? "escondido" : "visível";
-          console.log(`📦 Menu agora está: ${estado}`);
         });
 
-        // Fecha o menu ao clicar em qualquer item
         menu.querySelectorAll("a").forEach(link => {
           link.addEventListener("click", () => {
             menu.classList.add("hidden");
-            console.log("🔚 Menu fechado após clique em link");
           });
         });
       }

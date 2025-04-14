@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 #from .models import CustomUser, Role
-# apps/loginapp/forms.py
+# apps/loginapp/forms_temp.py
 from django import forms
 from django.contrib.auth.models import User
 

@@ -1,0 +1,51 @@
+<div class="bg-gray-50 p-6 rounded shadow-md border max-w-5xl">
+  <h2 class="text-xl font-bold text-gray-800 mb-4">Resultados - Laje Unidirecional</h2>
+
+  <!-- Parâmetros (se existirem) -->
+  {% if resultados.parametros %}
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-2">📐 Parâmetros</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-2 text-sm text-gray-700">
+      {% for nome, valor in resultados.parametros.items %}
+        <div><strong>{{ nome }}:</strong> {{ valor }}</div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Reações -->
+  {% if resultados.reacoes %}
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-2">🏋️ Reações de Apoio (kN/m)</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-gray-700">
+      {% for nome, valor in resultados.reacoes.items %}
+        <div><strong>{{ nome }}:</strong> {{ valor }}</div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Momentos -->
+  {% if resultados.momentos %}
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-2">⚖️ Momentos Fletores (kN.m/m)</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-gray-700">
+      {% for nome, valor in resultados.momentos.items %}
+        <div><strong>{{ nome }}:</strong> {{ valor }}</div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Flechas -->
+  {% if resultados.flechas %}
+  <div>
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-2">📊 Flechas (cm)</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-gray-700">
+      <div><strong>Inicial:</strong> {{ resultados.flechas.inicial }}</div>
+      <div><strong>Final:</strong> {{ resultados.flechas.final }}</div>
+      <div><strong>Limite:</strong> {{ resultados.flechas.limite }}</div>
+    </div>
+  </div>
+  {% endif %}
+</div>
