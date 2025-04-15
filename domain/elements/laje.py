@@ -196,7 +196,7 @@ class LajeUnidirecional(Laje):
             self.__Ase_calculada = self.calcular_As(self.__Me)
         as_sec1 =0.2 * self.__As_calculada
         as_sec2 = 0.9
-        as_sec3 = 0.63 * self._As_min
+        as_sec3 = 0.5 * self._As_min
         self.__As_secundaria = max(as_sec1, as_sec2, as_sec3)
         print(f"Armadura Calculada:\nAs+: {self.__As_calculada:.2f} cm2/m\tAs-: {self.__Ase_calculada:.2f} cm2/m\tAs_min: {self._As_min:.2f} cm2/m")
         print(f"As_sec1: {as_sec1:.2f} cm2/m\tAs_sec2: {as_sec2:.2f} cm2/m\tas_sec3: {as_sec3:.2f} cm2/m")
@@ -239,7 +239,7 @@ class LajeUnidirecional(Laje):
         else:
             print("Tipo de laje não encontrada")
         self._w0 = self.__k * self._p_serv * self._lx ** 4 / (384 * self._D)
-        return round(self._w0,4)
+        return round(self._w0*100,4)
 
 class LajeBidirecional(Laje):
     def __init__(self, lx: float, ly: float, h: int, g: float, q: float, tipo_laje: int, concreto: Concreto, aco:Aco, bitolas, psi2=0.4):
