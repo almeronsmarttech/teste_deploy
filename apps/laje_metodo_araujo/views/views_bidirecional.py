@@ -39,7 +39,7 @@ class LajeFormView(FormView):
             concreto=concreto,
             aco=aco_CA50,
             bitolas=bitolas,
-            psi2=["psi2"]
+            psi2=dados["psi2"]
         )
 
         resultados = {
