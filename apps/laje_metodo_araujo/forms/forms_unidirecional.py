@@ -1,4 +1,6 @@
 from django import forms
+from django.utils.safestring import mark_safe
+
 
 class LajeUnidirecionalForm(forms.Form):
     lx = forms.IntegerField(label="lₓ (cm)", min_value=1)
@@ -9,20 +11,20 @@ class LajeUnidirecionalForm(forms.Form):
 
     tipo_laje = forms.IntegerField(label="Tipo da Laje (1–4)", min_value=1, max_value=4)
 
-    gama_f = forms.FloatField(label="γᶠ", initial=1.4)
-    gama_c = forms.FloatField(label="γᶜ", initial=1.4)
-    gama_s = forms.FloatField(label="γˢ", initial=1.15)
+    gama_f = forms.FloatField(label=mark_safe("γ<sub>F</sub>"), initial=1.4)
+    gama_c = forms.FloatField(label=mark_safe("γ<sub>c</sub>"), initial=1.4)
+    gama_s = forms.FloatField(label=mark_safe("γ<sub>s</sub>"), initial=1.15)
 
     fck = forms.ChoiceField(
         label="fck (MPa)",
         choices=[(i, str(i)) for i in range(20, 95, 5)],
         initial=25
     )
-    fyk = forms.ChoiceField(
-        label="fyk (MPa)",
-        choices=[(500, "500"), (600, "600")],
-        initial=500
-    )
+    #fyk = forms.ChoiceField(
+    #    label="fyk (MPa)",
+    #    choices=[(500, "500"), (600, "600")],
+    #    initial=500
+    #)
 
     p = forms.FloatField(label="p = g + q", required=False)
     psi2 = forms.FloatField(label="ψ₂", min_value=0, max_value=1, initial=0.3)

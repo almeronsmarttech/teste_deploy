@@ -7,24 +7,26 @@ class Laje:
     def __init__(self, lx: float, ly: float, h: int, g: float, q: float, tipo_laje: int, concreto: Concreto, aco:Aco, bitolas, psi2=0.4, cobrimento = 2.5):
         self._lx = lx
         self._ly = ly
-        self.__h = h
+        self._h = h
         self.__b = 100
-        self.__d = self.__h - cobrimento
+        self.__d = self._h - cobrimento
         self.__g = g
         self.__q = q
         self._p = self.__g + self.__q
-        self._p_serv =self.__g + 0.3* self.__q
         self.__psi2 = psi2
+        self._p_serv =self.__g + self.__psi2 * self.__q
+        #print(f"psi2: {self.__psi2}")
+        #self._p_serv = self.__g + 0.3 * self.__q
         self._tipo_laje = tipo_laje
         self.__concreto = concreto
         self.__aco = aco
-        self._D = (self.__concreto.Ecs *self.__h/10*self.__h/10*self.__h/10)/(12*(1-(self.__concreto.nu*self.__concreto.nu))) #  rigidez
+        self._D = (self.__concreto.Ecs * self._h / 10 * self._h / 10 * self._h / 10) / (12 * (1 - (self.__concreto.nu * self.__concreto.nu))) #  rigidez
         print(f"D: {int(self._D)} kN")
-        self.__W0 = self.__b * self.__h * self.__h/6  # módulo resistente cm3
+        self.__W0 = self.__b * self._h * self._h / 6  # módulo resistente cm3
         print(f"W0: {self.__W0:.2f} cm3")
         self._w0 = 0 # flecha inicial m
         self.__wf = 0  # flecha inicial m
-        self.__wlim = min(self._lx, self._ly)/250
+        self._wlim = min(self._lx, self._ly) / 250
         self.__alfa_f = 0 #coeficiente multiplicador de flechas para consideração de fluência (cargas de longa duração)
         self.__Mdmin = 0.8 * self.__W0 * self.__concreto.fctk_sup
         #print(f"Md_min: {self.__Mdmin:.2f} kN.cm/m")
@@ -32,14 +34,14 @@ class Laje:
         print(f"ro_min: {self.__ro_min}")
         #self._As_min = max(self.__ro_min * self.__b * self.__h,self.calcular_As(self.__Mdmin))
         #self._As_min = self.calcular_As(self.__Mdmin/100)
-        self._As_min = self.__ro_min * self.__b * self.__h
+        self._As_min = self.__ro_min * self.__b * self._h
         self._Ase_min_bidirecional = 0
         self.__bitola_minima = 5.0 / 10 # em cm
-        self.__bitola_maxima = self.__h / 8 # em cm
+        self.__bitola_maxima = self._h / 8 # em cm
         self.__bitolas = bitolas
         self.__bitolas_possiveis = []
         self.__espacamento_minimo = 8.0
-        self.__espacamento_maximo = min(20.0, self.__h *2)
+        self.__espacamento_maximo = min(20.0, self._h * 2)
 
     def calcular_flecha_final(self, alfa_f=0, tempo_inicial_carregamento = 0, tempo_final_carregamento=71, ro_linha=0):
         # para carregamentos com 70 meses ou mais, xsi(t)=2
@@ -54,7 +56,7 @@ class Laje:
         return round(self.__wf*100,4)
 
     def calcular_flecha_limite(self):
-        return round(self.__wlim*100,4) # retorna flecha limite em cm
+        return round(self._wlim * 100, 4) # retorna flecha limite em cm
 
     def calcular_xsi_t(self, tempo_carregamento):
         if tempo_carregamento <= 70:
@@ -145,6 +147,7 @@ class LajeUnidirecional(Laje):
         self.__As_calculada, self.__Ase_calculada, self.__As_secundaria = 0, 0, 0
         self.__As_adotada, self.__Ase_adotada = 0, 0
         self.__k = 0
+        self.__gama_n = 1.0
         print(f"Laje Unidirecional tipo: {self._tipo_laje}")
 
     def calcular_reacoes_apoio(self):
@@ -176,6 +179,10 @@ class LajeUnidirecional(Laje):
             self.__Me = - self._p * self._lx * self._lx / 12
         elif self._tipo_laje == 4:
             self.__Me = - self._p * self._lx * self._lx / 2
+            if self._h < 19:
+                self.__gama_n = 1.95 - .05*self._h
+                self.__Me *= self.__gama_n
+                print(f"Momento negativo majorado por gama n = {self.__gama_n:.2f}")
         else:
             print("Tipo de laje não encontrada")
 
@@ -228,6 +235,7 @@ class LajeUnidirecional(Laje):
             self.__k = 1
         elif self._tipo_laje == 4:
             self.__k = 48
+            self._wlim = min(self._lx, self._ly) / 125
         else:
             print("Tipo de laje não encontrada")
         self._w0 = self.__k * self._p_serv * self._lx ** 4 / (384 * self._D)
@@ -244,6 +252,7 @@ class LajeBidirecional(Laje):
         self.__Asx_calculada, self.__Asxe_calculada, self.__Asy_calculada, self.__Asye_calculada = 0,0,0,0
         self.__As_minima_positiva, self.__As_minima_negativa = 0, 0
         self.__Asx_adotada, self.__Asxe_adotada, self.__Asy_adotada, self.__Asye_adotada = 0, 0, 0, 0
+
 
     def calcular_reacoes(self):
         lx_ly = self._lx / self._ly

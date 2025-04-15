@@ -1,18 +1,18 @@
 {% load crispy_forms_tags %}
-<h1 class="text-2xl font-bold text-gray-800 mb-6">Laje Unidirecional</h1>
+<h1 class="text-2xl font-bold text-gray-800 mb-6">Laje Bidirecional</h1>
 
 <form
   method="POST"
-  hx-post="{% url 'laje_unidirecional' %}"
+  hx-post="{% url 'laje' %}"
   hx-target="#resultados"
   hx-swap="innerHTML"
   class="space-y-6 bg-white p-6 rounded-lg shadow-md w-full"
 >
   {% csrf_token %}
 
-  <!-- Grupo 1: Geometria e Vinculações -->
+  <!-- Grupo 1: Geometria -->
   <div class="bg-gray-50 p-4 rounded border">
-    <h2 class="text-lg font-semibold text-gray-700 mb-2">Geometria e Vinculações</h2>
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">🔹 Geometria e Vinculações</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
       {{ form.lx|as_crispy_field }}
       {{ form.ly|as_crispy_field }}
@@ -21,9 +21,9 @@
     </div>
   </div>
 
-  <!-- Grupo 2: Coeficientes Ponderadores -->
+  <!-- Grupo 2: Coeficientes -->
   <div class="bg-gray-50 p-4 rounded border">
-    <h2 class="text-lg font-semibold text-gray-700 mb-2">Coeficientes Ponderadores</h2>
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">⚖️ Coeficientes Ponderadores</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {{ form.gama_f|as_crispy_field }}
       {{ form.gama_c|as_crispy_field }}
@@ -33,10 +33,9 @@
 
   <!-- Grupo 3: Materiais e Cargas -->
   <div class="bg-gray-50 p-4 rounded border">
-    <h2 class="text-lg font-semibold text-gray-700 mb-2">Materiais e Cargas</h2>
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">🧱 Materiais e Cargas</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
       {{ form.fck|as_crispy_field }}
-
 
       <div
         hx-post="{% url 'atualizar_p' %}"
@@ -59,8 +58,6 @@
       <div id="campo-p" class="bg-blue-50 rounded">
         {{ form.p|as_crispy_field }}
       </div>
-
-      {{ form.psi2|as_crispy_field }}
     </div>
   </div>
 

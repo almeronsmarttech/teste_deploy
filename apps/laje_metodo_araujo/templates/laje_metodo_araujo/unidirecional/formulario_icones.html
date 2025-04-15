@@ -12,7 +12,7 @@
 
   <!-- Grupo 1: Geometria e Vinculações -->
   <div class="bg-gray-50 p-4 rounded border">
-    <h2 class="text-lg font-semibold text-gray-700 mb-2">Geometria e Vinculações</h2>
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">🔹 Geometria e Vinculações</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
       {{ form.lx|as_crispy_field }}
       {{ form.ly|as_crispy_field }}
@@ -23,7 +23,7 @@
 
   <!-- Grupo 2: Coeficientes Ponderadores -->
   <div class="bg-gray-50 p-4 rounded border">
-    <h2 class="text-lg font-semibold text-gray-700 mb-2">Coeficientes Ponderadores</h2>
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">⚖️ Coeficientes Ponderadores</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {{ form.gama_f|as_crispy_field }}
       {{ form.gama_c|as_crispy_field }}
@@ -33,10 +33,10 @@
 
   <!-- Grupo 3: Materiais e Cargas -->
   <div class="bg-gray-50 p-4 rounded border">
-    <h2 class="text-lg font-semibold text-gray-700 mb-2">Materiais e Cargas</h2>
+    <h2 class="text-lg font-semibold text-gray-700 mb-2">🧱 Materiais e Cargas</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
       {{ form.fck|as_crispy_field }}
-
+      {{ form.fyk|as_crispy_field }}
 
       <div
         hx-post="{% url 'atualizar_p' %}"

@@ -1,0 +1,140 @@
+<div class="bg-gray-50 p-6 rounded shadow-md border max-w-5xl">
+  <h2 class="text-xl font-bold text-gray-800 mb-4">Resultados</h2>
+
+  <!-- Parâmetros -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">🔷 Parâmetros (adimensionais)</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 text-sm text-gray-800">
+      <div class="me-6"><strong>λ:</strong> {{ resultados.parametros.0 }}</div>
+      <div class="me-6"><strong>wc:</strong> {{ resultados.parametros.1 }}</div>
+      <div class="me-6"><strong>mx:</strong> {{ resultados.parametros.4 }}</div>
+      <div class="me-6"><strong>mxe:</strong> {{ resultados.parametros.2 }}</div>
+      <div class="me-6"><strong>my:</strong> {{ resultados.parametros.5 }}</div>
+      <div class="me-6"><strong>mye:</strong> {{ resultados.parametros.3 }}</div>
+      <div class="me-6"><strong>mxy:</strong> {{ resultados.parametros.6 }}</div>
+      <div class="me-6"><strong>rx:</strong> {{ resultados.parametros.8 }}</div>
+      <div class="me-6"><strong>rxe:</strong> {{ resultados.parametros.7 }}</div>
+      <div class="me-6"><strong>ry:</strong> {{ resultados.parametros.10 }}</div>
+      <div class="me-6"><strong>rye:</strong> {{ resultados.parametros.9 }}</div>
+      <div class="me-6"><strong>βx:</strong> {{ resultados.parametros.11 }}</div>
+      <div class="me-6"><strong>βy:</strong> {{ resultados.parametros.12 }}</div>
+    </div>
+  </div>
+
+  <!-- Reações de Apoio -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">⚡ Reações de Apoio (kN/m)</h3>
+    <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+      <div class="me-6"><strong>Rx:</strong> {{ resultados.reacoes.0 }}</div>
+      <div class="me-6"><strong>Rxe:</strong> {{ resultados.reacoes.1 }}</div>
+      <div class="me-6"><strong>Ry:</strong> {{ resultados.reacoes.2 }}</div>
+      <div class="me-6"><strong>Rye:</strong> {{ resultados.reacoes.3 }}</div>
+    </div>
+  </div>
+
+  <!-- Momentos Fletores -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">⚖️ Momentos Fletores (kN.m/m)</h3>
+    <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+      <div class="me-6"><strong>Mx:</strong> {{ resultados.momentos.0 }}</div>
+      <div class="me-6"><strong>Mxe:</strong> {{ resultados.momentos.1 }}</div>
+      <div class="me-6"><strong>My:</strong> {{ resultados.momentos.2 }}</div>
+      <div class="me-6"><strong>Mye:</strong> {{ resultados.momentos.3 }}</div>
+    </div>
+  </div>
+
+  <!-- ELS -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">📈 Deformações Excessivas (ELS-DEF)</h3>
+    <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+      <div class="me-6"><strong>Flecha Inicial:</strong> {{ resultados.flecha_inicial }} cm</div>
+      <div class="me-6 flex items-center">
+        <strong>Flecha Final:</strong>
+        <span class="ml-2">{{ resultados.flecha_final }} cm</span>
+        {% if resultados.flecha_final <= resultados.flecha_limite %}
+          <span class="text-green-600 text-base ml-2">✔</span>
+        {% else %}
+          <span class="text-red-600 text-base ml-2">✘</span>
+        {% endif %}
+      </div>
+      <div class="me-6"><strong>Flecha Limite:</strong> {{ resultados.flecha_limite }} cm</div>
+    </div>
+  </div>
+
+  <!-- Armaduras -->
+ <div class="mb-6">
+  <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">🔩 Área de Aço (cm²/m)</h3>
+  <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+
+    <div class="w-full font-semibold text-gray-600 mt-2">As Calculada:</div>
+    <div class="me-6"><strong>Asx:</strong> {{ resultados.calcular_armaduras.0 }} cm²</div>
+    {% if resultados.momentos.1 != 0 %}
+      <div class="me-6"><strong>Asxe:</strong> {{ resultados.calcular_armaduras.1 }} cm²</div>
+    {% endif %}
+    <div class="me-6"><strong>Asy:</strong> {{ resultados.calcular_armaduras.2 }} cm²</div>
+    {% if resultados.momentos.3 != 0 %}
+      <div class="me-6"><strong>Asye:</strong> {{ resultados.calcular_armaduras.3 }} cm²</div>
+    {% endif %}
+
+
+    <div class="w-full font-semibold text-gray-600 mt-4">As Mínima:</div>
+    <div class="me-6"><strong>Asx:</strong> {{ resultados.calcular_armaduras.4 }} cm²</div>
+    {% if resultados.momentos.1 != 0 %}
+      <div class="me-6"><strong>Asxe:</strong> {{ resultados.calcular_armaduras.5 }} cm²</div>
+    {% endif %}
+    <div class="me-6"><strong>Asy:</strong> {{ resultados.calcular_armaduras.6 }} cm²</div>
+    {% if resultados.momentos.3 != 0 %}
+      <div class="me-6"><strong>Asye:</strong> {{ resultados.calcular_armaduras.7 }} cm²</div>
+    {% endif %}
+
+    <div class="w-full font-semibold text-gray-600 mt-4">As Adotada:</div>
+    <div class="me-6"><strong>Asx:</strong> {{ resultados.calcular_armaduras.8 }} cm²</div>
+    {% if resultados.momentos.1 != 0 %}
+      <div class="me-6"><strong>Asxe:</strong> {{ resultados.calcular_armaduras.9 }} cm²</div>
+    {% endif %}
+    <div class="me-6"><strong>Asy:</strong> {{ resultados.calcular_armaduras.10 }} cm²</div>
+    {% if resultados.momentos.3 != 0 %}
+      <div class="me-6"><strong>Asye:</strong> {{ resultados.calcular_armaduras.11 }} cm²</div>
+    {% endif %}
+
+  </div>
+</div>
+
+
+  <!-- Detalhamento -->
+  <div class="mb-2">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">📐 Detalhamento (Arranjos)</h3>
+      <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+
+    <div class="w-full font-semibold text-gray-600 mt-2">Armadura Positiva X (Asx+):</div>
+    <ul class="list-disc pl-6 text-sm text-gray-800 space-y-1">
+      {% for linha in resultados.detalhar_armadura_positiva_x %}
+        <li>{{ linha }}</li>
+      {% endfor %}
+    </ul>
+    {% if resultados.momentos.1 != 0 %}
+      <div class="w-full font-semibold text-gray-600 mt-4">As Negativa X (Asx-):</div>
+      <ul class="list-disc pl-6 text-sm text-gray-800 space-y-1">
+        {% for linha in resultados.detalhar_armadura_negativa_x %}
+          <li>{{ linha }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+        <div class="w-full font-semibold text-gray-600 mt-2">Armadura Positiva Y (Asy+):</div>
+    <ul class="list-disc pl-6 text-sm text-gray-800 space-y-1">
+      {% for linha in resultados.detalhar_armadura_positiva_y %}
+        <li>{{ linha }}</li>
+      {% endfor %}
+    </ul>
+    {% if resultados.momentos.3 != 0 %}
+      <div class="w-full font-semibold text-gray-600 mt-4">As Negativa Y (Asy-):</div>
+      <ul class="list-disc pl-6 text-sm text-gray-800 space-y-1">
+        {% for linha in resultados.detalhar_armadura_negativa_y %}
+          <li>{{ linha }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+  </div>
+</div>

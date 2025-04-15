@@ -39,8 +39,8 @@ class FormularioUnidirecionalView(FormView):
             concreto=concreto,
             aco=aco_CA50,
             bitolas=bitolas,
-            psi2=["psi2"]
-            # ... adicione os outros parâmetros conforme necessário
+            psi2=dados["psi2"],
+
         )
 
         resultados = {
