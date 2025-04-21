@@ -1,0 +1,80 @@
+{#  <ul class="space-y-2 text-gray-700">#}
+{#    <li><strong>Tensão Solicitante de cálculo (τSd):</strong> {{ resultados.tensao_calc }} kN/cm²</li>#}
+{#    <li><strong>Tensão Resistente à punção (τRd2):</strong> {{ resultados.resistencia_puncao }} kN/cm²</li>#}
+{##}
+{#    <li><strong>Status:</strong>#}
+{#      {% if resultados.verificado %}#}
+{#        <span class="text-green-600 font-semibold">Verificado ✅</span>#}
+{#      {% else %}#}
+{#        <span class="text-red-600 font-semibold">Não verificado ❌</span>#}
+{#      {% endif %}#}
+{#    </li>#}
+{#  </ul>#}
+{##}
+{#  <div class="mt-6 text-gray-700">#}
+{#    {% if resultados.verificado %}#}
+{#      <p class="text-green-700 font-medium mt-4">✅ Não haverá esmagamento da diagonal comprimida.</p>#}
+{#    {% else %}#}
+{#      <p class="text-red-700 font-medium mt-4">⚠️ Haverá esmagamento da diagonal comprimida. Deve-se:</p>#}
+{#      <ul class="list-disc list-inside mt-2 text-red-600">#}
+{#        <li>Alterar as dimensões do pilar</li>#}
+{#        <li>Aumentar a espessura da laje</li>#}
+{#        <li>Fazer um capitel</li>#}
+{#        <li>Aumentar a resistência do concreto</li>#}
+{#      </ul>#}
+{#    {% endif %}#}
+
+
+  <div class="bg-white p-6 rounded-xl shadow-md space-y-10">
+  <h3 class="text-xl font-bold text-gray-800 mb-4">Resultado da Verificação de Punção</h3>
+
+  <!-- 1. Verificação da Diagonal Comprimida -->
+  <div>
+    <h4 class="text-lg font-semibold text-blue-900 mb-2">1. Verificação da Diagonal Comprimida</h4>
+
+    {% if resultados.verificado %}
+      <p class="text-green-700 font-medium">
+        ✅ A tensão de cálculo é de {{ resultados.tensao_calc }} kN/m², inferior à resistência à punção de {{ resultados.resistencia_puncao }} kN/m².
+        <br>
+        Portanto, <strong>não haverá esmagamento da diagonal comprimida</strong>.
+      </p>
+    {% else %}
+      <p class="text-red-700 font-medium">
+        ⚠️ A tensão de cálculo é de {{ resultados.tensao_calc }} kN/cm², superior à resistência à punção de {{ resultados.resistencia_puncao }} kN/cm².
+        <br>
+        <strong>Haverá esmagamento da diagonal comprimida.</strong> Recomenda-se:
+      </p>
+      <ul class="list-disc list-inside mt-2 text-red-600">
+        <li>Alterar as dimensões do pilar</li>
+        <li>Aumentar a espessura da laje</li>
+        <li>Fazer um capitel</li>
+        <li>Aumentar a resistência do concreto</li>
+      </ul>
+    {% endif %}
+  </div>
+
+  <!-- 2. Verificação da Necessidade de Armadura de Punção -->
+  {% if resultados.verificado %}
+  <div>
+    <h4 class="text-lg font-semibold text-blue-900 mb-2">2. Verificação da Necessidade de Armadura de Punção</h4>
+
+    {% if resultados.verificado_pinos %}
+      <p class="text-green-700 font-medium">
+        ✅ O valor solicitante é de {{ resultados.v_solicitante }} kN/cm² e o valor resistente é de {{ resultados.v_resistente }} kN/cm².
+        <br>
+        Portanto, <strong>a laje dispensa o uso de pinos de cisalhamento</strong>,
+        sendo obrigatória apenas caso a estabilidade global da estrutura dependa da laje à punção.
+        <br>
+        <span class="text-sm italic text-gray-600">(Ver NBR 6118:2023 - 19.5.3.5 - Armadura de punção obrigatória)</span>
+      </p>
+    {% else %}
+      <p class="text-red-700 font-medium">
+        ⚠️ O valor solicitante é de {{ resultados.v_solicitante }} kN/cm² e o valor resistente é de {{ resultados.v_resistente }} kN/cm².
+        <br>
+        <strong>A laje deverá ser armada com pinos de cisalhamento.</strong>
+      </p>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+

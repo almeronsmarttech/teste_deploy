@@ -2,6 +2,8 @@ from django.urls import path
 #from .views import SomaView
 from .views.views_bidirecional import LajeFormView, AtualizarPView
 from .views.views_unidirecional  import FormularioUnidirecionalView
+from .views.views_lisa import LajeLisaFormView
+
 
 urlpatterns = [
 
@@ -10,4 +12,7 @@ urlpatterns = [
     path("atualizar-p/", AtualizarPView.as_view(), name="atualizar_p"),
     path("unidirecional/", FormularioUnidirecionalView.as_view(), name="laje_unidirecional"),
     path("bidirecional/", LajeFormView.as_view(), name="laje_bidirecional"),
+    path("laje-lisa/", LajeLisaFormView.as_view(), name="laje_lisa"),
+
+
 ]

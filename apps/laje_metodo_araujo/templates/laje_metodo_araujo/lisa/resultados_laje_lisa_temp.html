@@ -1,0 +1,30 @@
+<div class="bg-white p-6 rounded-xl shadow-md">
+  <h3 class="text-xl font-bold text-gray-800 mb-4">Resultado da Verificação de Punção</h3>
+
+  <ul class="space-y-2 text-gray-700">
+    <li><strong>Tensão Solicitante de cálculo (τSd):</strong> {{ resultados.tensao_calc }} kN/cm²</li>
+    <li><strong>Tensão Resistente à punção (τRd2):</strong> {{ resultados.resistencia_puncao }} kN/cm²</li>
+
+    <li><strong>Status:</strong>
+      {% if resultados.verificado %}
+        <span class="text-green-600 font-semibold">Verificado ✅</span>
+      {% else %}
+        <span class="text-red-600 font-semibold">Não verificado ❌</span>
+      {% endif %}
+    </li>
+  </ul>
+
+  <div class="mt-6 text-gray-700">
+    {% if resultados.verificado %}
+      <p class="text-green-700 font-medium mt-4">✅ Não haverá esmagamento da diagonal comprimida.</p>
+    {% else %}
+      <p class="text-red-700 font-medium mt-4">⚠️ Haverá esmagamento da diagonal comprimida. Deve-se:</p>
+      <ul class="list-disc list-inside mt-2 text-red-600">
+        <li>Alterar as dimensões do pilar</li>
+        <li>Aumentar a espessura da laje</li>
+        <li>Fazer um capitel</li>
+        <li>Aumentar a resistência do concreto</li>
+      </ul>
+    {% endif %}
+  </div>
+</div>

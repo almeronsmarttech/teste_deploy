@@ -15,7 +15,7 @@ class LajeFormView(FormView):
 
         concreto = Concreto(
             fck=int(dados["fck"]),
-            tipo_agregado=TipoAgregado.CALCARIO  # ou tornar isso também um campo se desejar
+            tipo_agregado=TipoAgregado.CALCARIO
         )
 
         aco_CA50 = Aco(fyk=500)

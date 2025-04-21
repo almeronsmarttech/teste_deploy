@@ -28,3 +28,16 @@ class LajeUnidirecionalForm(forms.Form):
 
     p = forms.FloatField(label="p = g + q", required=False)
     psi2 = forms.FloatField(label="ψ₂", min_value=0, max_value=1, initial=0.3)
+
+    CAA_CHOICES = [
+        ('I', 'Classe I - Fraca'),
+        ('II', 'Classe II - Moderada'),
+        ('III', 'Classe III - Forte'),
+        ('IV', 'Classe IV - Muito forte'),
+    ]
+
+    classe_agressividade_ambiental = forms.ChoiceField(
+        choices=CAA_CHOICES,
+        label="Classe de Agressividade Ambiental (CAA)",
+        widget=forms.Select(attrs={"class": "appearance-none w-full p-2 border border-gray-300 rounded"})
+    )

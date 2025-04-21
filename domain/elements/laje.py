@@ -1,15 +1,18 @@
 import numpy as np
+
 from domain.utils.parametros_araujo import *
 from domain.materials.concreto import Concreto
 from domain.materials.aco import Aco, Barra
+from domain.enums import TipoPilarEnum
+
 
 class Laje:
-    def __init__(self, lx: float, ly: float, h: int, g: float, q: float, tipo_laje: int, concreto: Concreto, aco:Aco, bitolas, psi2=0.4, cobrimento = 2.5):
+    def __init__(self, lx: float, ly: float, h: int, g: float, q: float, tipo_laje: int, concreto: Concreto, aco:Aco, bitolas, psi2=0.4, cobrimento = 4.0, **kwargs):
         self._lx = lx
         self._ly = ly
         self._h = h
         self.__b = 100
-        self.__d = self._h - cobrimento
+        self._d = self._h - cobrimento
         self.__g = g
         self.__q = q
         self._p = self.__g + self.__q
@@ -18,9 +21,9 @@ class Laje:
         #print(f"psi2: {self.__psi2}")
         #self._p_serv = self.__g + 0.3 * self.__q
         self._tipo_laje = tipo_laje
-        self.__concreto = concreto
+        self._concreto = concreto
         self.__aco = aco
-        self._D = (self.__concreto.Ecs * self._h / 10 * self._h / 10 * self._h / 10) / (12 * (1 - (self.__concreto.nu * self.__concreto.nu))) #  rigidez
+        self._D = (self._concreto.Ecs * self._h / 10 * self._h / 10 * self._h / 10) / (12 * (1 - (self._concreto.nu * self._concreto.nu))) #  rigidez
         print(f"D: {int(self._D)} kN")
         self.__W0 = self.__b * self._h * self._h / 6  # módulo resistente cm3
         print(f"W0: {self.__W0:.2f} cm3")
@@ -28,13 +31,13 @@ class Laje:
         self.__wf = 0  # flecha inicial m
         self._wlim = min(self._lx, self._ly) / 250
         self.__alfa_f = 0 #coeficiente multiplicador de flechas para consideração de fluência (cargas de longa duração)
-        self.__Mdmin = 0.8 * self.__W0 * self.__concreto.fctk_sup
+        self.__Mdmin = 0.8 * self.__W0 * self._concreto.fctk_sup
         #print(f"Md_min: {self.__Mdmin:.2f} kN.cm/m")
-        self.__ro_min = self.calcular_ro_min()
-        print(f"ro_min: {self.__ro_min}")
+        self._ro_min = self._concreto.calcular_ro_min()
+        print(f"ro_min: {self._ro_min}")
         #self._As_min = max(self.__ro_min * self.__b * self.__h,self.calcular_As(self.__Mdmin))
         #self._As_min = self.calcular_As(self.__Mdmin/100)
-        self._As_min = self.__ro_min * self.__b * self._h
+        self._As_min = self._ro_min * self.__b * self._h
         self._Ase_min_bidirecional = 0
         self.__bitola_minima = 5.0 / 10 # em cm
         self.__bitola_maxima = self._h / 8 # em cm
@@ -42,6 +45,8 @@ class Laje:
         self.__bitolas_possiveis = []
         self.__espacamento_minimo = 8.0
         self.__espacamento_maximo = min(20.0, self._h * 2)
+        #self._tal_Rd1 = self.calcular_tal_Rd1()
+
 
     def calcular_flecha_final(self, alfa_f=0, tempo_inicial_carregamento = 0, tempo_final_carregamento=71, ro_linha=0):
         # para carregamentos com 70 meses ou mais, xsi(t)=2
@@ -66,11 +71,11 @@ class Laje:
 
     def calcular_As(self, momento, gama_f = 1.4):
         momento = abs(momento)
-        mi = (gama_f * momento * 100) / (self.__b*self.__d*self.__d*0.85*self.__concreto.fcd)
-        print(f"gama_f: {gama_f}\tmomento: {momento:.2f} kN.m\tb: {self.__b}\td: {self.__d:.2f} cm\tfcd: {self.__concreto.fcd:.4f} kN/cm2")
+        mi = (gama_f * momento * 100) / (self.__b * self._d * self._d * 0.85 * self._concreto.fcd)
+        print(f"gama_f: {gama_f}\tmomento: {momento:.2f} kN.m\tb: {self.__b}\td: {self._d:.2f} cm\tfcd: {self._concreto.fcd:.4f} kN/cm2")
         xsi = (1-np.sqrt(1-2*mi))/0.8
         print(f"mi: {mi:.4f}\txsi: {xsi:.4f}")
-        return 0.8*xsi*self.__b*self.__d*0.85*self.__concreto.fcd/self.__aco.fyd
+        return 0.8*xsi*self.__b*self._d*0.85*self._concreto.fcd/self.__aco.fyd
 
     def calcular_As_min(self):
         # calcula a armadura mínima através do momento mínimo
@@ -82,37 +87,7 @@ class Laje:
         #as_min = max(as_min_mom_min,as_min_ro_min)
         #return as_min
 
-    def calcular_ro_min(self):
-        match self.__concreto.fck:
-            case 20 | 25 | 30:
-                return 0.15 / 100
-            case 35:
-                return 0.164 / 100
-            case 40:
-                return 0.179 / 100
-            case 45:
-                return 0.194 / 100
-            case 50:
-                return 0.208 / 100
-            case 55:
-                return 0.211 / 100
-            case 60:
-                return 0.219 / 100
-            case 65:
-                return 0.226 / 100
-            case 70:
-                return 0.233 / 100
-            case 75:
-                return 0.239 / 100
-            case 80:
-                return 0.245 / 100
-            case 85:
-                return 0.251 / 100
-            case 90:
-                return 0.256 / 100
-            case _:
-                return 0
-                #return f"Valor de fck {self.__concreto.fck} inválido"
+
 
     def detalhamento_armaduras(self, As_necessario, cobertura = 1, tamanho = 1):
         self.__bitolas_possiveis = []
@@ -137,6 +112,9 @@ class Laje:
 
         return lista_resposta
 
+
+    #def calcular_tal_Rd1(self):
+    #    return 0.13*(1 - np.sqrt(20 / self._d))*np.pow(100 * () * self._concreto.fck, 1 / 3)
 
 class LajeUnidirecional(Laje):
     def __init__(self, lx: float, ly: float, h: int, g: float, q: float, tipo_laje: int, concreto: Concreto, aco:Aco, bitolas, psi2=0.4):
@@ -349,6 +327,80 @@ class LajeBidirecional(Laje):
             print(f"Lista 03 :{lista[3]}")
         print("Fim DETALHAR ARMADURAS BIDIRECIONAIS")
         return lista
+
+class LajeLisa(Laje):
+    def __init__(self, h, concreto, Ai, qmedio, C1, C2, tipo_pilar):
+        super().__init__(
+            lx=0,                     # valor neutro
+            ly=0,                     # valor neutro
+            h=h,
+            g=0,                      # carga permanente irrelevante aqui
+            q=0,                      # carga acidental irrelevante aqui
+            tipo_laje=0,             # ou algum código padrão para "Lisa"
+            concreto=concreto,
+            aco=None,                # sem aço neste modelo
+            bitolas=None,            # idem
+            psi2=0.4,
+            cobrimento=3.0
+        )
+        #self.h = h  # altura da laje em cm
+        #self.concreto = concreto  # objeto da classe Concreto
+        self.Ai = Ai  # área de influência (m²)
+        self.qmedio = qmedio  # carga média (kN/m²)
+        self.C1 = C1 # lado 1 do pilar (m)
+        self.C2 = C2 # lado 2 do pilar (m)
+        self.tipo_pilar = tipo_pilar  # enum TipoPilarEnum
+
+    def calcular_puncao(self):
+        # Cálculo das taxas mínimas de armaduras
+        #ro_x = 2*(self._ro_min *((6*self._d+self.C2)*self._h))
+        ro_x = self._ro_min # armadura mínima negativa (somente a armadura tracionada)
+        ro_y = self._ro_min # armadura mínima negativa (somente a armadura tracionada)
+        ro = np.sqrt(ro_x*ro_y)
+
+        tal_Rd1 =(0.13*(1 + np.sqrt(20 / self._d))*np.pow(100 * ro * self._concreto.fck, 1 / 3))/10 #kN/m2
+        print(f"d: {self._d}")
+        print(f"ro: {ro}")
+        # Perímetro de controle (simplificação para pilar retangular)
+        if self.tipo_pilar.value == "interior":
+            u0 = 2 * (self.C1 + self.C2)
+            u = (2*(self.C1 + self.C2))+ (4 * np.pi*self._d)
+        elif self.tipo_pilar.value == "borda":
+            a0 = min(1.5*self._d,self.C1/2)
+            u0 = (2*a0) + self.C2
+            print(f"a0: {a0}")
+            u = 2*a0 + self.C2 + (2*np.pi*self._d)
+        elif self.tipo_pilar.value == "canto":
+            a1 = min(1.5*self._d,self.C1/2)
+            a2 = min(1.5*self._d,self.C2/2)
+            u0 = a1 + a2
+            u = a1 + a2 + np.pi*self._d
+            print(f"a1: {a1}")
+            print(f"a2: {a2}")
+        else:
+            raise ValueError("Tipo de pilar inválido.")
+        print(f"u0: {u0}")
+        print(f"u: {u}")
+        # Tensão de cálculo
+        P = self.Ai * self.qmedio # kN
+        print(f"P: {P}")
+        tal_Sd_concreto = P/(u0*self._d) # Tensão Solicitante em kN/m²
+        # Resistência de punção simplificada (fórmula da NBR 6118)
+        print(f"TalSd concreto: {tal_Sd_concreto}")
+        tal_Sd_aco = P / (u * self._d)  # Tensão Solicitante em kN/m²
+        tal_Rd2 = self._concreto.tal_Rd2
+        print(f"TalRd2: {tal_Rd2}")
+        print(f"TalRd1: {tal_Rd1}")
+        return {
+            # verificação do esmagamento da diagonal comprimida
+            "tensao_calc": round(tal_Sd_concreto, 2),
+            "resistencia_puncao": round(tal_Rd2, 2),
+            "verificado": tal_Sd_concreto <= tal_Rd2,
+            # verificação da necessidade de armaduras (pinos)
+            "v_solicitante": round(tal_Sd_aco, 2),
+            "v_resistente": round(tal_Rd1 , 2),
+            "verificado_pinos": tal_Sd_concreto <= tal_Rd1
+        }
 
 
 
