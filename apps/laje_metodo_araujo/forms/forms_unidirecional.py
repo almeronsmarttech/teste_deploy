@@ -20,24 +20,24 @@ class LajeUnidirecionalForm(forms.Form):
         choices=[(i, str(i)) for i in range(20, 95, 5)],
         initial=25
     )
-    #fyk = forms.ChoiceField(
-    #    label="fyk (MPa)",
-    #    choices=[(500, "500"), (600, "600")],
-    #    initial=500
-    #)
 
-    p = forms.FloatField(label="p = g + q", required=False)
+    p = forms.FloatField(
+        label="p = g + q",
+        required=False,
+        disabled=True
+    )
+
     psi2 = forms.FloatField(label="ψ₂", min_value=0, max_value=1, initial=0.3)
 
-    CAA_CHOICES = [
-        ('I', 'Classe I - Fraca'),
-        ('II', 'Classe II - Moderada'),
-        ('III', 'Classe III - Forte'),
-        ('IV', 'Classe IV - Muito forte'),
-    ]
-
-    classe_agressividade_ambiental = forms.ChoiceField(
-        choices=CAA_CHOICES,
-        label="Classe de Agressividade Ambiental (CAA)",
-        widget=forms.Select(attrs={"class": "appearance-none w-full p-2 border border-gray-300 rounded"})
-    )
+    # CAA desativado temporariamente
+    # CAA_CHOICES = [
+    #     ('I', 'Classe I - Fraca'),
+    #     ('II', 'Classe II - Moderada'),
+    #     ('III', 'Classe III - Forte'),
+    #     ('IV', 'Classe IV - Muito forte'),
+    # ]
+    # classe_agressividade_ambiental = forms.ChoiceField(
+    #     choices=CAA_CHOICES,
+    #     label="Classe de Agressividade Ambiental (CAA)",
+    #     widget=forms.Select(attrs={"class": "appearance-none w-full p-2 border border-gray-300 rounded"})
+    # )

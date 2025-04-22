@@ -1,10 +1,10 @@
 from django.views.generic.edit import FormView
 from django.shortcuts import render
-
 from domain.materials.aco import Aco, Barra
-from ..forms.forms_unidirecional import LajeUnidirecionalForm
-from domain.elements.laje import LajeUnidirecional
 from domain.materials.concreto import Concreto, TipoAgregado
+from domain.elements.laje import LajeUnidirecional
+from ..forms.forms_unidirecional import LajeUnidirecionalForm
+
 
 class FormularioUnidirecionalView(FormView):
     template_name = "laje_metodo_araujo/unidirecional/formulario.html"
@@ -15,7 +15,7 @@ class FormularioUnidirecionalView(FormView):
 
         concreto = Concreto(
             fck=int(dados["fck"]),
-            tipo_agregado=TipoAgregado.CALCARIO  # ou tornar isso também um campo se desejar
+            tipo_agregado=TipoAgregado.CALCARIO
         )
 
         aco_CA50 = Aco(fyk=500)
@@ -30,8 +30,8 @@ class FormularioUnidirecionalView(FormView):
         ]
 
         laje = LajeUnidirecional(
-            lx=dados["lx"]/100,
-            ly=dados["ly"]/100,
+            lx=dados["lx"] / 100,
+            ly=dados["ly"] / 100,
             h=dados["h"],
             g=dados["g"],
             q=dados["q"],
@@ -40,7 +40,6 @@ class FormularioUnidirecionalView(FormView):
             aco=aco_CA50,
             bitolas=bitolas,
             psi2=dados["psi2"],
-
         )
 
         resultados = {
@@ -55,4 +54,8 @@ class FormularioUnidirecionalView(FormView):
             "detalhar_armadura_secundaria": laje.detalhar_armaduras()[2],
         }
 
-        return render(self.request, "laje_metodo_araujo/unidirecional/resultados_parciais.html", {"resultados": resultados, "form": form})
+        return render(
+            self.request,
+            "laje_metodo_araujo/unidirecional/resultados_parciais.html",
+            {"resultados": resultados}
+        )
