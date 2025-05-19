@@ -11,10 +11,12 @@
 
   <!-- Scripts -->
   <script src="https://unpkg.com/htmx.org"></script>
-
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
   <script id="MathJax-script" async
           src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
   </script>
+
+
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal flex flex-col min-h-screen overflow-x-hidden">
 
@@ -26,9 +28,8 @@
   <!-- Conteúdo principal -->
   <main class="container mx-auto mt-6 px-6 flex-grow">
     <div id="conteudo" class="bg-white shadow-md rounded-lg p-6"
-         hx-get="{% url 'home_partial' %}"
-         hx-trigger="load"
-         hx-swap="innerHTML">
+        {% block content %}
+        {% endblock %}
     </div>
   </main>
 

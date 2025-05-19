@@ -8,8 +8,10 @@ minha-venv/
 # Environments
 .env
 .venv
+.venv_old
 env/
 venv/
+venv_old/
 minha-env/
 ENV/
 env.bak/

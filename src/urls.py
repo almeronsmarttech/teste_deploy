@@ -35,4 +35,5 @@ urlpatterns = [
     path('header/', header_partial, name='header_partial'),
     path('form/', FormPartialView.as_view(), name='form_partial'),
     path('create-account/', UserCreationView.as_view(), name='create_account'),
+    path('subscriptions/', include('apps.subscriptions.urls', namespace='subscriptions')),
 ]

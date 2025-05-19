@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-lg mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg text-center">
+    <h1 class="text-2xl font-bold mb-4">Pagamento com Boleto</h1>
+    <p class="mb-4 text-gray-700">
+        Clique no botão abaixo para visualizar e pagar seu boleto:
+    </p>
+    <a href="{{ ticket_url }}" target="_blank"
+       class="inline-block mt-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 text-sm">
+        Abrir Boleto
+    </a>
+</div>
+{% endblock %}

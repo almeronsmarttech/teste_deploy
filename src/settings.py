@@ -6,12 +6,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #configuração de carregamento do arquivo
 load_dotenv(os.path.join(BASE_DIR,'.env'))
 
+PUBLIC_KEY_MP = os.getenv("PUBLIC_KEY_MP")
+ACCESS_TOKEN_MP = os.getenv("ACCESS_TOKEN_MP")
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = os.environ.get("DEBUG","False") == True
+DEBUG = True
+#DEBUG = os.environ.get("DEBUG","False") == True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -42,13 +45,14 @@ INSTALLED_APPS = [
     'apps.menu2',
     'apps.loginapp',
     'apps.laje_metodo_araujo',
+    'apps.subscriptions'
 ]
 
 if DEBUG:
     INSTALLED_APPS += ["django_browser_reload"]
 
-ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
-#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
+#ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(",")
 #ALLOWED_HOSTS = []
 # Application definition
