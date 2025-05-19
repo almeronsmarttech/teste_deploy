@@ -3,7 +3,8 @@ import numpy as np
 from domain.utils.parametros_araujo import *
 from domain.materials.concreto import Concreto
 from domain.materials.aco import Aco, Barra
-from domain.enums import TipoPilarEnum
+
+
 
 
 class Laje:
@@ -401,6 +402,5 @@ class LajeLisa(Laje):
             "v_resistente": round(tal_Rd1 , 2),
             "verificado_pinos": tal_Sd_concreto <= tal_Rd1
         }
-
 
 
