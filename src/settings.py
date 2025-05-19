@@ -55,6 +55,7 @@ ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almero
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(",")
 #ALLOWED_HOSTS = []
+
 # Application definition
 
 MIDDLEWARE = [
