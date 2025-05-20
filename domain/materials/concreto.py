@@ -6,7 +6,7 @@ class Concreto:
     def __init__(self, fck=20, tipo_agregado: TipoAgregado = TipoAgregado.ARENITO, gama_c = 1.4, nu = 0.2):
         self.__gama_c = gama_c
         self.__nu = nu
-        self.__fck = fck
+        self.__fck = int(fck)
 
         self.__fcd = self.__fck/10/self.__gama_c # kN/cm2
         #self.__fctk_m = 0.3 * np.pow(self.__fck, 2/3) / 10  # em kN/cm2

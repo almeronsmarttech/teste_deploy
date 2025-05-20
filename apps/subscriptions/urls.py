@@ -11,5 +11,5 @@ urlpatterns = [
     path('failure/', views.failure, name='failure'),
     # (opcional no futuro) path('webhook/', views.webhook, name='webhook'),
     path('test-payment-methods/', views.test_payment_methods, name='test_payment_methods'),
-path('process-payment/', views.process_payment, name='process_payment'),
+    path('process-payment/', views.process_payment, name='process_payment'),
 ]

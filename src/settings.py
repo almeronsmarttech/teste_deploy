@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'apps.menu2',
     'apps.loginapp',
     'apps.laje_metodo_araujo',
-    'apps.subscriptions'
+    'apps.subscriptions',
+    'apps.viga_retangular',
 ]
 
 if DEBUG:
@@ -55,7 +56,6 @@ ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almero
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(" ")
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS","*").split(",")
 #ALLOWED_HOSTS = []
-
 # Application definition
 
 MIDDLEWARE = [

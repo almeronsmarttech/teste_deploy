@@ -5,8 +5,6 @@ from domain.materials.concreto import Concreto
 from domain.materials.aco import Aco, Barra
 
 
-
-
 class Laje:
     def __init__(self, lx: float, ly: float, h: int, g: float, q: float, tipo_laje: int, concreto: Concreto, aco:Aco, bitolas, psi2=0.4, cobrimento = 4.0, **kwargs):
         self._lx = lx
@@ -90,28 +88,28 @@ class Laje:
 
 
 
-    def detalhamento_armaduras(self, As_necessario, cobertura = 1, tamanho = 1):
-        self.__bitolas_possiveis = []
-        lista_resposta =[]
-        for bitola in self.__bitolas:
-            if self.__bitola_minima <= bitola.diametro <= self.__bitola_maxima:
-                self.__bitolas_possiveis.append(bitola)
-        for bitola in self.__bitolas_possiveis:
-            num_barras = As_necessario/ bitola.area_aco
-            espacamento = int(np.floor(100 / num_barras))
+def detalhamento_armaduras(self, As_necessario, cobertura = 1, tamanho = 1,bitolas_possiveis = []):
 
-            if espacamento > self.__espacamento_maximo:
-                espacamento = self.__espacamento_maximo
-                #recalcula número de barras
-                num_barras = 100 / espacamento
-            if espacamento > self.__espacamento_minimo:
-                num_barras = int(np.ceil(num_barras * cobertura))
-                print(
-                    f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm a cada {espacamento} cm.\tAs efetivo: {num_barras / cobertura * bitola.area_aco:.2f} cm2/m.")
-                lista_resposta.append(
-                    f"Φ de {bitola.diametro * 10:.1f} mm a cada {espacamento} cm. (As efetivo: {num_barras / cobertura * bitola.area_aco:.2f} cm2/m) -  N = {num_barras}    L = {tamanho:.2f} m ")
+    lista_resposta =[]
+    for bitola in self.__bitolas:
+        if self.__bitola_minima <= bitola.diametro <= self.__bitola_maxima:
+            self.__bitolas_possiveis.append(bitola)
+    for bitola in self.__bitolas_possiveis:
+        num_barras = As_necessario/ bitola.area_aco
+        espacamento = int(np.floor(100 / num_barras))
 
-        return lista_resposta
+        if espacamento > self.__espacamento_maximo:
+            espacamento = self.__espacamento_maximo
+            #recalcula número de barras
+            num_barras = 100 / espacamento
+        if espacamento > self.__espacamento_minimo:
+            num_barras = int(np.ceil(num_barras * cobertura))
+            print(
+                f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm a cada {espacamento} cm.\tAs efetivo: {num_barras / cobertura * bitola.area_aco:.2f} cm2/m.")
+            lista_resposta.append(
+                f"Φ de {bitola.diametro * 10:.1f} mm a cada {espacamento} cm. (As efetivo: {num_barras / cobertura * bitola.area_aco:.2f} cm2/m) -  N = {num_barras}    L = {tamanho:.2f} m ")
+
+    return lista_resposta
 
 
     #def calcular_tal_Rd1(self):
