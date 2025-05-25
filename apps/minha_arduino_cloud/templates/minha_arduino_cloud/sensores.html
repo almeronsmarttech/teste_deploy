@@ -1,0 +1,13 @@
+<!-- apps/minha_arduino_cloud/templates/minha_arduino_cloud/sensores.html -->
+<h1 class="text-xl font-bold mb-4">Painel de Sensores</h1>
+
+<div
+  id="painel-sensores"
+  hx-get="{% url 'arduino_sensores_partial' %}"
+  hx-trigger="load, every 5s"
+  hx-target="#painel-sensores"
+  hx-swap="innerHTML"
+  class="border p-4 rounded bg-white shadow"
+>
+  <p>Carregando dados dos sensores...</p>
+</div>

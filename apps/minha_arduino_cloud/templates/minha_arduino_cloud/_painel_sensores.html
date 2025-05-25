@@ -1,0 +1,9 @@
+<!-- apps/minha_arduino_cloud/templates/minha_arduino_cloud/_painel_sensores.html -->
+<ul class="space-y-2">
+  {% for sensor in dados %}
+    <li>
+      <strong>{{ sensor.nome }}:</strong> {{ sensor.valor }}
+      <span class="text-sm text-gray-500">({{ sensor.atualizado }})</span>
+    </li>
+  {% endfor %}
+</ul>
