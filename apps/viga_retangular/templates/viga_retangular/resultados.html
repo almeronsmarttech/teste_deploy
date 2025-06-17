@@ -2,7 +2,10 @@
   <h3 class="text-lg font-semibold mb-2">Resultados</h3>
   <ul class="list-disc list-inside">
     {% if resultados.As %}
-      <li><strong>Armadura para Flexão (As):</strong> {{ resultados.As }} cm²</li>
+      <li><strong>Armadura de Tração (As):</strong> {{ resultados.As }} cm²</li>
+    {% endif %}
+    {% if resultados.As1 %}
+      <li><strong>Armadura de Compressão (As′):</strong> {{ resultados.As1 }} cm²</li>
     {% endif %}
     {% if resultados.Asw %}
       <li><strong>Armadura para Cisalhamento (Asw):</strong> {{ resultados.Asw }} cm²/m</li>
@@ -12,24 +15,30 @@
     {% endif %}
   </ul>
 
+  {% if resultados.armaduras_flexao %}
+    <h4 class="text-lg font-semibold mt-4">Detalhamento da Armadura de Tração</h4>
+    <ul class="list-disc list-inside">
+      {% for item in resultados.armaduras_flexao %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 
-{% if resultados.armaduras_flexao %}
-  <h4 class="text-lg font-semibold mt-4">Detalhamento da Armadura Longitudinal</h4>
-  <ul class="list-disc list-inside">
-    {% for item in resultados.armaduras_flexao %}
-      <li>{{ item }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+  {% if resultados.armaduras_compressao %}
+    <h4 class="text-lg font-semibold mt-4">Detalhamento da Armadura de Compressão</h4>
+    <ul class="list-disc list-inside">
+      {% for item in resultados.armaduras_compressao %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 
-{% if resultados.armaduras_cisalhamento %}
-  <h4 class="text-lg font-semibold mt-4">Detalhamento da Armadura Transversal (2 ramos)</h4>
-  <ul class="list-disc list-inside">
-    {% for item in resultados.armaduras_cisalhamento %}
-      <li>{{ item }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
-
-
+  {% if resultados.armaduras_cisalhamento %}
+    <h4 class="text-lg font-semibold mt-4">Detalhamento da Armadura Transversal (2 ramos)</h4>
+    <ul class="list-disc list-inside">
+      {% for item in resultados.armaduras_cisalhamento %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 </div>

@@ -7,8 +7,13 @@ class Aco:
 
         self.__fyd = self.__fyk/10/self.__gama_s # kN/cm2
         self.__fywd = min(self.__fyd, 43.5)
-        self.__es = 21000
-        print(f"Aço\nfyk: {self.__fyk} MPa\t fyd: {self.__fyd:.4f} kN/cm2\t Es: {int(self.__es)} MPa")
+        #self.__es = 21000
+        self._es = 20000
+        print(f"Aço\nfyk: {self.__fyk} MPa\t fyd: {self.__fyd:.4f} kN/cm2\t Es: {int(self._es)} MPa")
+
+    @property
+    def fyk(self):
+        return self.__fyk
 
     @property
     def fyd(self):

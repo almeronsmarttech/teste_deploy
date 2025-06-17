@@ -37,6 +37,8 @@ urlpatterns = [
     path('create-account/', UserCreationView.as_view(), name='create_account'),
     path('subscriptions/', include('apps.subscriptions.urls', namespace='subscriptions')),
     path('viga/', include('apps.viga_retangular.urls', namespace='viga_retangular')),
+    path('pilar/', include('apps.pilar_retangular.urls', namespace='pilar_retangular')),
+
     #path("arduino/", include("apps.minha_arduino_cloud.urls")),
     path("arduino/", include("apps.minha_arduino_cloud.urls")),
 ]

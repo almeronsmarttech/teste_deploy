@@ -3,8 +3,8 @@ import domain.codes.nbr_6118_2023.armadura_minima
 from domain.materials.aco import Aco, Barra
 
 
-def dimensionar_cisalhamento_secao_retangular(bw, h, Vk, estrutura) -> float:
-    d = h - 5
+def dimensionar_cisalhamento_secao_retangular(bw, d, Vk, estrutura) -> float:
+    #d = h - 5
     Vd = Vk * estrutura.gama_F
     print(f"Vd = {Vd:.2f}")
     tal_wd = Vd / (bw * d)
