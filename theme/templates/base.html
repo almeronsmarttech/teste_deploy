@@ -27,10 +27,13 @@
 
   <!-- Conteúdo principal -->
   <main class="container mx-auto mt-6 px-6 flex-grow">
-    <div id="conteudo" class="bg-white shadow-md rounded-lg p-6"
-        {% block content %}
-        {% endblock %}
-    </div>
+    <div id="conteudo"
+     hx-get="{% url 'home_partial' %}"
+     hx-trigger="load"
+     hx-swap="innerHTML"
+     class="bg-white shadow-md rounded-lg p-6">
+</div>
+
   </main>
 
   <!-- Rodapé -->

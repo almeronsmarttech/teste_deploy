@@ -77,11 +77,11 @@ def row_min(fck: int) -> float:
     # 90 0.23295214720620677
     match int(fck):
         case 20:
-            #return 0.0009
-            return 0.0010167926936247465
+            return 0.0009
+            #return 0.0010167926936247465
         case 25:
-            #return 0.0010
-            return 0.0011798834032069208
+            return 0.0010
+            #return 0.0011798834032069208
         case 30:
             #return 0.0012
             return 0.0013323753507557688

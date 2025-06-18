@@ -43,22 +43,24 @@ class VigaRetangularView(FormView):
 
         resultados = {}
         if Mk > 0:
-
-
             #resultados["As"] = round(viga.calcular_As(Mk), 2)
             as_resultado = viga.calcular_As(Mk)
             #resultados["armaduras_flexao"] = viga.detalhar_As()
             if isinstance(as_resultado, str):
                 resultados["mensagem"] = as_resultado
             else:
-                resultados["As"] = round(as_resultado[0], 2)
-                resultados["As1"] = round(as_resultado[1], 2)
-                resultados["armaduras_flexao"] = viga.detalhar_As()
-                resultados["armaduras_compressao"] = viga.detalhar_As_compressao()
+                as1 = round(as_resultado[0], 2)
+                as2 = round(as_resultado[1], 2)
+                resultados["As"] = as1
+                resultados["As1"] = as2
+                resultados["armaduras_flexao"] = viga.detalhar_As1(as1)
+                resultados["armaduras_compressao"] = viga.detalhar_As_compressao1(as2)
             print("Era pra chamar o método detalhar As")
 
         if Vk > 0:
-            resultados["Asw"] = round(viga.calcular_Asw(Vk), 2)
+            asw = round(viga.calcular_Asw(Vk), 2)
+            resultados["Asw"] = asw
+            #resultados["armaduras_cisalhamento"] = viga.detalhar_Asw1(asw)
             resultados["armaduras_cisalhamento"] = viga.detalhar_Asw()
             print("Era pra chamar o método detalhar Asw")
         if not resultados:

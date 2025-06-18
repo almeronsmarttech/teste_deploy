@@ -63,30 +63,58 @@ class VigaRetangular:
         return self._as1, self._as2
 
     def detalhar_As(self, cobertura = 1, tamanho = 1):
-        lista_resposta = []
+        lista_resposta_as1 = []
         print("Entrou no método detalhar As")
+        print(f"Deveria detalhar {self._as1}")
         if (self._as1 > 0):
             for bitola in self._estrutura.bitolas_longitudinal:
                 num_barras = np.ceil(self._as1_necessario / bitola.area_aco)
                 print(f"num_barras: {num_barras}")
 
                 print(f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm.\tAs efetivo: {num_barras * bitola.area_aco:.2f} cm2.")
-                lista_resposta.append(
-                    f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm. (As efetivo: {num_barras * bitola.area_aco:.2f} cm2/m)")
-        return lista_resposta
+                lista_resposta_as1.append(f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm.\tAs efetivo: {num_barras * bitola.area_aco:.2f} cm2.")
+        return lista_resposta_as1
 
     def detalhar_As_compressao(self, cobertura = 1, tamanho = 1):
-        lista_resposta = []
+        lista_resposta_as2 = []
         print("Entrou no método detalhar As'")
+        print(f"Deveria detalhar {self._as2}")
         if(self._as2 > 0):
             for bitola in self._estrutura.bitolas_longitudinal:
                 num_barras = np.ceil(self._as2_necessario / bitola.area_aco)
                 print(f"num_barras: {num_barras}")
                 print(
                     f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm.\tAs efetivo: {num_barras * bitola.area_aco:.2f} cm2.")
-                lista_resposta.append(
-                    f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm. (As efetivo: {num_barras * bitola.area_aco:.2f} cm2/m)")
-        return lista_resposta
+                lista_resposta_as2.append(
+                    f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm. (As efetivo: {num_barras * bitola.area_aco:.2f} cm2)")
+        return lista_resposta_as2
+
+    def detalhar_As1(self, as1, cobertura = 1, tamanho = 1):
+        lista_resposta_as1 = []
+        print("Entrou no método detalhar As")
+        #print(f"Deveria detalhar {self._as1}")
+        if (as1 > 0):
+            for bitola in self._estrutura.bitolas_longitudinal:
+                num_barras = np.ceil(as1 / bitola.area_aco)
+                print(f"num_barras: {num_barras}")
+
+                print(f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm.\tAs efetivo: {num_barras * bitola.area_aco:.2f} cm2.")
+                lista_resposta_as1.append(f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm.\tAs efetivo: {num_barras * bitola.area_aco:.2f} cm2.")
+        return lista_resposta_as1
+
+    def detalhar_As_compressao1(self, as2, cobertura = 1, tamanho = 1):
+        lista_resposta_as2 = []
+        print("Entrou no método detalhar As'")
+        #print(f"Deveria detalhar {self._as2}")
+        if(as2 > 0):
+            for bitola in self._estrutura.bitolas_longitudinal:
+                num_barras = np.ceil(as2 / bitola.area_aco)
+                print(f"num_barras: {num_barras}")
+                print(
+                    f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm.\tAs efetivo: {num_barras * bitola.area_aco:.2f} cm2.")
+                lista_resposta_as2.append(
+                    f"{num_barras} Φ de {bitola.diametro * 10:.1f} mm. (As efetivo: {num_barras * bitola.area_aco:.2f} cm2)")
+        return lista_resposta_as2
 
     def calcular_Asw(self, cortante):
         self._asw = dimensionar_cisalhamento_secao_retangular(self._bw, self._d, cortante, self._estrutura)
