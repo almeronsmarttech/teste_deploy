@@ -193,7 +193,7 @@ class PilarRetangular:
         # f"\tlambda1y: {round(self.__lambda1y_calc, 2)}" \
 
     def resultados(self):
-        return round(self.__Mdtoty,2), round(self.__Mdtotx,2) # self.__Mdtotx, self.__Mdtoty, self.__Mdtotx, self.__Mdtoty
+        return round(self.__Mdtotx,2), round(self.__Mdtoty,2) # self.__Mdtotx, self.__Mdtoty, self.__Mdtotx, self.__Mdtoty
 
     def cobrimento(self):
         return self._estrutura.cobrimento_nominal("pilar")
