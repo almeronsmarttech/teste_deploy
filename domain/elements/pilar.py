@@ -97,7 +97,7 @@ class PilarRetangular:
         if self.__MAx == self.__M1dmin_x:
             self.__alfabx = 1.0
         else:
-            self.__alfabx = min(max(0.6 + 0.4 * self.__MxB / self.__MxA, 0.4), 1.0)
+            self.__alfabx = min(max(0.6 + 0.4 * self.__MBx / self.__MAx, 0.4), 1.0)
 
         self.__lambda1x_calc = (25 + 12.5 * (self.__e1x / self.__hx)) / self.__alfabx
         self.__lambda1x_adot = min(max(self.__lambda1x_calc, 35), 90)
