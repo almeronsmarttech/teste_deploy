@@ -1,4 +1,6 @@
 from django import forms
+num_choices = [(i, i) for i in range(2, 11)]
+
 
 class PilarRetangularForm(forms.Form):
     hx = forms.IntegerField(label='hx (cm)')
@@ -17,3 +19,6 @@ class PilarRetangularForm(forms.Form):
     gama_f = forms.FloatField(label='γ_F', initial=1.4)
     gama_c = forms.FloatField(label='γ_c', initial=1.4)
     gama_s = forms.FloatField(label='γ_s', initial=1.15)
+
+    num_barras_x = forms.ChoiceField(label="Nº barras em x", choices=num_choices, initial=2)
+    num_barras_y = forms.ChoiceField(label="Nº barras em y", choices=num_choices, initial=2)

@@ -1,15 +1,14 @@
-<div class="bg-gray-100 p-4 rounded">
-  <h3 class="text-lg font-semibold mb-2">Resultados</h3>
-  <ul class="list-disc list-inside">
-      <!--
-    <li><strong>Mdtotx Topo:</strong> {{ Mdtotx_topo }} kN·m</li>
-    <li><strong>Mdtotx Base:</strong> {{ Mdtotx_base }} kN·m</li>
-    <li><strong>Mdtotx Centro:</strong> {{ Mdtotx_centro }} kN·m</li>
-    <li><strong>Mdtoty Topo:</strong> {{ Mdtoty_topo }} kN·m</li>
-    <li><strong>Mdtoty Base:</strong> {{ Mdtoty_base }} kN·m</li>
-    <li><strong>Mdtoty Centro:</strong> {{ Mdtoty_centro }} kN·m</li>
-    -->
-      <li><strong>Mdtot x:</strong> {{ Mdtotx_topo }} kN·m</li>
-    <li><strong>Mdtot y:</strong> {{ Mdtotx_base }} kN·m</li>
+<div class="mt-6">
+  <h2 class="text-xl font-bold text-gray-800 mb-2">Resultados</h2>
+  <ul class="list-disc ml-6 text-gray-700">
+    <li><strong>Mdtot x:</strong> {{ Mdtotx_topo|floatformat:2 }} kN·m</li>
+    <li><strong>Mdtot y:</strong> {{ Mdtotx_base|floatformat:2 }} kN·m</li>
   </ul>
+</div>
+
+<div class="mt-8">
+  <h2 class="text-xl font-semibold text-gray-800 mb-2">Seção com Carga Aplicada</h2>
+  <div class="border border-gray-300 rounded p-4 bg-white shadow">
+    {{ svg_resultado|safe }}
+  </div>
 </div>

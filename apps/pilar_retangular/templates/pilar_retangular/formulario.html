@@ -2,42 +2,62 @@
 <div class="space-y-6 bg-white shadow-md rounded-lg p-6 md:p-8">
   <h2 class="text-2xl md:text-3xl font-bold text-blue-900">Verificação de Pilar Retangular</h2>
 
-  <form method="post" hx-post="{% url 'pilar_retangular:formulario' %}" hx-target="#resultados-parciais" hx-swap="innerHTML">
-    {% csrf_token %}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Coluna 1: Formulário -->
+    <div>
+      <form method="post" hx-post="{% url 'pilar_retangular:formulario' %}" hx-target="#resultados-parciais" hx-swap="innerHTML">
+        {% csrf_token %}
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      {{ form.hx|as_crispy_field }}
-      {{ form.hy|as_crispy_field }}
-      {{ form.lex|as_crispy_field }}
-      {{ form.ley|as_crispy_field }}
-      {{ form.Nk|as_crispy_field }}
-      {{ form.Mkx_topo|as_crispy_field }}
-      {{ form.Mkx_base|as_crispy_field }}
-      {{ form.Mky_topo|as_crispy_field }}
-      {{ form.Mky_base|as_crispy_field }}
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {{ form.hx|as_crispy_field }}
+          {{ form.hy|as_crispy_field }}
+          {{ form.lex|as_crispy_field }}
+          {{ form.ley|as_crispy_field }}
+          {{ form.Nk|as_crispy_field }}
+          {{ form.Mkx_topo|as_crispy_field }}
+          {{ form.Mkx_base|as_crispy_field }}
+          {{ form.Mky_topo|as_crispy_field }}
+          {{ form.Mky_base|as_crispy_field }}
+          {{ form.num_barras_x|as_crispy_field }}
+          {{ form.num_barras_y|as_crispy_field }}
+        </div>
+
+        <button type="button"
+                onclick="const el = document.getElementById('parametros-gerais'); el.classList.toggle('hidden'); this.innerText = el.classList.contains('hidden') ? 'Mostrar parâmetros gerais' : 'Esconder parâmetros gerais';"
+                class="mt-4 text-sm text-blue-600">
+          Mostrar parâmetros gerais
+        </button>
+
+        <div id="parametros-gerais" class="hidden mt-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {{ form.fck|as_crispy_field }}
+            {{ form.fyk|as_crispy_field }}
+            {{ form.caa|as_crispy_field }}
+            {{ form.gama_f|as_crispy_field }}
+            {{ form.gama_c|as_crispy_field }}
+            {{ form.gama_s|as_crispy_field }}
+          </div>
+        </div>
+
+        <button type="submit"
+                class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm md:text-base font-semibold">
+          Calcular
+        </button>
+      </form>
+
+      <div id="resultados-parciais" class="mt-8"></div>
     </div>
 
-    <button type="button"
-            onclick="const el = document.getElementById('parametros-gerais'); el.classList.toggle('hidden'); this.innerText = el.classList.contains('hidden') ? 'Mostrar parâmetros gerais' : 'Esconder parâmetros gerais';"
-            class="mt-4 text-sm text-blue-600">
-      Mostrar parâmetros gerais
-    </button>
-
-    <div id="parametros-gerais" class="hidden mt-4">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {{ form.fck|as_crispy_field }}
-        {{ form.fyk|as_crispy_field }}
-        {{ form.caa|as_crispy_field }}
-        {{ form.gama_f|as_crispy_field }}
-        {{ form.gama_c|as_crispy_field }}
-        {{ form.gama_s|as_crispy_field }}
+    <!-- Coluna 2: SVG do Pilar -->
+    <div class="flex items-center justify-center border rounded p-4 bg-white shadow" style="max-height: 300px; max-width: 300px;">
+      <div id="desenho-pilar"
+           hx-get="{% url 'pilar_retangular:desenhar_secao_svg' %}"
+           hx-trigger="load, change from:#id_hx, change from:#id_hy, change from:#id_num_barras_x, change from:#id_num_barras_y"
+           hx-vals="js:{hx: document.getElementById('id_hx').value, hy: document.getElementById('id_hy').value, num_barras_x: document.getElementById('id_num_barras_x').value, num_barras_y: document.getElementById('id_num_barras_y').value}"
+           hx-target="#desenho-pilar"
+           hx-swap="innerHTML">
+        <!-- Conteúdo inicial (pilar padrão será retornado pela view) -->
       </div>
     </div>
-
-    <button type="submit" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm md:text-base font-semibold">
-      Calcular
-    </button>
-  </form>
-
-  <div id="resultados-parciais" class="mt-8"></div>
+  </div>
 </div>

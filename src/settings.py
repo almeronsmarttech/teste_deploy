@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_tailwind",
     'theme',
+
     #'django_browser_reload',
     'django_htmx',
     #'django_bootstrap5',
@@ -81,12 +82,12 @@ MIDDLEWARE = [
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:8000",  # ✅ Adicione sua URL local
-    "http://localhost:8000",
-    "https://almeronsmarttech.com.br",  # ✅ Adicione o domínio do site
-    "https://www.almeronsmarttech.com.br",
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://127.0.0.1:8000",  # ✅ Adicione sua URL local
+#     "http://localhost:8000",
+#     "https://almeronsmarttech.com.br",  # ✅ Adicione o domínio do site
+#     "https://www.almeronsmarttech.com.br",
+# ]
 
 # Comentário para tentar atualizar
 

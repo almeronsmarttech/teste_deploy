@@ -1,0 +1,45 @@
+<svg width="300" height="600" viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg">
+  {% with
+    sec_x=100
+    sec_y=200
+    escx=sec_x|floatformat:2
+    escy=sec_y|floatformat:2
+    margem=5
+    barra_r=diam_barra/2
+  %}
+  <rect x="{{ margem }}" y="{{ margem }}" width="{{ escx }}" height="{{ escy }}"
+        stroke="black" fill="none" stroke-width="0.5" />
+
+  <!-- Cotas -->
+  <text x="{{ sec_x/2 }}" y="{{ escy + 10 }}" font-size="4" text-anchor="middle">hx = {{ hx }} cm</text>
+  <text transform="rotate(-90)" x="-{{ sec_y/2 }}" y="0" font-size="4" text-anchor="middle">hy = {{ hy }} cm</text>
+
+  <!-- Barras em X (superior e inferior) -->
+  {% for i in nbx|make_list %}
+    {% with ix=forloop.counter0 %}
+      {% with dx=escx/(nbx|add:-1) %}
+        {% if nbx > 1 %}
+        <!-- Inferior -->
+        <circle cx="{{ margem + dx*ix }}" cy="{{ margem + escy - d_linha }}" r="{{ barra_r }}" fill="red" />
+        <!-- Superior -->
+        <circle cx="{{ margem + dx*ix }}" cy="{{ margem + d_linha }}" r="{{ barra_r }}" fill="red" />
+        {% endif %}
+      {% endwith %}
+    {% endwith %}
+  {% endfor %}
+
+  <!-- Barras em Y (esquerda e direita) -->
+  {% for j in nby|make_list %}
+    {% with jy=forloop.counter0 %}
+      {% with dy=escy/(nby|add:-1) %}
+        {% if nby > 1 %}
+        <!-- Esquerda -->
+        <circle cx="{{ margem + d_linha }}" cy="{{ margem + dy*jy }}" r="{{ barra_r }}" fill="red" />
+        <!-- Direita -->
+        <circle cx="{{ margem + escx - d_linha }}" cy="{{ margem + dy*jy }}" r="{{ barra_r }}" fill="red" />
+        {% endif %}
+      {% endwith %}
+    {% endwith %}
+  {% endfor %}
+  {% endwith %}
+</svg>

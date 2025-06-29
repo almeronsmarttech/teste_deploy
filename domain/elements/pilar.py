@@ -8,26 +8,7 @@ from domain.codes.nbr_6118_2023 import cobrimento
 from domain.materials.concreto import Concreto
 from domain.materials.aco import Aco, Barra
 from domain.structure.estrutura import Estrutura
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+from domain.utils.geral import bhaskara, mais_proximo
 
 
 class PilarRetangular:
@@ -47,6 +28,11 @@ class PilarRetangular:
         self.__Ac = self.__A  # menos a armadura - área líquida
         self.__lex = lex
         self.__ley = ley
+        self.__dl = 5
+        # ************************* AJUSTAR PARA A OUTRA DIREÇÃO TAMBÉM
+        self.__d = self.__hy - self.__dl
+        self.__h = self.__hy
+        # *************************************************************
         self.__Ro_min = 0.004 * self.__A
         self.__Ro_max = 0.04 * self.__A
         self._estrutura = estrutura
@@ -136,6 +122,25 @@ class PilarRetangular:
             self.__Mdtoty = self.__MAy
 #        self.__rigidez_capa_aprox_y = self.pilar_padrao_rigidez_kapa_aproximada(self.__hy, self.__alfaby, self.__MAy,
 #                                                                                self.__ley)
+    @property
+    def Mdx_topo(self):
+        return self.__Mdx_topo
+
+    @property
+    def Mdx_base(self):
+        return self.__Mdx_base
+
+    @property
+    def Mdy_topo(self):
+        return self.__Mdy_topo
+
+    @property
+    def Mdy_base(self):
+        return self.__Mdy_base
+
+    @property
+    def NSd(self):
+        return self.__NSd
 
     def __str__(self: object) -> str:
         dados = f"\nDADOS DO PILAR:\n\nhx: {self.__hx} cm\thy: {self.__hy} cm\tlex: {self.__lex} cm\tley: {self.__ley} cm\n" \
@@ -208,6 +213,215 @@ class PilarRetangular:
     def pilar_padrao_curvatura_aproximada(self, dimensao):
         return min(0.005 / (dimensao * (self.__ni_adot + 0.5)), 0.005 / dimensao)
 
+    def dominio_deformacao(self, x_estrela, x_2_3, x_lim):
+        if x_estrela < 0:
+            print("Domínio 1")
+            eps_c = -10 * (x_estrela / (self.__d - x_estrela)) / 1000
+            eps_1 = 10 / 1000
+            eps_2 = 10 * ((self.__dl - x_estrela) / (self.__d - x_estrela)) / 1000
+
+        elif x_estrela < x_2_3:
+            print("Domínio 2")
+            eps_c = 10 * (x_estrela / (self.__d - x_estrela)) / 1000
+            eps_1 = 10 / 1000
+            eps_2 = 10 * ((x_estrela - self.__dl) / (self.__d - x_estrela)) / 1000
+            print(eps_2)
+        elif x_estrela < x_lim:
+            print("Domínio 3")
+            eps_c = 3.5 / 1000
+            eps_1 = 3.5 * ((self.__d - x_estrela) / x_estrela) / 1000
+            eps_2 = 3.5 * ((x_estrela - self.__dl) / x_estrela) / 1000
+
+        elif x_estrela < self.__d:
+            print("Domínio 4")
+            eps_c = 3.5 / 1000
+            eps_1 = 3.5 * ((self.__d - x_estrela) / x_estrela) / 1000
+            eps_2 = 3.5 * ((x_estrela - self.__dl) / x_estrela) / 1000
+
+        elif x_estrela < self.__h:
+            print("Domínio 4a")
+            eps_c = 3.5 / 1000
+            eps_1 = 3.5 * ((self.__d - x_estrela) / x_estrela) / 1000
+            eps_2 = 3.5 * ((x_estrela - self.__dl) / x_estrela) / 1000
+
+        else:  # x_estrela > h
+            print("Domínio 5")
+            divisor = (x_estrela - (3 / 7) * self.__h)
+            eps_c = 2 * (x_estrela / divisor) / 1000
+            eps_1 = 2 * ((x_estrela - self.__d) / divisor) / 1000
+            eps_2 = 2 * ((x_estrela - self.__dl) / divisor) / 1000
+
+        #eps_c, eps1, eps2 = eps_c / 1000, eps_1 / 1000, eps_2 / 1000
+        sigma_1_estrela, sigma_2_estrela = self.Tensoes(eps_1, eps_2)
+        return eps_c, eps_1, eps_2, sigma_1_estrela, sigma_2_estrela
+
+    def Tensoes(self, eps_1, eps_2):
+        print(f"Função Tensões:\neps1: {eps_1}, eps2: {eps_2}, epsilon_y_d: {self.__aco.epsilon_y_d}")
+        if (eps_1<self.__aco.epsilon_y_d):
+            sigma_1_estrela = self.__aco._es * eps_1
+        else:
+            sigma_1_estrela = self.__aco.fyd
+
+        if (eps_2<self.__aco.epsilon_y_d):
+            sigma_2_estrela = self.__aco._es * eps_2
+        else:
+            sigma_2_estrela = self.__aco.fyd
+
+        return sigma_1_estrela, sigma_2_estrela
+
+    def iterar_As1_As2(self, x, x_2_3, x_lim, A1, B1, C1, A2, B2, C2, b,max_iter=100, tolerancia=0.001, min_iter=5):
+        x_arb = x / 2
+        D = self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b
+        #min_iter = 5  # Número mínimo de iterações
+
+        for i in range(max_iter):
+            # Etapa 1: calcular deformações e tensões
+            eps_c, eps_1, eps_2, sigma_1_estrela, sigma_2_estrela = self.dominio_deformacao(x_arb, x_2_3, x_lim)
+
+            # Calcular As1 e x_calc1
+            As1 = (A1 * x_arb ** 2 + B1 * x_arb + C1) / sigma_1_estrela
+            x_calc1 = (self.NSd - As1 * (sigma_2_estrela - sigma_1_estrela)) / D
+
+            # Calcular As2 e x_calc2
+            As2 = (A2 * x_arb ** 2 + B2 * x_arb + C2) / sigma_2_estrela
+            x_calc2 = (self.NSd - As2 * (sigma_2_estrela - sigma_1_estrela)) / D
+
+            # Verificar critério de convergência
+            if i >= min_iter and abs(As1 - As2) / max(As1, As2) <= tolerancia:
+                print(f"[Iter {i}] Convergência alcançada.")
+                return As1, As2, x_arb
+
+            # Atualizar x_arb
+            x_arb = (x_arb + mais_proximo(x_arb, x_calc1, x_calc2)) / 2
+
+        print("[Aviso] Máximo de iterações alcançado sem convergir.")
+        return As1, As2, x_arb  # último valor
+
+    def dimensionamento(self):
+        # Para My
+        b = self.__hx
+        h = self.__hy
+        dl = 5
+        d = h - dl
+
+        e_0 = self.Mdy_topo*100/self.__NSd
+        e_1 = (d - dl)/2 + e_0
+        e_2 = (d - dl)/2 - e_0
+        print(f"e_0: {e_0}\te_1: {e_1}\te_2: {e_2}")
+
+        e2_0 = (self.__NSd/(2*self.__conc.alfa_c*self.__conc.fcd*b))-dl
+
+        x_2_3 = 0.259 * d
+        x_lim = 0.628 * d
+
+        e2_2_3 = (self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * d *(0.5*self.__conc.lambdaa*d-dl))/self.__NSd
+
+        Rcc_estrela = self.__conc.alfa_c * self.__conc.fcd * b * h # força do concreto em toda a seção comprimida
+        x_estrela = h / self.__conc.lambdaa
+
+        eps_c , eps_1, eps_2, sigma_1_estrela,  sigma_2_estrela= self.dominio_deformacao(x_estrela, x_2_3, x_lim)
+        print(f"eps_c: {eps_c}\teps_1: {eps_1}\teps_2: {eps_2}\teps_y_d: {self.__aco.epsilon_y_d}")
+
+        print(f"sigma_1_estrela: {sigma_1_estrela:.2f} kN/cm2\tsigma_2_estrela: {sigma_2_estrela:.2f} kN/cm2\t")
+            
+        e2_3_4 = ((d-dl)/2)*(1+((Rcc_estrela/self.NSd)-1)*((sigma_2_estrela-sigma_1_estrela)/(sigma_2_estrela+sigma_1_estrela)))
+        print(f"x_2_3: {x_2_3}\tx_lim: {x_lim}\te2_0: {e2_0}\te2_2_3: {e2_2_3*self.__NSd}\tRcc_estrela: {Rcc_estrela}\tx_estrela:{x_estrela}\te2_3_4: {e2_3_4*self.__NSd}")
+        e_2_0 = (self.__NSd/(2*self.__conc.alfa_c*self.__conc.fcd*b))-dl
+        if e_2 < e_2_0:
+            print("É necessário armar")
+        else:
+            print("Não é necessário armar")
+        if e_2 < 0:
+            print("Caso 1")
+            A1 = (self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * 0.5 * self.__conc.lambdaa) / (d - dl)
+            B1 = (self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * (-dl)) / (d - dl)
+            C1 = self.NSd * abs(e_2) / (d - dl)
+            print(f"A1 = {A1}\tB1 = {B1}\tC1 = {C1}")
+
+
+            A2 = -(self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * -0.5 * self.__conc.lambdaa) / (d - dl)
+            B2 = -(self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * d) / (d - dl)
+            C2 = self.NSd * abs(e_1) / (d - dl)
+            print(f"A2 = {A2}\tB2 = {B2}\tC2 = {C2}")
+            possiveis_x = []
+            if bhaskara(A1, B1, C1):
+                x1, x2 = bhaskara(A1, B1, C1)
+                possiveis_x.append(x1)
+                possiveis_x.append(x2)
+                print(f"x1 = {x1}\tx2 = {x2}")
+            else:
+                print("Não possui raizes reais")
+
+            if bhaskara(A2, B2, C2):
+                x3, x4 = bhaskara(A2, B2, C2)
+                possiveis_x.append(x3)
+                possiveis_x.append(x4)
+                print(f"x3 = {x3}\tx4 = {x4}")
+            else:
+                print("Não possui raizes reais")
+
+            x = None
+
+            for xi in possiveis_x:
+                if xi >= 0 and xi <= d:  # para o caso 1 (domínios 2, 3 e 4)
+                    x = xi
+            print(f"x = {x}")
+
+            x_arb = x / 2
+            As1, As2, x = self.iterar_As1_As2(x_arb,x_2_3,x_lim,A1,B1,C1,A2,B2,C2,b)
+            print(f"As1 = {As1}\tAs2 = {As2}\tx = {x}")
+            # x_arb = x / 2
+            # eps_c , eps_1, eps_2, sigma_1_estrela, sigma_2_estrela = self.dominio_deformacao(x_arb,x_2_3,x_lim)
+            # print(f"eps_c: {eps_c}\teps_1: {eps_1}\teps_2: {eps_2}\teps_y_d: {self.__aco.epsilon_y_d}\tsigma_1_estrela: {sigma_1_estrela}\tsigma_2_estrela: {sigma_2_estrela}")
+            # D = (self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b)
+            # As1, x_calc1, As2, x_calc2 = 0, 0, 0, 0
+            # print(f"A1: {A1}\tx_arb: {x_arb}\tB1: {B1}\tC1: {C1}\tsimga_1_estrela: {sigma_1_estrela}")
+            # As1 = (A1 * x_arb ** 2 + B1 * x_arb + C1) / sigma_1_estrela
+            # x_calc1 = (self.NSd - As1 * (sigma_2_estrela - sigma_1_estrela)) / D
+            # print(f"A2: {A2}\tx_arb: {x_arb}\tB2: {B2}\tC2: {C2}\tsimga_2_estrela: {sigma_2_estrela}")
+            # As2 = (A2 * x_arb ** 2 + B2 * x_arb + C2) / sigma_2_estrela
+            # x_calc2 = (self.NSd - As2 * (sigma_2_estrela - sigma_1_estrela)) / D
+            # print(f"As1 = {As1}\tAs2 = {As2}\tx_calc1 = {x_calc1}\tx_calc2 = {x_calc2}")
+            # x_arb2 = (x_arb + mais_proximo(x_arb,x_calc1,x_calc2)) / 2
+            # print(f"x_arb2 = {x_arb2}")
+            # eps_c, eps_1, eps_2, sigma_1_estrela, sigma_2_estrela = self.dominio_deformacao(x_arb2, x_2_3, x_lim)
+            #
+            # print(
+            #     f"eps_c: {eps_c}\teps_1: {eps_1}\teps_2: {eps_2}\teps_y_d: {self.__aco.epsilon_y_d}\tsigma_1_estrela: {sigma_1_estrela}\tsigma_2_estrela: {sigma_2_estrela}")
+            #
+            # As1, x_calc1, As2, x_calc2 = 0, 0, 0, 0
+            # print(f"A1: {A1}\tx_arb: {x_arb2}\tB1: {B1}\tC1: {C1}\tsimga_1_estrela: {sigma_1_estrela}")
+            # As1 = (A1 * x_arb2 ** 2 + B1 * x_arb2 + C1) / sigma_1_estrela
+            # x_calc1 = (self.NSd - As1 * (sigma_2_estrela - sigma_1_estrela)) / D
+            # print(f"A2: {A2}\tx_arb: {x_arb2}\tB2: {B2}\tC2: {C2}\tsimga_2_estrela: {sigma_2_estrela}")
+            # As2 = (A2 * x_arb2 ** 2 + B2 * x_arb2 + C2) / sigma_2_estrela
+            # x_calc2 = (self.NSd - As2 * (sigma_2_estrela - sigma_1_estrela)) / D
+            # print(f"As1 = {As1}\tAs2 = {As2}\tx_calc1 = {x_calc1}\tx_calc2 = {x_calc2}")
+            # x_arb3 = (x_arb2 + mais_proximo(x_arb2, x_calc1, x_calc2)) / 2
+            # print(f"x_arb3 = {x_arb3}")
+            #
+            # eps_c, eps_1, eps_2, sigma_1_estrela, sigma_2_estrela = self.dominio_deformacao(x_arb3, x_2_3, x_lim)
+            #
+            # print(
+            #     f"eps_c: {eps_c}\teps_1: {eps_1}\teps_2: {eps_2}\teps_y_d: {self.__aco.epsilon_y_d}\tsigma_1_estrela: {sigma_1_estrela}\tsigma_2_estrela: {sigma_2_estrela}")
+            #
+            # As1, x_calc1, As2, x_calc2 = 0, 0, 0, 0
+            # print(f"A1: {A1}\tx_arb: {x_arb3}\tB1: {B1}\tC1: {C1}\tsimga_1_estrela: {sigma_1_estrela}")
+            # As1 = (A1 * x_arb3 ** 2 + B1 * x_arb3 + C1) / sigma_1_estrela
+            # x_calc1 = (self.NSd - As1 * (sigma_2_estrela - sigma_1_estrela)) / D
+            # print(f"A2: {A2}\tx_arb: {x_arb3}\tB2: {B2}\tC2: {C2}\tsimga_2_estrela: {sigma_2_estrela}")
+            # As2 = (A2 * x_arb3 ** 2 + B2 * x_arb3 + C2) / sigma_2_estrela
+            # x_calc2 = (self.NSd - As2 * (sigma_2_estrela - sigma_1_estrela)) / D
+            # print(f"As1 = {As1}\tAs2 = {As2}\tx_calc1 = {x_calc1}\tx_calc2 = {x_calc2}")
+
+
+
+        elif e_2 < e2_2_3:
+            print("Caso 2")
+        elif e_2 < e2_3_4:
+            print("Caso 3")
+        else:
+            print("Caso 4")
     # import math
     # def pilar_padrao_rigidez_kapa_aproximada(self, dimensao, alfab, M1dA, le):
     #     dimensao /= 100

@@ -22,7 +22,7 @@ class Concreto:
         self.__alfa_c = self.calcular_alfa_c()
         # faccio
         # self.__beta_lim, self.__alfa, self.__eta = .45, .85, .45 if self.__fck <= 50 else .35, .35, .35
-        self._beta_lim, self._alfa, self._lambda, self._eta = (
+        self._beta_lim, self._alfa, self._lambdaa, self._eta = (
             .45 if self.__fck <= 50 else .35,
             .85 if self.__fck <= 50 else 0.85 * (1 - (self.__fck - 50) / 200),
             .8 if self.__fck <= 50 else 0.8 - (self.fck - 50) / 400,
@@ -173,4 +173,4 @@ class Concreto:
 
     @property
     def lambdaa(self):
-        return self.__lambda
+        return self._lambdaa

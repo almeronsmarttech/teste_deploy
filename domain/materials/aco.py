@@ -7,8 +7,9 @@ class Aco:
 
         self.__fyd = self.__fyk/10/self.__gama_s # kN/cm2
         self.__fywd = min(self.__fyd, 43.5)
-        #self.__es = 21000
-        self._es = 20000
+        self._es = 21000
+        #self._es = 20000
+        self.__epsilon_y_d = self.__fyd / self._es # self.__epsilon_y_d = deformação de cálculo no aço (2.07 por mil ou 0.207%)
         print(f"Aço\nfyk: {self.__fyk} MPa\t fyd: {self.__fyd:.4f} kN/cm2\t Es: {int(self._es)} MPa")
 
     @property
@@ -22,6 +23,10 @@ class Aco:
     @property
     def fywd(self):
         return self.__fywd
+
+    @property
+    def epsilon_y_d(self):
+        return self.__epsilon_y_d
 
     def Tensao(self, esl):
         # Calcula a tensão no aço
