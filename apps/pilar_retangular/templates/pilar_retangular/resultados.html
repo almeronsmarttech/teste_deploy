@@ -1,8 +1,41 @@
+{#<div class="mt-6">#}
+{#  <h2 class="text-xl font-bold text-gray-800 mb-2">Resultados</h2>#}
+{#  <ul class="list-disc ml-6 text-gray-700">#}
+{#    <li><strong>Mdtot x:</strong> {{ Mdtotx_topo|floatformat:2 }} kN·m</li>#}
+{#    <li><strong>Mdtot y:</strong> {{ Mdtotx_base|floatformat:2 }} kN·m</li>#}
+{#  </ul>#}
+{#</div>#}
+{##}
+{#<div class="mt-8">#}
+{#  <h2 class="text-xl font-semibold text-gray-800 mb-2">Seção com Carga Aplicada</h2>#}
+{#  <div class="border border-gray-300 rounded p-4 bg-white shadow">#}
+{#    {{ svg_resultado|safe }}#}
+{#  </div>#}
+{#</div>#}
+
+
 <div class="mt-6">
   <h2 class="text-xl font-bold text-gray-800 mb-2">Resultados</h2>
   <ul class="list-disc ml-6 text-gray-700">
     <li><strong>Mdtot x:</strong> {{ Mdtotx_topo|floatformat:2 }} kN·m</li>
     <li><strong>Mdtot y:</strong> {{ Mdtotx_base|floatformat:2 }} kN·m</li>
+  </ul>
+</div>
+
+<div class="mt-6">
+  <h2 class="text-lg font-semibold text-gray-800 mb-2">Armaduras</h2>
+  <ul class="space-y-2 ml-6">
+    <li class="{% if As_x_nec > As_x %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-800{% endif %} px-3 py-1 rounded">
+      <strong>As x existente:</strong> {{ As_x }} cm² – <strong>Necessária:</strong> {{ As_x_nec|floatformat:2 }} cm²
+    </li>
+    <li class="{% if As_y_nec > As_y %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-800{% endif %} px-3 py-1 rounded">
+      <strong>As y existente:</strong> {{ As_y }} cm² – <strong>Necessária:</strong> {{ As_y_nec|floatformat:2 }} cm²
+    </li>
+    <li class="{% if As_x|add:As_y < As_min %}bg-red-100 text-red-700{% elif As_x|add:As_y > As_max %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-800{% endif %} px-3 py-1 rounded">
+      <strong>As total existente:</strong> {{ As_total_existente }} cm²<br>
+      <strong>As mín:</strong> {{ As_min|floatformat:2 }} cm² –
+      <strong>As máx:</strong> {{ As_max|floatformat:2 }} cm²
+    </li>
   </ul>
 </div>
 

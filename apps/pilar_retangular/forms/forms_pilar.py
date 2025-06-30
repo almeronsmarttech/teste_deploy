@@ -1,6 +1,6 @@
 from django import forms
-num_choices = [(i, i) for i in range(2, 11)]
 
+num_choices = [(i, i) for i in range(2, 11)]
 
 class PilarRetangularForm(forms.Form):
     hx = forms.IntegerField(label='hx (cm)')
@@ -22,3 +22,17 @@ class PilarRetangularForm(forms.Form):
 
     num_barras_x = forms.ChoiceField(label="Nº barras em x", choices=num_choices, initial=2)
     num_barras_y = forms.ChoiceField(label="Nº barras em y", choices=num_choices, initial=2)
+
+    BITOLAS_CHOICES = [
+        (10.0, '10,0 mm'),
+        (12.5, '12,5 mm'),
+        (16.0, '16,0 mm'),
+        (20.0, '20,0 mm'),
+        (25.0, '25,0 mm'),
+    ]
+    bitola_mm = forms.ChoiceField(
+        choices=BITOLAS_CHOICES,
+        label='Bitola (mm)',
+        initial=10.0,
+        required=True
+    )

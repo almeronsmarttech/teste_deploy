@@ -3,7 +3,7 @@ from ..materials.aco import Aco, Barra
 from ..codes.nbr_6118_2023 import cobrimento
 
 class Estrutura:
-    def __init__(self, nome = '', norma = "nbr_6118_2023", concreto = Concreto(fck=25), aco = Aco(fyk=500), caa="III", gama_c=1.4, gama_s=1.15, gama_F=1.4, diametro_estribo_viga = 6.3,diametro_logitudinal_viga = 16.0):
+    def __init__(self, nome = '', norma = "nbr_6118_2023", concreto = Concreto(fck=25), aco = Aco(fyk=500), caa="III", gama_c=1.4, gama_s=1.15, gama_F=1.4, taxa_arm_min_pilar = 0.4/100,taxa_arm_max_pilar = (8/2)/100, diametro_estribo_viga = 6.3,diametro_logitudinal_viga = 16.0):
         self.nome = nome
         self.concreto = concreto
         self.aco = aco
@@ -12,6 +12,8 @@ class Estrutura:
         self.gama_c = gama_c
         self.gama_s = gama_s
         self.gama_F = gama_F
+        self.taxa_arm_min_pilar = taxa_arm_min_pilar
+        self.taxa_arm_max_pilar = taxa_arm_max_pilar
         self.pavimentos = []
         self.diametro_estribo_viga = diametro_estribo_viga
         self.diametro_logitudinal_viga = diametro_logitudinal_viga

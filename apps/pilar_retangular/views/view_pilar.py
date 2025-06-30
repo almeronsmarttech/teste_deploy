@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET
 from domain.utils.desenho import desenhar_svg_pilar, desenhar_svg_resultado
+from math import pi
 
 
 class PilarRetangularView(FormView):
@@ -54,26 +55,56 @@ class PilarRetangularView(FormView):
             estrutura=estrutura
         )
 
+        # Cálculo das áreas de aço As_x e As_y
+        num_barras_x = int(form.cleaned_data.get("num_barras_x", 2))
+        num_barras_y = int(form.cleaned_data.get("num_barras_y", 2))
+        bitola_mm = float(form.cleaned_data.get("bitola_mm", 10.0))
+        area_barra_cm2 = (pi * bitola_mm**2) / 400.0
+        As_x = num_barras_x * area_barra_cm2
+        As_y = num_barras_y * area_barra_cm2
+        print(f"Asx existente= {As_x} cm2\tAs_y existente= {As_y} cm2")
+
+        #print(f"MRdxx = {MRdxx}\tMRdyy = {MRdyy}")
         svg_resultado = desenhar_svg_resultado(
             hx=float(hx),
             hy=float(hy),
-            num_barras_x=int(form.cleaned_data.get("num_barras_x", 2)),
-            num_barras_y=int(form.cleaned_data.get("num_barras_y", 2)),
-            e_x = max(pilar.Mdx_topo,pilar.Mdx_base)/pilar.NSd,
-            e_y = max(pilar.Mdy_topo,pilar.Mdy_base)/pilar.NSd,
+            num_barras_x=num_barras_x,
+            num_barras_y=num_barras_y,
+            e_x=max(pilar.Mdx_topo, pilar.Mdx_base)/pilar.NSd,
+            e_y=max(pilar.Mdy_topo, pilar.Mdy_base)/pilar.NSd,
         )
-        pilar.dimensionamento()
         resultado = pilar.resultados()
+        As1_x_nec, As2_x_nec = pilar.dimensionamento(hx, hy,resultado[0])
+        As1_y_nec, As2_y_nec = pilar.dimensionamento(hy, hx, resultado[1])
+        print(f"As1_y_necessária= {As1_y_nec} cm2\tAs2_y necessária= {As2_y_nec} cm2")
+        print(f"As1_x_necessária= {As1_x_nec} cm2\tAs2_x necessária= {As2_x_nec} cm2")
+        #pilar.dimensionamento()
+        As_min = pilar.As_min
+        As_max = pilar.As_max
+        As_total_existente = (num_barras_x+num_barras_y)*area_barra_cm2
+        print(f"As min= {As_min} cm2\tAs existente= {As_total_existente} cm2")
+
+
         context = {
             "form": form,
             "Mdtotx_topo": resultado[0],
             "Mdtotx_base": resultado[1],
             "hx": hx,
             "hy": hy,
-            "num_barras_x": form.cleaned_data.get("num_barras_x", 2),
-            "num_barras_y": form.cleaned_data.get("num_barras_y", 2),
+            "num_barras_x": num_barras_x,
+            "num_barras_y": num_barras_y,
+            "As_x": round(As_x, 2),
+            "As_y": round(As_y, 2),
+            "bitola_mm": bitola_mm,
             "timestamp": timezone.now(),
-            "svg_resultado": svg_resultado,  # Adicionado para mostrar o desenho nos resultados
+            "svg_resultado": svg_resultado,
+            "As_x": round(As_x,2),
+            "As_y": round(As_y,2),
+            "As_x_nec": round(max(As1_x_nec,As2_x_nec),2),
+            "As_y_nec": round(max(As1_y_nec,As2_y_nec),2),
+            "As_min": round(As_min,2),
+            "As_max": round(As_max,2),
+            "As_total_existente": round(As_total_existente,2),
         }
 
         if self.request.htmx:

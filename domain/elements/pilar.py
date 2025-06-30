@@ -33,13 +33,11 @@ class PilarRetangular:
         self.__d = self.__hy - self.__dl
         self.__h = self.__hy
         # *************************************************************
-        self.__Ro_min = 0.004 * self.__A
-        self.__Ro_max = 0.04 * self.__A
+        #self.__Ro_min = 0.004 * self.__A
+        #self.__Ro_max = 0.04 * self.__A
         self._estrutura = estrutura
         self.__cobrimento = self.cobrimento()
-        self.__As_efe = 0
-        self.__As_calc = 0
-        self.__Asw = 0
+
 
         # Materiais
         self.__aco = estrutura.aco
@@ -59,6 +57,19 @@ class PilarRetangular:
         self.__Mdy_base = self.__Mky_base * self._estrutura.gama_F
         self.__Mdy_topo = self.__Mky_topo * self._estrutura.gama_F
 
+        self.__As_min = self.armadura_minima()
+        self.__As_max = self.armadura_maxima()
+        self.__As_topo_base_calc = 0  # vem do dimensionamento
+        self.__As_topo_base_nec = max(self.__As_min, self.__As_topo_base_calc)
+        self.__As_topo_base_efe = 0  # vem do detalhamento
+
+        self.__As_esq_dir_calc = 0  # vem do dimensionamento
+        self.__As_topo_base_nec = max(self.__As_min, self.__As_esq_dir_calc)
+        self.__As_esq_dir_efe = 0  # vem do detalhamento
+        self.__Asw = 0
+
+        self.__x_linha_neutra = 0
+
         if min(self.__hx, self.__hy) < 19 and min(self.__hx, self.__hy) >= 14:
             gaman = 1.95 - 0.05 * min(self.__hx, self.__hy)
             self.__NSd * gaman
@@ -69,7 +80,7 @@ class PilarRetangular:
         # Adimensionais
         self.__ni_calc = self.__NSd / (self.__Ac * self.__conc.fcd)
         self.__ni_adot = max(self.__ni_calc, 0.5)
-        # self.__mi =
+
         self.__MAx, self.__MBx = max(abs(self.__Mdx_topo), abs(
             self.__Mdx_base), self.__M1dmin_x), min(abs(self.__Mdx_topo), abs(self.__Mdx_base))
         # Verifica se o MxB tem que ser negativo
@@ -104,7 +115,7 @@ class PilarRetangular:
         self.__lambda1y_calc = (25 + 12.5 * (self.__e1y / self.__hy)) / self.__alfaby
         self.__lambda1y_adot = min(max(self.__lambda1y_calc, 35), 90)
 
-        #self.__Mdtotx, self.__Mdtoty = 0,0
+
 
         self.__curvatura_x = self.pilar_padrao_curvatura_aproximada(self.__hx)
         self.__e2x = ((self.__lex ** 2) / 10) * self.__curvatura_x
@@ -112,16 +123,17 @@ class PilarRetangular:
         self.__Mdtotx = self.__alfabx * self.__MAx + self.__M2dx
         if self.__lambda1x_adot > self.__lambdax:
             self.__Mdtotx = self.__MAx
-        #self.__rigidez_capa_aprox_x = self.pilar_padrao_rigidez_kapa_aproximada(self.__hx, self.__alfabx, self.__MAx,
-        #                                                                        self.__lex)
+
+        #self.__Mdtotx, self.__Mdtoty = 0,0
+        #self.__rigidez_capa_aprox_x = self.pilar_padrao_rigidez_kapa_aproximada(self.__hx, self.__alfabx, self.__MAx, self.__lex)
         self.__curvatura_y = self.pilar_padrao_curvatura_aproximada(self.__hy)
         self.__e2y = ((self.__ley ** 2) / 10) * self.__curvatura_y
         self.__M2dy = self.__NSd * self.__e2y
         self.__Mdtoty = self.__alfaby * self.__MAy + self.__M2dy
         if self.__lambda1y_adot > self.__lambday:
             self.__Mdtoty = self.__MAy
-#        self.__rigidez_capa_aprox_y = self.pilar_padrao_rigidez_kapa_aproximada(self.__hy, self.__alfaby, self.__MAy,
-#                                                                                self.__ley)
+#        self.__rigidez_capa_aprox_y = self.pilar_padrao_rigidez_kapa_aproximada(self.__hy, self.__alfaby, self.__MAy, self.__ley)
+
     @property
     def Mdx_topo(self):
         return self.__Mdx_topo
@@ -141,6 +153,18 @@ class PilarRetangular:
     @property
     def NSd(self):
         return self.__NSd
+
+    @property
+    def As_min(self):
+        return self.__As_min
+
+    @property
+    def As_max(self):
+        return self.__As_max
+
+    @property
+    def x_linha_neutra(self):
+        return self.__x_linha_neutra
 
     def __str__(self: object) -> str:
         dados = f"\nDADOS DO PILAR:\n\nhx: {self.__hx} cm\thy: {self.__hy} cm\tlex: {self.__lex} cm\tley: {self.__ley} cm\n" \
@@ -219,7 +243,6 @@ class PilarRetangular:
             eps_c = -10 * (x_estrela / (self.__d - x_estrela)) / 1000
             eps_1 = 10 / 1000
             eps_2 = 10 * ((self.__dl - x_estrela) / (self.__d - x_estrela)) / 1000
-
         elif x_estrela < x_2_3:
             print("Domínio 2")
             eps_c = 10 * (x_estrela / (self.__d - x_estrela)) / 1000
@@ -231,19 +254,16 @@ class PilarRetangular:
             eps_c = 3.5 / 1000
             eps_1 = 3.5 * ((self.__d - x_estrela) / x_estrela) / 1000
             eps_2 = 3.5 * ((x_estrela - self.__dl) / x_estrela) / 1000
-
         elif x_estrela < self.__d:
             print("Domínio 4")
             eps_c = 3.5 / 1000
             eps_1 = 3.5 * ((self.__d - x_estrela) / x_estrela) / 1000
             eps_2 = 3.5 * ((x_estrela - self.__dl) / x_estrela) / 1000
-
         elif x_estrela < self.__h:
             print("Domínio 4a")
             eps_c = 3.5 / 1000
             eps_1 = 3.5 * ((self.__d - x_estrela) / x_estrela) / 1000
             eps_2 = 3.5 * ((x_estrela - self.__dl) / x_estrela) / 1000
-
         else:  # x_estrela > h
             print("Domínio 5")
             divisor = (x_estrela - (3 / 7) * self.__h)
@@ -251,12 +271,11 @@ class PilarRetangular:
             eps_1 = 2 * ((x_estrela - self.__d) / divisor) / 1000
             eps_2 = 2 * ((x_estrela - self.__dl) / divisor) / 1000
 
-        #eps_c, eps1, eps2 = eps_c / 1000, eps_1 / 1000, eps_2 / 1000
         sigma_1_estrela, sigma_2_estrela = self.Tensoes(eps_1, eps_2)
         return eps_c, eps_1, eps_2, sigma_1_estrela, sigma_2_estrela
 
     def Tensoes(self, eps_1, eps_2):
-        print(f"Função Tensões:\neps1: {eps_1}, eps2: {eps_2}, epsilon_y_d: {self.__aco.epsilon_y_d}")
+
         if (eps_1<self.__aco.epsilon_y_d):
             sigma_1_estrela = self.__aco._es * eps_1
         else:
@@ -266,11 +285,13 @@ class PilarRetangular:
             sigma_2_estrela = self.__aco._es * eps_2
         else:
             sigma_2_estrela = self.__aco.fyd
-
+        print(f"Função Tensões:\neps1: {eps_1*1000:.2f} ‰\tsigma_1: {sigma_1_estrela:.2f} kN/cm2\teps2: {eps_2*1000:.2f} ‰\tsigma_2: {sigma_2_estrela:.2f} kN/cm2")
         return sigma_1_estrela, sigma_2_estrela
 
-    def iterar_As1_As2(self, x, x_2_3, x_lim, A1, B1, C1, A2, B2, C2, b,max_iter=100, tolerancia=0.001, min_iter=5):
-        x_arb = x / 2
+    def iterar_As1_As2_caso1_caso2(self, x, x_2_3, x_lim, A1, B1, C1, A2, B2, C2, b, max_iter=100, tolerancia=0.001, min_iter=3):
+        #x_arb = x / 2
+        x_arb = x
+        print(f"x_arb: {x_arb:.2f}")
         D = self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b
         #min_iter = 5  # Número mínimo de iterações
 
@@ -285,6 +306,33 @@ class PilarRetangular:
             # Calcular As2 e x_calc2
             As2 = (A2 * x_arb ** 2 + B2 * x_arb + C2) / sigma_2_estrela
             x_calc2 = (self.NSd - As2 * (sigma_2_estrela - sigma_1_estrela)) / D
+            print(f"As1: {As1:.2f}\tAs2: {As2:.2f}")
+            # Verificar critério de convergência
+            if i >= min_iter and abs(As1 - As2) / max(As1, As2) <= tolerancia:
+                print(f"[Iter {i}] Convergência alcançada.")
+                return As1, As2, x_arb
+
+            # Atualizar x_arb
+            x_arb = (x_arb + mais_proximo(x_arb, x_calc1, x_calc2)) / 2
+            print(f"x_arb: {x_arb:.2f}")
+        print("[Aviso] Máximo de iterações alcançado sem convergir.")
+        return As1, As2, x_arb  # último valor
+
+    def iterar_As1_As2_caso3(self, x, x_2_3, x_lim, A1, B1, C1, A2, B2, C2, b, max_iter=100, tolerancia=0.001, min_iter=3):
+        x_arb = x
+        D = self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b
+        #min_iter = 5  # Número mínimo de iterações
+        for i in range(max_iter):
+            # Etapa 1: calcular deformações e tensões
+            eps_c, eps_1, eps_2, sigma_1_estrela, sigma_2_estrela = self.dominio_deformacao(x_arb, x_2_3, x_lim)
+
+            # Calcular As1 e x_calc1
+            As1 = (A1 * x_arb ** 2 + B1 * x_arb + C1) / sigma_1_estrela
+            x_calc1 = (self.NSd - As1 * (sigma_2_estrela + sigma_1_estrela)) / D
+
+            # Calcular As2 e x_calc2
+            As2 = (A2 * x_arb ** 2 + B2 * x_arb + C2) / sigma_2_estrela
+            x_calc2 = (self.NSd - As2 * (sigma_2_estrela + sigma_1_estrela)) / D
 
             # Verificar critério de convergência
             if i >= min_iter and abs(As1 - As2) / max(As1, As2) <= tolerancia:
@@ -293,37 +341,106 @@ class PilarRetangular:
 
             # Atualizar x_arb
             x_arb = (x_arb + mais_proximo(x_arb, x_calc1, x_calc2)) / 2
-
+            print(f"x_arb: {x_arb:.2f}")
         print("[Aviso] Máximo de iterações alcançado sem convergir.")
         return As1, As2, x_arb  # último valor
 
-    def dimensionamento(self):
+    def iterar_As1_As2_caso4(self, b, h, d, dl, e_1, e_2, tolerancia=0.001, max_iter=50, min_iter=3):
+        fyd = self.__aco.fyd
+        fcd = self.__conc.fcd
+        alfa_c = self.__conc.alfa_c
+        Es = self.__aco._es
+        epsilon_y_d = self.__aco.epsilon_y_d
+        for i in range(max_iter):
+            # Passo 1: supor que As2 escoou
+            sigma2 = fyd
+            As2 = (self.__NSd * e_1 - alfa_c * fcd * b * h * (d - 0.5 * h)) / (sigma2 * (d - dl))
+            # Passo 2: assumir As1 = As2
+            As1 = As2
+            # Passo 3: calcular sigma1
+            sigma1 = (self.__NSd * e_2 - alfa_c * fcd * b * h * (0.5 * h - dl)) / (As1 * (d - dl))
+            # Passo 4: verificar se As1 escoou
+            if sigma1 >= fyd:
+                eps_1 = epsilon_y_d
+            else:
+                eps_1 = sigma1 / Es
+            # Passo 5: isolar x pela equação da deformação
+            x = ((eps_1 * 3 / 7 * h) - (2 / 1000 * d)) / (eps_1 - 2 / 1000)
+            # Passo 6: calcular eps_2 e sigma2 atualizado
+            eps_2 = (2 / 1000) * ((x - dl) / (x - 3 / 7 * h))
+            sigma2 = Es * eps_2 if eps_2 < epsilon_y_d else fyd
+            # Passo 7: atualizar As2
+            As2_novo = (self.__NSd * e_1 - alfa_c * fcd * b * h * (d - 0.5 * h)) / (sigma2 * (d - dl))
+            print(
+                f"[Iter {i}] sigma1 = {sigma1:.2f}, eps_1 = {eps_1:.6f}, x = {x:.2f} cm, eps_2 = {eps_2:.6f}, sigma2 = {sigma2:.2f}")
+            print(f"[Iter {i}] As1 = {As1:.4f} cm², As2 = {As2_novo:.4f} cm²")
+            # Critério de convergência
+            if i >= min_iter and abs(As1 - As2_novo) / max(As1, As2_novo) <= tolerancia:
+                print(f"[Iter {i}] Convergência alcançada.")
+                return As1, As2_novo, x
+            # Atualiza As2 para próxima iteração
+            As2 = As2_novo
+        print("[Aviso] Máximo de iterações atingido sem convergir.")
+        return As1, As2, x
+
+    def calcular_x(self,A1,B1,C1,A2,B2,C2, ini_itervalo, fim_itervalo):
+        x = None
+        possiveis_x1 = []
+        if bhaskara(A1, B1, C1):
+            x1, x2 = bhaskara(A1, B1, C1)
+            x1, x2 = min(x1, x2), max(x1, x2)
+            print(f"x1 = {x1}\tx2 = {x2}")
+            possiveis_x1.append(x1)
+            possiveis_x1.append(x2)
+            for xi in possiveis_x1:
+                if xi >= ini_itervalo and xi <= fim_itervalo:
+                    if A1 > 0:  # para o caso 1 (domínios 2, 3 e 4)
+                        if xi <= x1 or xi >= x2:  # válido somente fora da parábola
+                            x = xi
+                    else:
+                        if xi >= x1 and xi <= x2:  # válido somente dentro da parábola
+                            x = xi
+        else:
+            print("Não possui raizes reais")
+        possiveis_x2 = []
+        if bhaskara(A2, B2, C2):
+            x3, x4 = bhaskara(A2, B2, C2)
+            x3, x4 = min(x3, x4), max(x3, x4)
+            print(f"x3 = {x3}\tx4 = {x4}")
+            possiveis_x2.append(x3)
+            possiveis_x2.append(x4)
+            for xi in possiveis_x2:
+                if xi >= ini_itervalo and xi <= fim_itervalo:
+                    print(f"xi = {xi}")
+                    if A2 > 0:  # para o caso 1 (domínios 2, 3 e 4)
+                        if xi <= x3 or xi >= x4:  # válido somente fora da parábola
+                            x = xi
+                    else:
+                        if xi >= x3 and xi <= x4:  # válido somente dentro da parábola
+                            x = xi
+        else:
+            print("Não possui raizes reais")
+        return x
+
+    def dimensionamento(self, b, h, Md):
         # Para My
-        b = self.__hx
-        h = self.__hy
+        #b = self.__hx
+        #h = self.__hy
         dl = 5
         d = h - dl
-
-        e_0 = self.Mdy_topo*100/self.__NSd
+        e_0 = Md/self.__NSd
         e_1 = (d - dl)/2 + e_0
         e_2 = (d - dl)/2 - e_0
         print(f"e_0: {e_0}\te_1: {e_1}\te_2: {e_2}")
-
         e2_0 = (self.__NSd/(2*self.__conc.alfa_c*self.__conc.fcd*b))-dl
-
         x_2_3 = 0.259 * d
         x_lim = 0.628 * d
-
         e2_2_3 = (self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * d *(0.5*self.__conc.lambdaa*d-dl))/self.__NSd
-
         Rcc_estrela = self.__conc.alfa_c * self.__conc.fcd * b * h # força do concreto em toda a seção comprimida
         x_estrela = h / self.__conc.lambdaa
-
         eps_c , eps_1, eps_2, sigma_1_estrela,  sigma_2_estrela= self.dominio_deformacao(x_estrela, x_2_3, x_lim)
-        print(f"eps_c: {eps_c}\teps_1: {eps_1}\teps_2: {eps_2}\teps_y_d: {self.__aco.epsilon_y_d}")
-
+        print(f"eps_c: {eps_c*1000:.2f} ‰\teps_1: {eps_1*1000:.2f} ‰\teps_2: {eps_2*1000:.2f} ‰\teps_y_d: {self.__aco.epsilon_y_d*1000:.2f} ‰")
         print(f"sigma_1_estrela: {sigma_1_estrela:.2f} kN/cm2\tsigma_2_estrela: {sigma_2_estrela:.2f} kN/cm2\t")
-            
         e2_3_4 = ((d-dl)/2)*(1+((Rcc_estrela/self.NSd)-1)*((sigma_2_estrela-sigma_1_estrela)/(sigma_2_estrela+sigma_1_estrela)))
         print(f"x_2_3: {x_2_3}\tx_lim: {x_lim}\te2_0: {e2_0}\te2_2_3: {e2_2_3*self.__NSd}\tRcc_estrela: {Rcc_estrela}\tx_estrela:{x_estrela}\te2_3_4: {e2_3_4*self.__NSd}")
         e_2_0 = (self.__NSd/(2*self.__conc.alfa_c*self.__conc.fcd*b))-dl
@@ -331,111 +448,114 @@ class PilarRetangular:
             print("É necessário armar")
         else:
             print("Não é necessário armar")
+            As1 = self.As_min
+            As2 = self.As_min
+            return As1, As2
         if e_2 < 0:
             print("Caso 1")
             A1 = (self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * 0.5 * self.__conc.lambdaa) / (d - dl)
             B1 = (self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * (-dl)) / (d - dl)
             C1 = self.NSd * abs(e_2) / (d - dl)
             print(f"A1 = {A1}\tB1 = {B1}\tC1 = {C1}")
-
-
             A2 = -(self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * -0.5 * self.__conc.lambdaa) / (d - dl)
             B2 = -(self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * d) / (d - dl)
             C2 = self.NSd * abs(e_1) / (d - dl)
             print(f"A2 = {A2}\tB2 = {B2}\tC2 = {C2}")
-            possiveis_x = []
-            if bhaskara(A1, B1, C1):
-                x1, x2 = bhaskara(A1, B1, C1)
-                possiveis_x.append(x1)
-                possiveis_x.append(x2)
-                print(f"x1 = {x1}\tx2 = {x2}")
-            else:
-                print("Não possui raizes reais")
 
-            if bhaskara(A2, B2, C2):
-                x3, x4 = bhaskara(A2, B2, C2)
-                possiveis_x.append(x3)
-                possiveis_x.append(x4)
-                print(f"x3 = {x3}\tx4 = {x4}")
-            else:
-                print("Não possui raizes reais")
-
-            x = None
-
-            for xi in possiveis_x:
-                if xi >= 0 and xi <= d:  # para o caso 1 (domínios 2, 3 e 4)
-                    x = xi
+            x = self.calcular_x(A1, B1, C1, A2, B2, C2,ini_itervalo=0,fim_itervalo=d)
             print(f"x = {x}")
-
-            x_arb = x / 2
-            As1, As2, x = self.iterar_As1_As2(x_arb,x_2_3,x_lim,A1,B1,C1,A2,B2,C2,b)
-            print(f"As1 = {As1}\tAs2 = {As2}\tx = {x}")
-            # x_arb = x / 2
-            # eps_c , eps_1, eps_2, sigma_1_estrela, sigma_2_estrela = self.dominio_deformacao(x_arb,x_2_3,x_lim)
-            # print(f"eps_c: {eps_c}\teps_1: {eps_1}\teps_2: {eps_2}\teps_y_d: {self.__aco.epsilon_y_d}\tsigma_1_estrela: {sigma_1_estrela}\tsigma_2_estrela: {sigma_2_estrela}")
-            # D = (self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b)
-            # As1, x_calc1, As2, x_calc2 = 0, 0, 0, 0
-            # print(f"A1: {A1}\tx_arb: {x_arb}\tB1: {B1}\tC1: {C1}\tsimga_1_estrela: {sigma_1_estrela}")
-            # As1 = (A1 * x_arb ** 2 + B1 * x_arb + C1) / sigma_1_estrela
-            # x_calc1 = (self.NSd - As1 * (sigma_2_estrela - sigma_1_estrela)) / D
-            # print(f"A2: {A2}\tx_arb: {x_arb}\tB2: {B2}\tC2: {C2}\tsimga_2_estrela: {sigma_2_estrela}")
-            # As2 = (A2 * x_arb ** 2 + B2 * x_arb + C2) / sigma_2_estrela
-            # x_calc2 = (self.NSd - As2 * (sigma_2_estrela - sigma_1_estrela)) / D
-            # print(f"As1 = {As1}\tAs2 = {As2}\tx_calc1 = {x_calc1}\tx_calc2 = {x_calc2}")
-            # x_arb2 = (x_arb + mais_proximo(x_arb,x_calc1,x_calc2)) / 2
-            # print(f"x_arb2 = {x_arb2}")
-            # eps_c, eps_1, eps_2, sigma_1_estrela, sigma_2_estrela = self.dominio_deformacao(x_arb2, x_2_3, x_lim)
-            #
-            # print(
-            #     f"eps_c: {eps_c}\teps_1: {eps_1}\teps_2: {eps_2}\teps_y_d: {self.__aco.epsilon_y_d}\tsigma_1_estrela: {sigma_1_estrela}\tsigma_2_estrela: {sigma_2_estrela}")
-            #
-            # As1, x_calc1, As2, x_calc2 = 0, 0, 0, 0
-            # print(f"A1: {A1}\tx_arb: {x_arb2}\tB1: {B1}\tC1: {C1}\tsimga_1_estrela: {sigma_1_estrela}")
-            # As1 = (A1 * x_arb2 ** 2 + B1 * x_arb2 + C1) / sigma_1_estrela
-            # x_calc1 = (self.NSd - As1 * (sigma_2_estrela - sigma_1_estrela)) / D
-            # print(f"A2: {A2}\tx_arb: {x_arb2}\tB2: {B2}\tC2: {C2}\tsimga_2_estrela: {sigma_2_estrela}")
-            # As2 = (A2 * x_arb2 ** 2 + B2 * x_arb2 + C2) / sigma_2_estrela
-            # x_calc2 = (self.NSd - As2 * (sigma_2_estrela - sigma_1_estrela)) / D
-            # print(f"As1 = {As1}\tAs2 = {As2}\tx_calc1 = {x_calc1}\tx_calc2 = {x_calc2}")
-            # x_arb3 = (x_arb2 + mais_proximo(x_arb2, x_calc1, x_calc2)) / 2
-            # print(f"x_arb3 = {x_arb3}")
-            #
-            # eps_c, eps_1, eps_2, sigma_1_estrela, sigma_2_estrela = self.dominio_deformacao(x_arb3, x_2_3, x_lim)
-            #
-            # print(
-            #     f"eps_c: {eps_c}\teps_1: {eps_1}\teps_2: {eps_2}\teps_y_d: {self.__aco.epsilon_y_d}\tsigma_1_estrela: {sigma_1_estrela}\tsigma_2_estrela: {sigma_2_estrela}")
-            #
-            # As1, x_calc1, As2, x_calc2 = 0, 0, 0, 0
-            # print(f"A1: {A1}\tx_arb: {x_arb3}\tB1: {B1}\tC1: {C1}\tsimga_1_estrela: {sigma_1_estrela}")
-            # As1 = (A1 * x_arb3 ** 2 + B1 * x_arb3 + C1) / sigma_1_estrela
-            # x_calc1 = (self.NSd - As1 * (sigma_2_estrela - sigma_1_estrela)) / D
-            # print(f"A2: {A2}\tx_arb: {x_arb3}\tB2: {B2}\tC2: {C2}\tsimga_2_estrela: {sigma_2_estrela}")
-            # As2 = (A2 * x_arb3 ** 2 + B2 * x_arb3 + C2) / sigma_2_estrela
-            # x_calc2 = (self.NSd - As2 * (sigma_2_estrela - sigma_1_estrela)) / D
-            # print(f"As1 = {As1}\tAs2 = {As2}\tx_calc1 = {x_calc1}\tx_calc2 = {x_calc2}")
-
-
-
+            #x_arb = (x + 0) / 2 # x + extremidade superior do intervalo
+            x_arb = x
+            As1, As2, x = self.iterar_As1_As2_caso1_caso2(x_arb, x_2_3, x_lim, A1, B1, C1, A2, B2, C2, b)
+            self.__x_linha_neutra = x
+            print(f"As1 = {As1:.2f} cm2\tAs2 = {As2:.2f} cm2\tx = {x:.2f} cm\tAs min = {self.__As_min:.2f} cm2\tAs máx = {self.__As_max:.2f} cm2")
         elif e_2 < e2_2_3:
             print("Caso 2")
+            A1 = (self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * 0.5 * self.__conc.lambdaa) / (d - dl)
+            B1 = (self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * (-dl)) / (d - dl)
+            C1 = - self.__NSd * abs(e_2) / (d - dl)
+            print(f"A1 = {A1}\tB1 = {B1}\tC1 = {C1}")
+            A2 = -(self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * -0.5 * self.__conc.lambdaa) / (d - dl)
+            B2 = -(self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * d) / (d - dl)
+            C2 = self.__NSd * abs(e_1) / (d - dl)
+            print(f"A2 = {A2}\tB2 = {B2}\tC2 = {C2}")
+
+            x = self.calcular_x(A1, B1, C1,A2,B2,C2,ini_itervalo=0,fim_itervalo=d)
+            print(f"x = {x}")
+            #x_arb = (x + d) / 2 # x + extremidade superior do intervalo
+            x_arb = x
+            print(f"x_arb = {x_arb}\tx_lim = {x_lim}")
+            As1, As2, x = self.iterar_As1_As2_caso1_caso2(x_arb, x_2_3, x_lim, A1, B1, C1, A2, B2, C2, b)
+            self.__x_linha_neutra = x
+            print(
+                f"As1 = {As1:.2f} cm2\tAs2 = {As2:.2f} cm2\tx = {x:.2f} cm\tAs min = {self.__As_min:.2f} cm2\tAs máx = {self.__As_max:.2f} cm2")
         elif e_2 < e2_3_4:
             print("Caso 3")
+            A1 = -(self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * 0.5 * self.__conc.lambdaa) / (d - dl)
+            B1 = -(self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * (-dl)) / (d - dl)
+            C1 = self.__NSd * e_2 / (d - dl)
+            print(f"A1 = {A1}\tB1 = {B1}\tC1 = {C1}")
+            A2 = (self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * 0.5 * self.__conc.lambdaa) / (
+                        d - dl)
+            B2 = -(self.__conc.alfa_c * self.__conc.lambdaa * self.__conc.fcd * b * d) / (d - dl)
+            C2 = self.__NSd * e_1 / (d - dl)
+            print(f"A2 = {A2}\tB2 = {B2}\tC2 = {C2}")
+
+            x = self.calcular_x(A1, B1, C1, A2, B2, C2, ini_itervalo=d, fim_itervalo=h/self.__conc.lambdaa)
+
+            print(f"x = {x}")
+            #x_arb = (x + d) / 2  # x + extremidade INFERIOR do intervalo *****************************************
+            x_arb = x
+            print(f"x_arb = {x_arb}\tx_lim = {x_lim}")
+            As1, As2, x = self.iterar_As1_As2_caso3(x_arb, x_2_3, x_lim, A1, B1, C1, A2, B2, C2, b)
+            self.__x_linha_neutra = x
+            print(
+                f"As1 = {As1:.2f} cm2\tAs2 = {As2:.2f} cm2\tx = {x:.2f} cm\tAs min = {self.__As_min:.2f} cm2\tAs máx = {self.__As_max:.2f} cm2")
         else:
             print("Caso 4")
+            As1, As2, x = self.iterar_As1_As2_caso4(b,h,d,dl,e_1,e_2)
+            self.__x_linha_neutra = x
+        return As1, As2
+        #MRdyy = self.verificacao_momento_resistente(4.02,4.02)
+        #print(f"MRdyy = {MRdyy}")
+
+    def verificar_momento_resistente(self, b, h, As1, As2, x):
+        dl = 5
+        d = h - dl
+        lambdaa = self.__conc.lambdaa
+        alfa_c = self.__conc.alfa_c
+        fcd = self.__conc.fcd
+        fyd = self.__aco.fyd
+
+        eps_c, eps_1, eps_2, sigma1, sigma2 = self.dominio_deformacao(x, 0.259 * d, 0.628 * d)
+
+        Fc = alfa_c * fcd * b * lambdaa * x
+        zc = x - 0.5 * lambdaa * x
+        M_concreto = Fc * zc
+
+        F1 = sigma1 * As1
+        F2 = sigma2 * As2
+        z1 = d - x
+        z2 = x - dl
+        M_aco = F1 * z1 - F2 * z2
+
+        MRd = M_concreto + M_aco
+        return MRd
+
     # import math
-    # def pilar_padrao_rigidez_kapa_aproximada(self, dimensao, alfab, M1dA, le):
-    #     dimensao /= 100
-    #     M1dA /= 100
-    #     le /= 100
-    #     print(f"b: {dimensao}")
-    #     print(f"NSd: {self.__NSd}")
-    #     print(f"M: {M1dA}")
-    #     print(f"le: {le}")
-    #     A = 5 * dimensao
-    #     B = (dimensao ** 2) * self.__NSd - ((self.__NSd * ((le) ** 2)) / 320) - 5 * dimensao * alfab * M1dA
-    #     C = - self.__NSd * (dimensao ** 2) * alfab * M1dA
-    #     print(f"A: {A}\tB: {B}\tC: {C}")
-    #     return (-B + (B ** 2 - 4 * A * C) ** 0.5) / (2 * A)
+    def pilar_padrao_rigidez_kapa_aproximada(self, dimensao, alfab, M1dA, le):
+        dimensao /= 100
+        M1dA /= 100
+        le /= 100
+        print(f"b: {dimensao}")
+        print(f"NSd: {self.__NSd}")
+        print(f"M: {M1dA}")
+        print(f"le: {le}")
+        A = 5 * dimensao
+        B = (dimensao ** 2) * self.__NSd - ((self.__NSd * ((le) ** 2)) / 320) - 5 * dimensao * alfab * M1dA
+        C = - self.__NSd * (dimensao ** 2) * alfab * M1dA
+        print(f"A: {A}\tB: {B}\tC: {C}")
+        return bhaskara(A,B,C)[0] #(-B + (B ** 2 - 4 * A * C) ** 0.5) / (2 * A)
 
     def momento_minimo(self, dim):
         return self.__NSd * (1.5 + 0.03 * dim)
@@ -487,9 +607,11 @@ class PilarRetangular:
         # Verificar se tem as dimensoes mínimas e se não é pilar parede
         pass
 
-    # def MomentoMinimo(self: object):
+    def armadura_minima(self: object):
+        return max(self._estrutura.taxa_arm_min_pilar * self.__Ac,0.15* self.__NSd  /self.__aco.fyd)
 
-    #    print(f"Mdx_min: {round(Mxmin,2)}\tMdy_min: {round(Mymin,2)}")
+    def armadura_maxima(self: object):
+        return self._estrutura.taxa_arm_max_pilar * self.__Ac
 
 # def CurvaResistente(self: object) -> None:
 #     print(
