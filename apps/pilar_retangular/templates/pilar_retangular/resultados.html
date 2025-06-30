@@ -31,7 +31,7 @@
     <li class="{% if As_y_nec > As_y %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-800{% endif %} px-3 py-1 rounded">
       <strong>As y existente:</strong> {{ As_y }} cm² – <strong>Necessária:</strong> {{ As_y_nec|floatformat:2 }} cm²
     </li>
-    <li class="{% if As_x|add:As_y < As_min %}bg-red-100 text-red-700{% elif As_x|add:As_y > As_max %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-800{% endif %} px-3 py-1 rounded">
+    <li class="{% if As_total_existente < As_min %}bg-red-100 text-red-700{% elif As_total_existente > As_max %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-800{% endif %} px-3 py-1 rounded">
       <strong>As total existente:</strong> {{ As_total_existente }} cm²<br>
       <strong>As mín:</strong> {{ As_min|floatformat:2 }} cm² –
       <strong>As máx:</strong> {{ As_max|floatformat:2 }} cm²
