@@ -78,7 +78,7 @@ class PilarRetangularView(FormView):
         As1_y_nec, As2_y_nec = pilar.dimensionamento(hy, hx, resultado[1])
         print(f"As1_y_necessária= {As1_y_nec} cm2\tAs2_y necessária= {As2_y_nec} cm2")
         print(f"As1_x_necessária= {As1_x_nec} cm2\tAs2_x necessária= {As2_x_nec} cm2")
-        #pilar.dimensionamento()
+
         As_min = pilar.As_min
         As_max = pilar.As_max
         As_total_existente = (num_barras_x+num_barras_y)*area_barra_cm2

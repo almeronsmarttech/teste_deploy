@@ -52,10 +52,10 @@ class PilarRetangular:
         self.__Mky_base = Mky_base
 
         self.__NSd = self.__Nk * self._estrutura.gama_F
-        self.__Mdx_base = self.__Mkx_base * self._estrutura.gama_F
-        self.__Mdx_topo = self.__Mkx_topo * self._estrutura.gama_F
-        self.__Mdy_base = self.__Mky_base * self._estrutura.gama_F
-        self.__Mdy_topo = self.__Mky_topo * self._estrutura.gama_F
+        self.__Mdx_base = self.__Mkx_base * 100 * self._estrutura.gama_F
+        self.__Mdx_topo = self.__Mkx_topo * 100 *  self._estrutura.gama_F
+        self.__Mdy_base = self.__Mky_base * 100 *  self._estrutura.gama_F
+        self.__Mdy_topo = self.__Mky_topo * 100 *  self._estrutura.gama_F
 
         self.__As_min = self.armadura_minima()
         self.__As_max = self.armadura_maxima()
