@@ -37,10 +37,12 @@
                     hidden group-hover:flex flex-col z-50">
           <a href="#" hx-get="{% url 'compressao_madeira:form' %}" hx-target="#conteudo" hx-swap="innerHTML"
              class="block px-4 py-2 hover:bg-blue-100 rounded-t-lg">Compressão</a>
-          <a href="#" hx-get="{% url 'compressao_madeira:form' %}" hx-target="#conteudo" hx-swap="innerHTML"
+          <a href="#" hx-get="{% url 'tracao_madeira:form' %}" hx-target="#conteudo" hx-swap="innerHTML"
              class="block px-4 py-2 hover:bg-blue-100 rounded-b-lg">Tração</a>
-            <a href="#" hx-get="{% url 'compressao_madeira:form' %}" hx-target="#conteudo" hx-swap="innerHTML"
+            <a href="#" hx-get="{% url 'flexao_madeira:form' %}" hx-target="#conteudo" hx-swap="innerHTML"
              class="block px-4 py-2 hover:bg-blue-100 rounded-b-lg">Flexão Simples</a>
+            <a href="#" hx-get="{% url 'cortante_madeira:form' %}" hx-target="#conteudo" hx-swap="innerHTML"
+             class="block px-4 py-2 hover:bg-blue-100 rounded-b-lg">Cortante</a>
         </div>
       </div>
 

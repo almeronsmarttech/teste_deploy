@@ -13,8 +13,8 @@ ACCESS_TOKEN_MP = os.getenv("ACCESS_TOKEN_MP")
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = os.environ.get("DEBUG","False") == True
+DEBUG = True
+#DEBUG = os.environ.get("DEBUG","False") == True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -59,8 +59,8 @@ INSTALLED_APPS = [
 if DEBUG:
     INSTALLED_APPS += ["django_browser_reload"]
 
-ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
-#ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+#ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 #ALLOWED_HOSTS = []
 # Application definition
@@ -99,8 +99,8 @@ ROOT_URLCONF = 'src.urls'
 
 TAILWIND_APP_NAME = 'theme'
 
-NPM_BIN_PATH = "/usr/local/bin/npm"
-#NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+#NPM_BIN_PATH = "/usr/local/bin/npm"
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 
 TEMPLATES = [

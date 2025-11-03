@@ -39,6 +39,10 @@ urlpatterns = [
     path('viga/', include('apps.viga_retangular.urls', namespace='viga_retangular')),
     path('pilar/', include('apps.pilar_retangular.urls', namespace='pilar_retangular')),
     path('compressao_madeira/', include('apps.compressao_madeira.urls')),
+    path('tracao_madeira/', include('apps.tracao_madeira.urls')),
+    path('flexao_madeira/', include('apps.flexao_madeira.urls')),
+
+    path('cortante/', include('apps.cortante_madeira.urls')),
     #path("arduino/", include("apps.minha_arduino_cloud.urls")),
     path("arduino/", include("apps.minha_arduino_cloud.urls")),
 ]

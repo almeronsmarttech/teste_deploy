@@ -1,0 +1,63 @@
+<div class="bg-gray-50 p-6 rounded shadow-md border max-w-5xl">
+  <!-- Dados de entrada usados (agora primeiro) -->
+  {% if resultados.inputs %}
+  <div class="mb-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-2">Dados considerados</h2>
+    <div class="text-sm text-gray-700">
+      hₓ = {{ resultados.inputs.hx }} cm,&nbsp;
+      hᵧ = {{ resultados.inputs.hy }} cm,&nbsp;
+      lₓ = {{ resultados.inputs.lx }} cm,&nbsp;
+      lᵧ = {{ resultados.inputs.ly }} cm,&nbsp;
+      Classe = D{{ resultados.inputs.classe_resistencia }},&nbsp;
+      Umidade = {{ resultados.inputs.umidade_ambiente }}%,&nbsp;
+      Nₖ = {{ resultados.inputs.Nk }} kN,&nbsp;
+      Mₖₓ = {{ resultados.inputs.Mkx }} kN·m,&nbsp;
+      Mₖᵧ = {{ resultados.inputs.Mky }} kN·m,&nbsp;
+      Classe de carregamento = {{ resultados.inputs.classe_carregamento }}.
+    </div>
+  </div>
+  {% endif %}
+
+  <h2 class="text-xl font-bold text-gray-800 mb-4">Resultados</h2>
+
+  <!-- Tensões -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Tensões (MPa)</h3>
+    <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+      <div class="me-6"><strong>f<sub>c0d</sub>:</strong> {{ resultados.sigma_rd }}</div>
+      <div class="me-6"><strong>σ<sub>Sd</sub>:</strong> {{ resultados.sigma_sd }}</div>
+        {% if resultados.sigma_rel and resultados.sigma_rel < 0.3 %}
+        <span class="text-green-600 font-semibold">✔ Seção verificada (≤ 0,3)</span>
+      {% elif resultados.sigma_rel %}
+        <span class="text-red-600 font-semibold"> ✘ Tem que fazer a verificação quanto a esbeltez! (esbeltez relativa = {{ resultados.sigma_rel }} &gt; 0,3)</span>
+      {% else %}
+        <span class="text-gray-500">Cálculo ainda não realizado.</span>
+      {% endif %}
+
+
+    </div>
+  </div>
+
+  <!-- Coeficientes -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Coeficientes</h3>
+    <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+      <div class="me-6"><strong>k:</strong> {{ resultados.k }}</div>
+      <div class="me-6"><strong>k<sub>c</sub>:</strong> {{ resultados.kc }}</div>
+    </div>
+  </div>
+
+  <!-- Situação de Verificação -->
+  <div class="mb-2">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Verificação</h3>
+    <div class="text-sm text-gray-800 flex items-center gap-3">
+      {% if resultados.ver and resultados.ver <= 1 %}
+        <span class="text-green-600 font-semibold">✔ Seção verificada ({{resultados.ver}} ≤ 1,0)</span>
+      {% elif resultados.ver %}
+        <span class="text-red-600 font-semibold">✘ Seção não verificada ({{  resultados.ver}} &gt; 1,0)</span>
+      {% else %}
+        <span class="text-gray-500">Cálculo ainda não realizado.</span>
+      {% endif %}
+    </div>
+  </div>
+</div>

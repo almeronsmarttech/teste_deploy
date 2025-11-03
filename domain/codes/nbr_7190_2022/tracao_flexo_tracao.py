@@ -1,5 +1,5 @@
 
-def tracao(madeira, secao_transversal, acoes):
+def tracao(madeira, secao_transversal, acoes, num_furo =0, bitola = 0):
     # esbeltez lambda
 
     if secao_transversal.lambda_x >= 140 or secao_transversal.lambda_y >= 140:
@@ -9,14 +9,14 @@ def tracao(madeira, secao_transversal, acoes):
 
     sigma_Ncd = acoes.NSd / secao_transversal.Aw
 
-    if madeira.fc0d < sigma_Ncd:
+    if madeira.ft0d < sigma_Ncd:
         print("Tensão resistente menor que a atuante. Rever dimensões, altura ou madeira.")
         exit()
 
     sigma_Mxcd = (acoes.MSdx * secao_transversal.hx / 2) / secao_transversal.Ix
     sigma_Mycd = (acoes.MSdy * secao_transversal.hy / 2) / secao_transversal.Iy
 
-    tensao_sigma = (sigma_Ncd / madeira.fc0d) + (sigma_Mxcd / madeira.fc0d) + (sigma_Mycd / madeira.fc0d)
+    tensao_sigma = (sigma_Ncd / madeira.ft0d) + (sigma_Mxcd / madeira.fc0d) + (sigma_Mycd / madeira.fc0d)
 
     print(
         f"Equação Simplificada Solicitações Compostas\nsigma Ncd = {round(sigma_Ncd, 2)} kN/cm2\tsigma_Mxcd = {round(sigma_Mxcd, 2)} kNcm\tsigma_Mycd = {round(sigma_Mycd, 2)} kNcm")

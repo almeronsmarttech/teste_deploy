@@ -118,4 +118,8 @@ class Madeira:
     def fc0d(self):
         return self.__fc0d
 
+    @property
+    def ft0d(self):
+        return self.__ft0d
+
 
