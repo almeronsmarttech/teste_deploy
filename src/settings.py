@@ -13,8 +13,8 @@ ACCESS_TOKEN_MP = os.getenv("ACCESS_TOKEN_MP")
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = os.environ.get("DEBUG","False") == True
+DEBUG = True
+#DEBUG = os.environ.get("DEBUG","False") == True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -50,13 +50,17 @@ INSTALLED_APPS = [
     'apps.viga_retangular',
     'apps.pilar_retangular',
     'apps.minha_arduino_cloud',
+    'apps.compressao_madeira',
+'apps.tracao_madeira',
+'apps.flexao_madeira',
+'apps.cortante_madeira',
 ]
 
 if DEBUG:
     INSTALLED_APPS += ["django_browser_reload"]
 
-ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
-#ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+#ALLOWED_HOSTS = ["almeronsmarttech.com.br","www.almeronsmarttech.com.br","almeron.com.br","www.almeron.com.br","sea-lion-app-zxare.ondigitalocean.app"]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 #ALLOWED_HOSTS = []
 # Application definition
