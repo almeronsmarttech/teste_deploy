@@ -10,9 +10,9 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <!-- Geometria -->
-      <fieldset class="lg:col-span-7">
-        <legend class="text-lg font-semibold mb-3">Madeira - Esforço Normal de Tração</legend>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <fieldset class="lg:col-span-6">
+        <legend class="text-lg font-semibold mb-3">Geometria da Seção</legend>
+        <div class="grid grid-cols-2 md:grid-cols-2 gap-3">
           <div>
             <label for="{{ form.hx.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.hx.label }}</label>
             {{ form.hx }}
@@ -22,18 +22,22 @@
             {{ form.hy }}
           </div>
           <div>
-            <label for="{{ form.lx.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.lx.label }}</label>
-            {{ form.lx }}
+            <label for="{{ form.numero_furos.id_for_label }}" class="block text-sm font-medium mb-1">
+              {{ form.numero_furos.label }}
+            </label>
+            {{ form.numero_furos }}
           </div>
           <div>
-            <label for="{{ form.ly.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.ly.label }}</label>
-            {{ form.ly }}
+            <label for="{{ form.diametro_furo.id_for_label }}" class="block text-sm font-medium mb-1">
+              {{ form.diametro_furo.label }}
+            </label>
+            {{ form.diametro_furo }}
           </div>
         </div>
       </fieldset>
 
       <!-- Materiais e Ambiente -->
-      <fieldset class="lg:col-span-5">
+      <fieldset class="lg:col-span-6">
         <legend class="text-lg font-semibold mb-3">Materiais e Ambiente</legend>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
@@ -47,12 +51,6 @@
               {{ form.umidade_ambiente.label }}
             </label>
             {{ form.umidade_ambiente }}
-          </div>
-          <div class="md:col-span-2">
-            <label for="{{ form.classe_carregamento.id_for_label }}" class="block text-sm font-medium mb-1">
-              {{ form.classe_carregamento.label }}
-            </label>
-            {{ form.classe_carregamento }}
           </div>
         </div>
       </fieldset>
@@ -76,8 +74,19 @@
         </div>
       </fieldset>
 
+      <!-- Ações (classe de carregamento) -->
+      <fieldset class="lg:col-span-3">
+        <legend class="text-lg font-semibold mb-3">Carregamento</legend>
+        <div>
+          <label for="{{ form.classe_carregamento.id_for_label }}" class="block text-sm font-medium mb-1">
+            {{ form.classe_carregamento.label }}
+          </label>
+          {{ form.classe_carregamento }}
+        </div>
+      </fieldset>
+
       <!-- Botão -->
-      <div class="lg:col-span-3 flex items-end justify-end">
+      <div class="lg:col-span-12 flex items-end justify-end">
         <button type="submit" class="px-5 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700">
           Calcular
         </button>

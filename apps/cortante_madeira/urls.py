@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views.views_cortante import FormularioCortanteMadeiraView
+from .views.views_cortante import FormularioCisalhamentoMadeiraView
 
 from ..compressao_madeira.views import *
 
@@ -9,6 +9,6 @@ from ..compressao_madeira.views import *
 app_name = "cortante_madeira"
 
 urlpatterns = [
-    path('', FormularioCortanteMadeiraView.as_view(), name='form'),
+    path('', FormularioCisalhamentoMadeiraView.as_view(), name='form'),
 
 ]

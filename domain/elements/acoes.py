@@ -29,4 +29,4 @@ class Acoes:
         return self.__VSd
 
     def majorar_esforcos(self):
-        return (self.__NSk * self.__gama_F, self.__MSkx * self.__gama_F, self.__MSky * self.__gama_F, self.__VSk * self.__gama_F)
+        return (self.__NSk * self.__gama_F, self.__MSkx * self.__gama_F * 100, self.__MSky * self.__gama_F * 100, self.__VSk * self.__gama_F)

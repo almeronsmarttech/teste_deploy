@@ -1,8 +1,8 @@
 <div class="max-w-6xl mx-auto">
   <form
     method="post"
-    hx-post="{% url 'compressao_madeira:form' %}"
-    hx-target="#resultados-unidirecional"
+    hx-post="{% url 'cortante_madeira:form' %}"
+    hx-target="#resultados-cisalhamento"
     hx-swap="innerHTML"
     class="bg-white rounded-2xl shadow border border-gray-200 p-4 md:p-6"
   >
@@ -10,30 +10,22 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <!-- Geometria -->
-      <fieldset class="lg:col-span-7">
-        <legend class="text-lg font-semibold mb-3">Madeira - Cortante</legend>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <fieldset class="lg:col-span-6">
+        <legend class="text-lg font-semibold mb-3">Geometria da Seção</legend>
+        <div class="grid grid-cols-2 gap-3">
           <div>
-            <label for="{{ form.hx.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.hx.label }}</label>
-            {{ form.hx }}
+            <label for="{{ form.b.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.b.label }}</label>
+            {{ form.b }}
           </div>
           <div>
-            <label for="{{ form.hy.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.hy.label }}</label>
-            {{ form.hy }}
-          </div>
-          <div>
-            <label for="{{ form.lx.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.lx.label }}</label>
-            {{ form.lx }}
-          </div>
-          <div>
-            <label for="{{ form.ly.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.ly.label }}</label>
-            {{ form.ly }}
+            <label for="{{ form.h.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.h.label }}</label>
+            {{ form.h }}
           </div>
         </div>
       </fieldset>
 
       <!-- Materiais e Ambiente -->
-      <fieldset class="lg:col-span-5">
+      <fieldset class="lg:col-span-6">
         <legend class="text-lg font-semibold mb-3">Materiais e Ambiente</legend>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
@@ -48,30 +40,22 @@
             </label>
             {{ form.umidade_ambiente }}
           </div>
-          <div class="md:col-span-2">
-            <label for="{{ form.classe_carregamento.id_for_label }}" class="block text-sm font-medium mb-1">
-              {{ form.classe_carregamento.label }}
-            </label>
-            {{ form.classe_carregamento }}
-          </div>
         </div>
       </fieldset>
 
       <!-- Ações -->
       <fieldset class="lg:col-span-9">
         <legend class="text-lg font-semibold mb-3">Ações</legend>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <label for="{{ form.Nk.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.Nk.label }}</label>
-            {{ form.Nk }}
+            <label for="{{ form.Vk.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.Vk.label }}</label>
+            {{ form.Vk }}
           </div>
           <div>
-            <label for="{{ form.Mkx.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.Mkx.label }}</label>
-            {{ form.Mkx }}
-          </div>
-          <div>
-            <label for="{{ form.Mky.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.Mky.label }}</label>
-            {{ form.Mky }}
+            <label for="{{ form.classe_carregamento.id_for_label }}" class="block text-sm font-medium mb-1">
+              {{ form.classe_carregamento.label }}
+            </label>
+            {{ form.classe_carregamento }}
           </div>
         </div>
       </fieldset>
@@ -86,5 +70,5 @@
   </form>
 
   <!-- Resultados (HTMX) -->
-  <div id="resultados-unidirecional" class="mt-4"></div>
+  <div id="resultados-cisalhamento" class="mt-4"></div>
 </div>

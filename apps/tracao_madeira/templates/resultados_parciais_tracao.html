@@ -1,46 +1,49 @@
 <div class="bg-gray-50 p-6 rounded shadow-md border max-w-5xl">
-  <!-- Dados de entrada usados (agora primeiro) -->
+
   {% if resultados.inputs %}
   <div class="mb-6">
-    <h2 class="text-xl font-bold text-gray-800 mb-2">Dados considerados Tração</h2>
+    <h2 class="text-xl font-bold text-gray-800 mb-2">Dados considerados</h2>
     <div class="text-sm text-gray-700">
       hₓ = {{ resultados.inputs.hx }} cm,&nbsp;
       hᵧ = {{ resultados.inputs.hy }} cm,&nbsp;
-
       Classe = D{{ resultados.inputs.classe_resistencia }},&nbsp;
       Umidade = {{ resultados.inputs.umidade_ambiente }}%,&nbsp;
       Nₖ = {{ resultados.inputs.Nk }} kN,&nbsp;
       Mₖₓ = {{ resultados.inputs.Mkx }} kN·m,&nbsp;
       Mₖᵧ = {{ resultados.inputs.Mky }} kN·m,&nbsp;
-      Classe de carregamento = {{ resultados.inputs.classe_carregamento }}.
+      Classe de carregamento = {{ resultados.inputs.classe_carregamento }}.<br>
+      Número de furos = {{ resultados.inputs.numero_furos }},&nbsp;
+      Diâmetro dos furos = {{ resultados.inputs.diametro_furo }} cm.
     </div>
   </div>
   {% endif %}
 
-  <h2 class="text-xl font-bold text-gray-800 mb-4">Resultados Tração</h2>
+  <h2 class="text-xl font-bold text-gray-800 mb-4">Resultados</h2>
 
-  <!-- Tensões -->
   <div class="mb-6">
-    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Tensões (MPa)</h3>
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Verificação à Tração</h3>
     <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
-      <div class="me-6"><strong>f<sub>t0d</sub>:</strong> {{ resultados.ft0d }}</div>
+      <div class="me-6"><strong>σ<sub>Rd</sub> (f<sub>t0d</sub>):</strong> {{ resultados.sigma_rd }}</div>
       <div class="me-6"><strong>σ<sub>Sd</sub>:</strong> {{ resultados.sigma_sd }}</div>
-
-
+      {% if resultados.sigma_rel is not None %}
+        <div class="me-6"><strong>σ<sub>Sd</sub>/σ<sub>Rd</sub>:</strong> {{ resultados.sigma_rel }}</div>
+      {% endif %}
     </div>
   </div>
 
-   <!-- Situação de Verificação -->
   <div class="mb-2">
-    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Verificação</h3>
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Verificação da Seção</h3>
     <div class="text-sm text-gray-800 flex items-center gap-3">
-        {% if resultados.ft0d and resultados.ft0d > resultados.sigma_sd %}
-        <span class="text-green-600 font-semibold">✔ Seção verificada</span>
-      {% elif resultados.ft0d %}
-        <span class="text-red-600 font-semibold"> ✘ Resistência à tração ultrapassada! Rever as dimensões da peça ou substituir a madeira.)</span>
+      {% if resultados.sigma_rel is not None %}
+        {% if resultados.atende %}
+          <span class="text-green-600 font-semibold">✔ Seção verificada (σ<sub>Sd</sub>/σ<sub>Rd</sub> ≤ 1,0)</span>
+        {% else %}
+          <span class="text-red-600 font-semibold">✘ Seção não verificada (σ<sub>Sd</sub>/σ<sub>Rd</sub> &gt; 1,0) — Redimensionar</span>
+        {% endif %}
       {% else %}
         <span class="text-gray-500">Cálculo ainda não realizado.</span>
       {% endif %}
     </div>
   </div>
+
 </div>

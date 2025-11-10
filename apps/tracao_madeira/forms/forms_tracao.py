@@ -21,7 +21,7 @@ class TracaoMadeiraForm(forms.Form):
     umidade_ambiente = forms.FloatField(label="Umidade ambiente (%)", min_value=0, max_value=100)
 
     # Ações (kN, kN·m)
-    Nk  = forms.FloatField(label="Nₖ (kN)",   min_value=0)
+    Nk  = forms.FloatField(label="Nₖ (kN)",    min_value=0)
     Mkx = forms.FloatField(label="Mₖₓ (kN·m)", min_value=0)
     Mky = forms.FloatField(label="Mₖᵧ (kN·m)", min_value=0)
 
@@ -37,11 +37,11 @@ class TracaoMadeiraForm(forms.Form):
         label="Classe de carregamento", choices=CLASSE_CARREGAMENTO_CHOICES
     )
 
-    # NOVOS CAMPOS
+    # Furos na seção
     numero_furos = forms.IntegerField(label="Número de furos", min_value=0, initial=0)
-    bitola = forms.FloatField(label="Bitola (cm)", min_value=0.01)
+    diametro_furo = forms.FloatField(label="Diâmetro dos furos (cm)", min_value=0.0, initial=0.0)
 
-    # Estilização (sem alterar lógica)
+    # Estilização
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         base = "w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"

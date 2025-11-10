@@ -2,10 +2,8 @@ from django import forms
 
 class FlexaoMadeiraForm(forms.Form):
     # --- seus campos exatamente como já estão ---
-    hx = forms.IntegerField(label="hₓ (cm)", min_value=1)
-    hy = forms.IntegerField(label="hᵧ (cm)", min_value=1)
-    lx = forms.IntegerField(label="lₓ (cm)", min_value=1)
-    ly = forms.IntegerField(label="lᵧ (cm)", min_value=1)
+    b = forms.IntegerField(label="b (cm)", min_value=1)
+    h = forms.IntegerField(label="h (cm)", min_value=1)
 
     CLASSE_RESISTENCIA_CHOICES = [
         (20, "D20"),
@@ -20,9 +18,7 @@ class FlexaoMadeiraForm(forms.Form):
 
     umidade_ambiente = forms.FloatField(label="Umidade ambiente (%)", min_value=0, max_value=100)
 
-    Nk  = forms.FloatField(label="Nₖ (kN)",   min_value=0)
-    Mkx = forms.FloatField(label="Mₖₓ (kN·m)", min_value=0)
-    Mky = forms.FloatField(label="Mₖᵧ (kN·m)", min_value=0)
+    Mk  = forms.FloatField(label="Mₖ (kN.m)",   min_value=0)
 
     CLASSE_CARREGAMENTO_CHOICES = [
         (0.6, "Permanente"),

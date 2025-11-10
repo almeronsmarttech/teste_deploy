@@ -7,7 +7,7 @@ from ..forms.forms_flexao import FlexaoMadeiraForm
 from domain.materials.madeira import Madeira
 from domain.elements.secao_transversal import SecaoRetangular
 from domain.elements.acoes import Acoes
-from domain.codes.nbr_7190_2022.compressao_flexo_compressao import compressao
+from domain.codes.nbr_7190_2022.flexao_simples_reta_obliqua import flexao
 
 class FormularioFlexaoMadeiraView(FormView):
     form_class = FlexaoMadeiraForm
@@ -16,66 +16,66 @@ class FormularioFlexaoMadeiraView(FormView):
     def form_valid(self, form):
         cd = form.cleaned_data
 
-        # Normalização dos ChoiceFields (strings -> numérico)
-        # classe_resistencia: D20..D60 com valores 20,30,40,50,60
-        classe_resistencia_val = int(cd["classe_resistencia"])
-        # classe_carregamento: Permanente..Instantânea com valores 0.6..1.1
-        classe_carregamento_val = float(cd["classe_carregamento"])
-        print(f"classe de carregamento {classe_carregamento_val}")
-        # Echo dos inputs (útil para rodapé do resultado)
-        inputs = {
-            "hx": cd["hx"],                    # cm
-            "hy": cd["hy"],                    # cm
-            "lx": cd["lx"],                    # cm
-            "ly": cd["ly"],                    # cm
-            "classe_resistencia": classe_resistencia_val,
-            "umidade_ambiente": cd["umidade_ambiente"],  # %
-            "Nk": cd["Nk"],                    # kN
-            "Mkx": cd["Mkx"],                  # kN·m
-            "Mky": cd["Mky"],                  # kN·m
-            "classe_carregamento": classe_carregamento_val,
-        }
+        # Normalização dos ChoiceFields
+        classe_resistencia_val = int(cd["classe_resistencia"])      # 20..60
+        classe_carregamento_val = float(cd["classe_carregamento"])  # 0.6..1.1
 
-        # ===== PONTO DE INTEGRAÇÃO COM O DOMÍNIO =====
-        # Substituir os placeholders abaixo por chamadas reais, ex.:
-        # resultados_calc = dominio.calcular(...inputs...)
-        # sigma_rd = resultados_calc.sigma_rd
-        # ...
+        # Materiais / Seção / Ações
+        madeira = Madeira(
+            classe_resistencia_val,
+            float(cd["umidade_ambiente"]),
+            classe_carregamento_val,
+        )
+        # b, h (cm)
+        secao = SecaoRetangular(
+            int(cd["b"]),
+            int(cd["h"]),
+        )
+        # Somente momento fletor (adotei Mk em x; ajuste se seu domínio usar outro eixo)
+        acoes = Acoes(
+            0.0,                      # NSk
+            float(cd["Mk"]),          # MSkx
+            0.0                       # MSky
+        )
 
-        #(self, D=20, u_amb=65, carregamento=1, gama_w_c=1.4, gama_w_t=1.4, gama_w_v=1.8):
-        madeira = Madeira(int(classe_resistencia_val), float(cd["umidade_ambiente"]), classe_carregamento_val)
-        # def __init__(self: object, hx: int = 2, hy: int = 2, lex: int = 300, ley: int = 300) -> None:
-        secao = SecaoRetangular(int(cd["hx"]),int(cd["hy"]),int(cd["lx"]),int(cd["ly"]))
-        # NSk: float = 0, MSkx: float = 0, MSky: float = 0, VSk: float = 0
-        acoes = Acoes(float(cd["Nk"]),float(cd["Mkx"]),float(cd["Mky"]))
+        # Cálculo no domínio
+        resp = flexao(madeira, secao, acoes)
 
+        # Tensão solicitante de cálculo (σ_Md) e resistência de cálculo à flexão (f_md)
+        # Suporte a diferentes formatos de retorno do domínio
+        if isinstance(resp, dict):
+            sigma_md = float(resp.get("sigma_md", resp.get("sigma_sd", 0.0)))
+        else:
+            # se o domínio retornar lista/tupla, assumir o primeiro como σ (ajuste se necessário)
+            sigma_md = float(resp[0]) if (hasattr(resp, "__len__") and len(resp) > 0) else 0.0
 
-        sigma_rd = 1
-        sigma_sd = 1
-        sigma_rel = 1
-        k = 1
-        kc = 1
-        # =============================================
-        respostas = compressao(madeira, secao, acoes)
+        fmd = madeira.fmd
+
+        # Razão e verificação
+        rel = (sigma_md / fmd) if fmd else None
+        atende = (rel is not None) and (rel <= 1.0)
+
         resultados = {
-            "sigma_rd": round(madeira.fc0d,3),
-            "sigma_sd": round(respostas[0],3),
-            "sigma_rel": round(respostas[1],3),
-            "k": round(respostas[2],2),
-            "kc": round(respostas[3],2),
-            "inputs": inputs,
-            "ver": round(respostas[4],2),
+            "sigma_md": round(sigma_md, 3),
+            "fmd": round(fmd, 3),
+            "rel": round(rel, 3) if rel is not None else None,
+            "atende": atende,
+            "inputs": {
+                "b": cd["b"], "h": cd["h"],
+                "classe_resistencia": classe_resistencia_val,
+                "umidade_ambiente": cd["umidade_ambiente"],
+                "Mk": cd["Mk"],
+                "classe_carregamento": classe_carregamento_val,
+            },
         }
 
-        # Retorna apenas o fragmento para o alvo HTMX do formulário
         return render(
             self.request,
-            "resultados_parciais.html",
+            "resultados_parciais_flexao.html",
             {"resultados": resultados},
         )
 
     def form_invalid(self, form):
-        # Re-renderiza a página do formulário com os erros (comportamento padrão que você já usa)
         return render(
             self.request,
             self.template_name,

@@ -1,0 +1,45 @@
+<div class="bg-gray-50 p-6 rounded shadow-md border max-w-5xl">
+
+  {% if resultados.inputs %}
+  <div class="mb-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-2">Dados considerados</h2>
+    <div class="text-sm text-gray-700">
+      b = {{ resultados.inputs.b }} cm,&nbsp;
+      h = {{ resultados.inputs.h }} cm,&nbsp;
+      Classe = D{{ resultados.inputs.classe_resistencia }},&nbsp;
+      Umidade = {{ resultados.inputs.umidade_ambiente }}%,&nbsp;
+      Vₖ = {{ resultados.inputs.Vk }} kN,&nbsp;
+      Classe de carregamento = {{ resultados.inputs.classe_carregamento }}.
+    </div>
+  </div>
+  {% endif %}
+
+  <h2 class="text-xl font-bold text-gray-800 mb-4">Resultados</h2>
+
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Verificação ao Cisalhamento</h3>
+    <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
+      <div class="me-6"><strong>τ<sub>d</sub>:</strong> {{ resultados.tald }}</div>
+      <div class="me-6"><strong>f<sub>v0d</sub>:</strong> {{ resultados.fv0d }}</div>
+      {% if resultados.rel is not None %}
+        <div class="me-6"><strong>τ<sub>d</sub>/f<sub>v0d</sub>:</strong> {{ resultados.rel }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="mb-2">
+    <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Verificação da Seção</h3>
+    <div class="text-sm text-gray-800 flex items-center gap-3">
+      {% if resultados.rel is not None %}
+        {% if resultados.atende %}
+          <span class="text-green-600 font-semibold">✔ Seção verificada (τ<sub>d</sub>/f<sub>v0d</sub> ≤ 1,0)</span>
+        {% else %}
+          <span class="text-red-600 font-semibold">✘ Seção não verificada (τ<sub>d</sub>/f<sub>v0d</sub> &gt; 1,0) — Redimensionar</span>
+        {% endif %}
+      {% else %}
+        <span class="text-gray-500">Cálculo ainda não realizado.</span>
+      {% endif %}
+    </div>
+  </div>
+
+</div>

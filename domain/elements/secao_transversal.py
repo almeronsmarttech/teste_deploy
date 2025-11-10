@@ -10,6 +10,9 @@ class SecaoRetangular:
         self.__ky = (self.__I_y / self.__Aw) ** 0.5
         self.__lambda_x = self.__lex / self.__kx
         self.__lambda_y = self.__ley / self.__ky
+    @property
+    def Wx(self):
+        return self.__W_x
 
     @property
     def Aw(self):

@@ -88,11 +88,13 @@ class Madeira:
         self.__fv0k /= 10  # de MPa para kN/cm2
         self.__fuv = self.__fv0k / (1 + (3 * (self.__u_eq - 12)) / 100)
         self.__fv0k = self.__fuv
+        self.__fv0d = self.__fuv/ self.__gama_w_c
+
         self.__fv90d = (self.__kmod * self.__fuv) / self.__gama_w_v
 
         print(f"Madeira\nkmod1: {self.__kmod1}\t kmod2: {self.__kmod2}\t kmod: {self.__kmod}")
         print(f"Madeira\nfc0k: {self.__fc0k} MPa\t fmk: {round(self.__fmk,2)}")
-        print(f"fcd: {self.__fc0d:.2f} kN/cm2\tfmd: {self.__fmd:.2f} kN/cm2\tft0d: {self.__ft0d:.2f} kN/cm2")
+        print(f"fcd: {self.__fc0d:.2f} kN/cm2\tfmd: {self.__fmd:.2f} kN/cm2\tft0d: {self.__ft0d:.2f} kN/cm2\tfv0d: {self.__fv0d:.2f} kN")
 
     @property
     def u_eq(self):
@@ -121,5 +123,13 @@ class Madeira:
     @property
     def ft0d(self):
         return self.__ft0d
+
+    @property
+    def fv0d(self):
+        return self.__fv0d
+
+    @property
+    def fmd(self):
+        return self.__fmd
 
 
