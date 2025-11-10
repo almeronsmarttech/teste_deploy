@@ -81,7 +81,7 @@ class Madeira:
         # Valor Módulo Corrigido para a umidade ambiente
         self.__Eu = self.__Ec0med / (1 + (2 * (self.__u_eq - 12)) / 100)
         self.__Ec0ef = self.__Eu * self.__kmod  # E c0 efetivo
-
+        self.__E0_05 = 0.7 * self.__Ec0ef
         self.__fc0d = (self.__kmod * self.__fc0k) / self.__gama_w_c
         self.__fmd = (self.__kmod * self.__fc0k) / self.__gama_w_t
         self.__ft0d = (self.__kmod * self.__fc0k) / (self.__gama_w_t * 0.77)
