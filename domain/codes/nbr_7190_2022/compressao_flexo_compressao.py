@@ -30,11 +30,11 @@ def compressao(madeira, secao_transversal, acoes):
     # ESTABILIDADE
 
     # Módulo de Elasticidade Característico
-    E0_05 = 0.7 * madeira.Ec0med
+    #E0_05 = 0.7 * madeira.Ec0med
 
-    lambda_rel = (max(secao_transversal.lambda_x, secao_transversal.lambda_y) / 3.1415) * ((madeira.fc0k / E0_05)**0.5)
+    lambda_rel = (max(secao_transversal.lambda_x, secao_transversal.lambda_y) / 3.1415) * ((madeira.fc0k / madeira.E0_05)**0.5)
 
-    print(f"E0,05 = {E0_05} kN/cm2\tlambda_rel = {round(lambda_rel, 2)}")
+    print(f"E0,05 = {madeira.E0_05} kN/cm2\tlambda_rel = {round(lambda_rel, 2)}")
 
     beta_c = 0.2  # para madeira serrada retangular
     ver = 0
@@ -43,7 +43,7 @@ def compressao(madeira, secao_transversal, acoes):
         k = 0.5 * (1 + beta_c * (lambda_rel - 0.3) + (lambda_rel**2))
 
         # fator de instabilidade kc
-        kc = 1 / (k + (((k**2) - (lambda_rel**2)))**0.5)
+        kc = 1 / (k + ((k**2) - (lambda_rel**2))**0.5)
         print(f"k = {round(k, 2)}\tkc = {round(kc, 2)}")
         # Verificação da Estabilidade
         ver = sigma_Ncd / (kc * madeira.fc0d)  # (kc*fc0d) conhecido como resistência à flambagem

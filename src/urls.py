@@ -43,6 +43,7 @@ urlpatterns = [
     path('flexao_madeira/', include('apps.flexao_madeira.urls')),
 
     path('cortante/', include('apps.cortante_madeira.urls')),
+path('flambagem_lateral/', include('apps.flambagem_lateral_madeira.urls')),
     #path("arduino/", include("apps.minha_arduino_cloud.urls")),
     path("arduino/", include("apps.minha_arduino_cloud.urls")),
 ]

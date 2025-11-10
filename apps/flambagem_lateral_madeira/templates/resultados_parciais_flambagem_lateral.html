@@ -1,0 +1,43 @@
+<div class="bg-gray-50 p-6 rounded shadow-md border max-w-5xl">
+
+  {% if resultados.inputs %}
+  <div class="mb-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-2">Dados considerados</h2>
+    <div class="text-sm text-gray-700">
+      b = {{ resultados.inputs.b }} cm,&nbsp;
+      h = {{ resultados.inputs.h }} cm,&nbsp;
+      L₁ = {{ resultados.inputs.L1 }} cm,&nbsp;
+      Classe = D{{ resultados.inputs.classe_resistencia }},&nbsp;
+      Umidade = {{ resultados.inputs.umidade_ambiente }}%,&nbsp;
+      Classe de carregamento = {{ resultados.inputs.classe_carregamento }}.
+    </div>
+  </div>
+  {% endif %}
+
+  <h2 class="text-xl font-bold text-gray-800 mb-4">Resultados</h2>
+
+  {% if resultados.parte1 is not None and resultados.parte2 is not None %}
+    <div class="mb-4 text-sm text-gray-800">
+      <div class="flex items-center gap-3">
+        <span>
+          <strong>{{ resultados.parte1|floatformat:3 }}</strong>
+          {% if resultados.parte1 > resultados.parte2 %}
+            &gt;
+          {% else %}
+            &le;
+          {% endif %}
+          <strong>{{ resultados.parte2|floatformat:3 }}</strong>
+        </span>
+
+        {% if resultados.parte1 > resultados.parte2 %}
+          <span class="text-red-600 font-semibold">— Não passou</span>
+        {% else %}
+          <span class="text-green-600 font-semibold">— Passou</span>
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
+    <div class="text-sm text-gray-500">Resultados indisponíveis.</div>
+  {% endif %}
+
+</div>

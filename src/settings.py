@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'apps.tracao_madeira',
     'apps.flexao_madeira',
     'apps.cortante_madeira',
+    'apps.flambagem_lateral_madeira',
 ]
 
 if DEBUG:

@@ -80,8 +80,8 @@ class Madeira:
         self.__ro_a_12 /= 100  # kgf para (kN/m3) massa específica aparente -tabelado
         # Valor Módulo Corrigido para a umidade ambiente
         self.__Eu = self.__Ec0med / (1 + (2 * (self.__u_eq - 12)) / 100)
-        self.__Ec0ef = self.__Eu * self.__kmod  # E c0 efetivo
-        self.__E0_05 = 0.7 * self.__Ec0ef
+        self.__E0ef = self.__Eu * self.__kmod  # E c0 efetivo
+        self.__E0_05 = 0.7 * self.__E0ef
         self.__fc0d = (self.__kmod * self.__fc0k) / self.__gama_w_c
         self.__fmd = (self.__kmod * self.__fc0k) / self.__gama_w_t
         self.__ft0d = (self.__kmod * self.__fc0k) / (self.__gama_w_t * 0.77)
@@ -93,7 +93,7 @@ class Madeira:
         self.__fv90d = (self.__kmod * self.__fuv) / self.__gama_w_v
 
         print(f"Madeira\nkmod1: {self.__kmod1}\t kmod2: {self.__kmod2}\t kmod: {self.__kmod}")
-        print(f"Madeira\nfc0k: {self.__fc0k} MPa\t fmk: {round(self.__fmk,2)}")
+        print(f"Madeira\nfc0k: {self.__fc0k} MPa\t fmk: {round(self.__fmk,2)}\t E0_05: {round(self.__E0_05,2)}")
         print(f"fcd: {self.__fc0d:.2f} kN/cm2\tfmd: {self.__fmd:.2f} kN/cm2\tft0d: {self.__ft0d:.2f} kN/cm2\tfv0d: {self.__fv0d:.2f} kN")
 
     @property
@@ -105,8 +105,12 @@ class Madeira:
         return self.__Ec0med
 
     @property
-    def Ecs(self):
-        return self.__ecs
+    def E0_05(self):
+        return self.__E0_05
+
+    @property
+    def E0ef(self):
+        return self.__E0ef
 
     @property
     def nu(self):

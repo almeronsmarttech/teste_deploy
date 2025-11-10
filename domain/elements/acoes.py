@@ -28,5 +28,9 @@ class Acoes:
     def VSd(self):
         return self.__VSd
 
+    @property
+    def gamaF(self):
+        return self.__gama_F
+
     def majorar_esforcos(self):
         return (self.__NSk * self.__gama_F, self.__MSkx * self.__gama_F * 100, self.__MSky * self.__gama_F * 100, self.__VSk * self.__gama_F)

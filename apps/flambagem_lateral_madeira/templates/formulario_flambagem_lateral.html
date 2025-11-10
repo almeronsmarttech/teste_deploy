@@ -1,0 +1,67 @@
+<div class="max-w-6xl mx-auto">
+  <form
+    method="post"
+    hx-post="{% url 'flambagem_lateral_madeira:form' %}"
+    hx-target="#resultados-flambagem-lateral"
+    hx-swap="innerHTML"
+    class="bg-white rounded-2xl shadow border border-gray-200 p-4 md:p-6"
+  >
+    {% csrf_token %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Geometria -->
+      <fieldset class="lg:col-span-6">
+        <legend class="text-lg font-semibold mb-3">Geometria da Seção</legend>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="{{ form.b.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.b.label }}</label>
+            {{ form.b }}
+          </div>
+          <div>
+            <label for="{{ form.h.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.h.label }}</label>
+            {{ form.h }}
+          </div>
+          <div class="col-span-2">
+            <label for="{{ form.L1.id_for_label }}" class="block text-sm font-medium mb-1">{{ form.L1.label }}</label>
+            {{ form.L1 }}
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Materiais e Ambiente -->
+      <fieldset class="lg:col-span-6">
+        <legend class="text-lg font-semibold mb-3">Materiais e Ambiente</legend>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label for="{{ form.classe_resistencia.id_for_label }}" class="block text-sm font-medium mb-1">
+              {{ form.classe_resistencia.label }}
+            </label>
+            {{ form.classe_resistencia }}
+          </div>
+          <div>
+            <label for="{{ form.umidade_ambiente.id_for_label }}" class="block text-sm font-medium mb-1">
+              {{ form.umidade_ambiente.label }}
+            </label>
+            {{ form.umidade_ambiente }}
+          </div>
+          <div class="md:col-span-2">
+            <label for="{{ form.classe_carregamento.id_for_label }}" class="block text-sm font-medium mb-1">
+              {{ form.classe_carregamento.label }}
+            </label>
+            {{ form.classe_carregamento }}
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Botão -->
+      <div class="lg:col-span-12 flex items-end justify-end">
+        <button type="submit" class="px-5 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700">
+          Calcular
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Resultados (HTMX) -->
+  <div id="resultados-flambagem-lateral" class="mt-4"></div>
+</div>
