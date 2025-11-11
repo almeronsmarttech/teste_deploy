@@ -9,13 +9,8 @@ class Madeira:
         self.__gama_w_c = gama_w_c
         self.__gama_w_t = gama_w_t
         self.__gama_w_v = gama_w_v
-        #gama_F = 1.4
-
         self.__u_amb = u_amb
-        #self.__carregamento = carregamento
-        #self.__kmod1 = 1.0
         self.__kmod1 = kmod1
-        #self.__kmod2 = 1.0
 
         if D == 20:
             self.__fc0k = 20

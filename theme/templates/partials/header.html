@@ -149,64 +149,83 @@
     </div>
 
     <!-- Menu Mobile -->
-    <div class="lg:hidden relative">
-      <button id="menu-button" type="button" class="text-white focus:outline-none">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-             stroke-width="2" stroke="currentColor" class="w-6 h-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
-        </svg>
-      </button>
+<div class="lg:hidden relative">
+  <button id="menu-button" type="button" class="text-white focus:outline-none">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+         stroke-width="2" stroke="currentColor" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+    </svg>
+  </button>
 
-      <nav id="mobile-menu"
-           class="hidden flex flex-col space-y-2 bg-blue-900 text-white absolute right-0 top-full w-52 p-4 rounded-lg shadow-lg z-50">
-        <a href="#" hx-get="{% url 'home_partial' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Home</a>
-        <a class="text-gray-400 cursor-not-allowed">Materiais</a>
-        <a class="text-gray-400 cursor-not-allowed">Análise Estrutural</a>
+  <nav id="mobile-menu"
+       class="hidden flex flex-col space-y-2 bg-blue-900 text-white absolute right-0 top-full w-64 p-4 rounded-lg shadow-lg z-50">
 
+    <!-- Home -->
+    <a href="#"
+       hx-get="{% url 'home_partial' %}"
+       hx-target="#conteudo" hx-swap="innerHTML"
+       class="hover:underline">Home</a>
 
+    <!-- Desabilitados (iguais ao desktop) -->
+    <span class="text-gray-400 cursor-not-allowed pointer-events-none select-none">Materiais</span>
+    <span class="text-gray-400 cursor-not-allowed pointer-events-none select-none">Análise Estrutural</span>
+    <span class="text-gray-400 cursor-not-allowed pointer-events-none select-none">Aço</span>
+    <span class="text-gray-400 cursor-not-allowed pointer-events-none select-none">Concreto Armado</span>
 
-        <a href="#" hx-get="{% url 'laje' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Laje Bidirecional</a>
-        <a href="#" hx-get="{% url 'laje_unidirecional' %}" hx-target="#conteudo" hx-swap="innerHTML" class="hover:underline">Laje Unidirecional</a>
-
-        <!-- Vigas submenu atualizado -->
-        <div class="flex flex-col space-y-1">
-          <span class="font-semibold text-sm text-gray-300 uppercase tracking-wider">Vigas</span>
-          <a href="#" hx-get="{% url 'viga_retangular:formulario' %}" hx-target="#conteudo" hx-swap="innerHTML"
-             class="pl-2 text-white hover:underline">Seção Retangular</a>
-        </div>
-
-        <!-- Pilares submenu mobile -->
-        <div class="flex flex-col space-y-1">
-          <span class="font-semibold text-sm text-gray-300 uppercase tracking-wider">Pilares</span>
-          <a href="#" hx-get="{% url 'pilar_retangular:formulario' %}" hx-target="#conteudo" hx-swap="innerHTML"
-             class="pl-2 text-white hover:underline">Pilar Retangular</a>
-        </div>
-
-        <a class="text-gray-400 cursor-not-allowed">BIM</a>
-
-        <!-- Submenu Pré-Dimensionamento Mobile -->
-        <div class="flex flex-col space-y-1">
-          <span class="font-semibold text-sm text-gray-300 uppercase tracking-wider">Pré-Dimensionamento</span>
-          <a href="#" hx-get="{% url 'laje_lisa' %}" hx-target="#conteudo" hx-swap="innerHTML"
-             class="pl-2 text-white hover:underline">Punção Laje Lisa</a>
-          <a href="#" class="pl-2 text-gray-400 cursor-not-allowed">Lajes</a>
-          <a href="#" class="pl-2 text-gray-400 cursor-not-allowed">Vigas</a>
-          <a href="#" class="pl-2 text-gray-400 cursor-not-allowed">Pilares</a>
-        </div>
-
-        <a class="text-gray-400 cursor-not-allowed">IoT</a>
-
-        {% if user.is_authenticated %}
-          <a href="{% url 'logout' %}" class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition">
-            Logout
-          </a>
-        {% else %}
-          <a href="#" hx-get="{% url 'form_partial' %}" hx-target="#conteudo"
-             class="bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-800 transition text-center">
-            Login
-          </a>
-        {% endif %}
-      </nav>
+    <!-- Madeira (submenu em lista simples no mobile) -->
+    <div class="flex flex-col space-y-1 mt-2">
+      <span class="font-semibold text-sm text-gray-300 uppercase tracking-wider">Madeira</span>
+      <a href="#"
+         hx-get="{% url 'compressao_madeira:form' %}"
+         hx-target="#conteudo" hx-swap="innerHTML"
+         class="pl-2 text-white hover:underline">Compressão</a>
+      <a href="#"
+         hx-get="{% url 'tracao_madeira:form' %}"
+         hx-target="#conteudo" hx-swap="innerHTML"
+         class="pl-2 text-white hover:underline">Tração</a>
+      <a href="#"
+         hx-get="{% url 'flexao_madeira:form' %}"
+         hx-target="#conteudo" hx-swap="innerHTML"
+         class="pl-2 text-white hover:underline">Flexão Simples</a>
+      <a href="#"
+         hx-get="{% url 'cortante_madeira:form' %}"
+         hx-target="#conteudo" hx-swap="innerHTML"
+         class="pl-2 text-white hover:underline">Cortante</a>
+      <a href="#"
+         hx-get="{% url 'flambagem_lateral_madeira:form' %}"
+         hx-target="#conteudo" hx-swap="innerHTML"
+         class="pl-2 text-white hover:underline">Flambagem Lateral</a>
     </div>
+
+    <!-- BIM (desabilitado) -->
+    <span class="text-gray-400 cursor-not-allowed pointer-events-none select-none">BIM</span>
+
+    <!-- Pré-Dimensionamento (desabilitado como no desktop) -->
+    <div class="flex flex-col space-y-1 opacity-60 select-none pointer-events-none">
+      <span class="font-semibold text-sm text-gray-300 uppercase tracking-wider">Pré-Dimensionamento</span>
+      <span class="pl-2 text-gray-300">Punção Laje Lisa</span>
+      <span class="pl-2 text-gray-300">Lajes</span>
+      <span class="pl-2 text-gray-300">Vigas</span>
+      <span class="pl-2 text-gray-300">Pilares</span>
+    </div>
+
+    <!-- IoT (desabilitado) -->
+    <span class="text-gray-400 cursor-not-allowed pointer-events-none select-none">IoT</span>
+
+    <!-- Login/Logout -->
+    {% if user.is_authenticated %}
+      <a href="{% url 'logout' %}"
+         class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition text-center">
+        Logout
+      </a>
+    {% else %}
+      <a href="#"
+         hx-get="{% url 'form_partial' %}" hx-target="#conteudo"
+         class="bg-blue-700 px-4 py-2 rounded-lg hover:bg-blue-800 transition text-center">
+        Login
+      </a>
+    {% endif %}
+  </nav>
+</div>
   </div>
 </nav>
