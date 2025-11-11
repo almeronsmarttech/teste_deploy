@@ -88,7 +88,7 @@ class Madeira:
         self.__fv0k /= 10  # de MPa para kN/cm2
         self.__fuv = self.__fv0k / (1 + (3 * (self.__u_eq - 12)) / 100)
         self.__fv0k = self.__fuv
-        self.__fv0d = self.__kmod * self.__fuv/ self.__gama_w_c
+        self.__fv0d = self.__kmod * self.__fv0k/ self.__gama_w_v
 
         self.__fv90d = (self.__kmod * self.__fuv) / self.__gama_w_v
 
