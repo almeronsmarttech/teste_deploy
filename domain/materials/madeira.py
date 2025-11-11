@@ -136,4 +136,8 @@ class Madeira:
     def fmd(self):
         return self.__fmd
 
+    @property
+    def kmod(self):
+        return self.__kmod
+
 

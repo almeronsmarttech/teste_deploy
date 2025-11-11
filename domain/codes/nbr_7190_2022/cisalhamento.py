@@ -4,6 +4,6 @@ def cisalhamento(madeira, secao_transversal, acoes):
 
     tal_d = 1.5 * acoes.VSd / secao_transversal.Aw
 
-    percentual =  tal_d/ madeira.fv0d
+    percentual = madeira.kmod * tal_d/ madeira.fv0d
 
     return tal_d, madeira.fv0d, percentual
