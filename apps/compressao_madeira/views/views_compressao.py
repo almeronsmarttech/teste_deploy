@@ -49,13 +49,6 @@ class FormularioCompressaoMadeiraView(FormView):
         # NSk: float = 0, MSkx: float = 0, MSky: float = 0, VSk: float = 0
         acoes = Acoes(float(cd["Nk"]),float(cd["Mkx"]),float(cd["Mky"]))
 
-
-        sigma_rd = 1
-        sigma_sd = 1
-        sigma_rel = 1
-        k = 1
-        kc = 1
-        # =============================================
         respostas = compressao(madeira, secao, acoes)
         resultados = {
             "sigma_rd": round(madeira.fc0d,3),

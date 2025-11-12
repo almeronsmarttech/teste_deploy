@@ -46,7 +46,10 @@ def compressao(madeira, secao_transversal, acoes):
         kc = 1 / (k + ((k**2) - (lambda_rel**2))**0.5)
         print(f"k = {round(k, 2)}\tkc = {round(kc, 2)}")
         # Verificação da Estabilidade
-        ver = sigma_Ncd / (kc * madeira.fc0d)  # (kc*fc0d) conhecido como resistência à flambagem
+        kM = 0.7
+        ver1 = (sigma_Ncd / (kc * madeira.fc0d)) + (kM*(sigma_Mxcd / madeira.fc0d)) +(sigma_Mycd / madeira.fc0d)
+        ver2 = (sigma_Ncd / (kc * madeira.fc0d)) + (sigma_Mxcd / madeira.fc0d) +(kM*(sigma_Mycd / madeira.fc0d))
+        ver = max(ver1, ver2)  # (kc*fc0d) conhecido como resistência à flambagem
         print(f"Verificação:\nver = {round(ver, 2)}")
         if ver < 1:
             print("Verificação à flambagem passou!")
