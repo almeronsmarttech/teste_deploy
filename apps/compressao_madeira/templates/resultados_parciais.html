@@ -1,5 +1,4 @@
 <div class="bg-gray-50 p-6 rounded shadow-md border max-w-5xl">
-  <!-- Dados de entrada usados (agora primeiro) -->
   {% if resultados.inputs %}
   <div class="mb-6">
     <h2 class="text-xl font-bold text-gray-800 mb-2">Dados considerados</h2>
@@ -20,24 +19,44 @@
 
   <h2 class="text-xl font-bold text-gray-800 mb-4">Resultados</h2>
 
+  {% if resultados.tensao_ultrapassada %}
+    <div class="mb-4 rounded border border-red-200 bg-red-50 px-4 py-3">
+      <div class="text-red-700 font-bold">
+        Tensão atuante é maior que a resistente.<br>
+        Rever dimensões ou alterar o material.
+      </div>
+    </div>
+  {% endif %}
+
   <!-- Tensões -->
   <div class="mb-6">
     <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Tensões (MPa)</h3>
     <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-gray-800">
       <div class="me-6"><strong>f<sub>c0d</sub>:</strong> {{ resultados.sigma_rd }}</div>
-      <div class="me-6"><strong>σ<sub>Sd</sub>:</strong> {{ resultados.sigma_sd }}</div>
+      <div class="me-6">
+        <strong>σ<sub>Sd</sub>:</strong> {{ resultados.sigma_sd }}
+        {% if resultados.tensao_ultrapassada %}
+          <span class="ml-2 text-red-600 font-semibold">✘ σ<sub>Sd</sub> &gt; f<sub>c0d</sub></span>
+        {% else %}
+          <span class="ml-2 text-green-600 font-semibold">✔ σ<sub>Sd</sub> ≤ f<sub>c0d</sub></span>
+        {% endif %}
+      </div>
+
+      {% if not resultados.tensao_ultrapassada %}
         {% if resultados.sigma_rel and resultados.sigma_rel < 0.3 %}
-        <span class="text-green-600 font-semibold">✔ Seção verificada (≤ 0,3)</span>
-      {% elif resultados.sigma_rel %}
-        <span class="text-red-600 font-semibold"> ✘ Tem que fazer a verificação quanto a esbeltez! (esbeltez relativa = {{ resultados.sigma_rel }} &gt; 0,3)</span>
-      {% else %}
-        <span class="text-gray-500">Cálculo ainda não realizado.</span>
+          <span class="text-green-600 font-semibold">✔ Seção verificada (≤ 0,3)</span>
+        {% elif resultados.sigma_rel %}
+          <span class="text-red-600 font-semibold">
+            ✘ Tem que fazer a verificação quanto a esbeltez! (esbeltez relativa = {{ resultados.sigma_rel }} &gt; 0,3)
+          </span>
+        {% else %}
+          <span class="text-gray-500">Cálculo ainda não realizado.</span>
+        {% endif %}
       {% endif %}
-
-
     </div>
   </div>
 
+  {% if not resultados.tensao_ultrapassada %}
   <!-- Coeficientes -->
   <div class="mb-6">
     <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Coeficientes</h3>
@@ -52,12 +71,13 @@
     <h3 class="text-lg font-semibold text-gray-700 border-b pb-1 mb-3">Verificação</h3>
     <div class="text-sm text-gray-800 flex items-center gap-3">
       {% if resultados.ver and resultados.ver <= 1 %}
-        <span class="text-green-600 font-semibold">✔ Seção verificada ({{resultados.ver}} ≤ 1,0)</span>
+        <span class="text-green-600 font-semibold">✔ Seção verificada ({{ resultados.ver }} ≤ 1,0)</span>
       {% elif resultados.ver %}
-        <span class="text-red-600 font-semibold">✘ Seção não verificada ({{  resultados.ver}} &gt; 1,0)</span>
+        <span class="text-red-600 font-semibold">✘ Seção não verificada ({{ resultados.ver }} &gt; 1,0)</span>
       {% else %}
         <span class="text-gray-500">Cálculo ainda não realizado.</span>
       {% endif %}
     </div>
   </div>
+  {% endif %}
 </div>

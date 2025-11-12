@@ -65,6 +65,7 @@ class FormularioCompressaoMadeiraView(FormView):
             "kc": round(respostas[3],2),
             "inputs": inputs,
             "ver": round(respostas[4],2),
+            "tensao_ultrapassada": respostas[5],
         }
 
         # Retorna apenas o fragmento para o alvo HTMX do formulário

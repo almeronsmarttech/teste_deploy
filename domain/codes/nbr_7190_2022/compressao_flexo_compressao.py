@@ -1,7 +1,7 @@
 
 def compressao(madeira, secao_transversal, acoes):
     # esbeltez lambda
-
+    tensao_ultrapassada = False
     if secao_transversal.lambda_x >= 140 or secao_transversal.lambda_y >= 140:
         print(
             f"lambda = {max(secao_transversal.lambda_x, secao_transversal.lambda_y)}. O lambda deve ser menor que 140.\nReveja as dimensões da peça ou o comprimento do elemento.")
@@ -11,7 +11,7 @@ def compressao(madeira, secao_transversal, acoes):
 
     if madeira.fc0d < sigma_Ncd:
         print("Tensão resistente menor que a atuante. Rever dimensões, altura ou madeira.")
-        exit()
+        tensao_ultrapassada = True
 
     sigma_Mxcd = (acoes.MSdx * secao_transversal.hx / 2) / secao_transversal.Ix
     sigma_Mycd = (acoes.MSdy * secao_transversal.hy / 2) / secao_transversal.Iy
@@ -55,4 +55,4 @@ def compressao(madeira, secao_transversal, acoes):
 
 
 
-    return sigma_Ncd, lambda_rel, k, kc, ver
+    return sigma_Ncd, lambda_rel, k, kc, ver, tensao_ultrapassada
